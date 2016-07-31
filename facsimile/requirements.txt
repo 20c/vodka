@@ -1,0 +1,4 @@
+munge==0.2.0
+click==6.6
+pluginmgr==0.1.0
+twentyc.tmpl==0.1.1
