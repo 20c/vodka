@@ -1,6 +1,6 @@
 # vodka
 
-[![PyPI version](https://badge.fury.io/py/vodka.svg)](https://badge.fury.io/py/vodka)
+[![PyPI](https://img.shields.io/pypi/v/vodka.svg?maxAge=2592000)](https://pypi.python.org/pypi/vodka)
 [![Travis CI](https://img.shields.io/travis/20c/vodka.svg?maxAge=2592000)](https://travis-ci.org/20c/vodka)
 [![Code Health](https://landscape.io/github/20c/vodka/master/landscape.svg?style=flat)](https://landscape.io/github/20c/vodka/master)
 [![Codecov](https://img.shields.io/codecov/c/github/20c/vodka/master.svg?maxAge=2592000)](https://codecov.io/github/20c/vodka)
