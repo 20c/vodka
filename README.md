@@ -1,4 +1,3 @@
-
 # vodka
 
 [![PyPI](https://img.shields.io/pypi/v/vodka.svg?maxAge=2592000)](https://pypi.python.org/pypi/vodka)
