@@ -2,10 +2,10 @@
 # vodka
 
 [![PyPI](https://img.shields.io/pypi/v/vodka.svg?maxAge=2592000)](https://pypi.python.org/pypi/vodka)
-[![Travis CI](https://img.shields.io/travis/True/vodka.svg?maxAge=2592000)](https://travis-ci.org/True/vodka)
-[![Code Health](https://landscape.io/github/True/vodka/master/landscape.svg?style=flat)](https://landscape.io/github/True/vodka/master)
-[![Codecov](https://img.shields.io/codecov/c/github/True/vodka/master.svg?maxAge=2592000)](https://codecov.io/github/True/vodka)
-[![Requires.io](https://img.shields.io/requires/github/True/vodka.svg?maxAge=2592000)](https://requires.io/github/True/vodka/requirements)
+[![Travis CI](https://img.shields.io/travis/20c/vodka.svg?maxAge=2592000)](https://travis-ci.org/20c/vodka)
+[![Code Health](https://landscape.io/github/20c/vodka/master/landscape.svg?style=flat)](https://landscape.io/github/20c/vodka/master)
+[![Codecov](https://img.shields.io/codecov/c/github/20c/vodka/master.svg?maxAge=2592000)](https://codecov.io/github/20c/vodka)
+[![Requires.io](https://img.shields.io/requires/github/20c/vodka.svg?maxAge=2592000)](https://requires.io/github/20c/vodka/requirements)
 
 vodka is a plugin based real-time web service daemon
 
