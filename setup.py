@@ -20,7 +20,11 @@ setup(
     test_requires=test_requirements,
     url='https://github.com/20c/vodka',
     download_url='https://github.com/20c/vodka/%s' % version,
-    scripts=['bin/bartender.py'],
+    entry_points={
+        'console_scripts': [
+            'bartender=vodka.bartender:bartender'
+        ]
+    },
     include_package_data=True,
     zip_safe=True
 )
