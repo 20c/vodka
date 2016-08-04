@@ -17,7 +17,7 @@ def dict_get_path(data, path, default=None):
             if not found:
                 return default
         elif type(data) == dict:
-            if data.has_key(k):
+            if k in data:
                 data = data[k]
             else:
                 return default
