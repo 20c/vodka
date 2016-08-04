@@ -1,4 +1,7 @@
-import zmq
+try:
+    import zmq
+except ImportError:
+    pass
 
 import vodka
 import vodka.plugins
