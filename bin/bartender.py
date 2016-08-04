@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import click
-import vodka.config
 import vodka
+import vodka.config
 
 def options(f):
     """
