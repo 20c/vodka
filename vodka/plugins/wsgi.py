@@ -113,7 +113,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
     def run(self):
         pass
 
-    def set_route(self, path, target):
+    def set_route(self, path, target, methods=None):
         pass
 
     def request_env(self, req=None, **kwargs):

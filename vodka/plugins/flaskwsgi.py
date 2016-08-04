@@ -26,7 +26,9 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
     def request_env(self, req=None, **kwargs):
         return super(VodkaFlask, self).request_env(req=request, **kwargs)
 
-    def set_route(self, path, target, methods=["GET"]):
+    def set_route(self, path, target, methods=None):
+        if not methods:
+            methods = ["GET"]
         self.wsgi_application.add_url_rule(
             '%s/' % path, view_func=target, methods=methods)
 

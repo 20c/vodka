@@ -111,7 +111,7 @@ def init(config, rawConfig):
     }
 
 
-def start(gevent_workers=[], thread_workers=[]):
+def start(gevent_workers=None, thread_workers=None):
     if gevent_workers:
         import gevent
         print "joining", gevent_workers

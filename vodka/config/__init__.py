@@ -58,13 +58,13 @@ class Attribute(object):
     A configuration attribute 
     """
 
-    def __init__(self, expected_type, default=None, help_text=None, handler=None, choices=None, prepare=[]):
+    def __init__(self, expected_type, default=None, help_text=None, handler=None, choices=None, prepare=None):
         self.expected_type = expected_type
         self.default = default
         self.help_text = help_text
         self.handler = handler
         self.choices = choices
-        self.prepare = prepare
+        self.prepare = prepare or []
 
 
 class Handler(object):
