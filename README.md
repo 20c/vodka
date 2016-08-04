@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/20c/vodka/master.svg?maxAge=3600)](https://codecov.io/github/20c/vodka)
 [![Requires.io](https://img.shields.io/requires/github/20c/vodka.svg?maxAge=3600)](https://requires.io/github/20c/vodka/requirements)
 
-vodka is a plugin based real-time web service daemon
+vodka is a plugin based real-time web service daemon.
 
 ### License
 
