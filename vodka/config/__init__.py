@@ -3,7 +3,6 @@ import types
 import os
 import os.path
 
-import vodka
 import vodka.app
 import vodka.exceptions
 import vodka.log
