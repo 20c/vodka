@@ -59,7 +59,7 @@ def init(config, rawConfig):
     load(app_home)
 
     # instantiate data types
-    vodka.log.debug("instnatiating data types")
+    vodka.log.debug("instantiating data types")
     vodka.data.data_types.instantiate_from_config(cfg.get("data", []))
 
     # instantiate vodka applications
