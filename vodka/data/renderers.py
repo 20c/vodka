@@ -22,6 +22,14 @@ class DataRenderer(object):
 
 
 class RPC(DataRenderer):
+    
+    """
+    RPC renderer, renders an rpc response containing meta and data objects
+
+    Should be used as a decorator. The decorated function will be called
+    with the data container as first argument and the meta container referenced
+    in the "meta" keyword argument.
+    """
 
     def __init__(self, type="json", data_type=list, errors=False):
         super(RPC, self).__init__(type=type)

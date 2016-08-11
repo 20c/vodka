@@ -1,18 +1,43 @@
 import logging.config
 
 def log():
+    """Return the default logger set up for vodka"""
     return logging.getLogger("vodka")
 
 def debug(msg):
+    """
+    Log debug message using the default logger
+
+    Args:
+        msg (str): message
+    """
     return log().debug(msg)
 
 def error(msg):
+    """
+    Log error message using the default logger
+
+    Args:
+        msg (str): message
+    """
     return log().error(msg)
 
 def info(msg):
+    """
+    Log info message using the default logger
+
+    Args:
+        msg (str): message
+    """
     return log().info(msg)
 
 def warn(msg):
+    """
+    Log warning message using the default logger
+
+    Args:
+        msg (str): message
+    """
     return log().warn(msg)
 
 def set_loggers(config):
@@ -27,6 +52,16 @@ def set_loggers(config):
 
 
 class LoggerMixin(object):
+    
+    """
+    Mixin class that sets a 'log' property that will either return
+    the default vodka logger, or a logger specified in the object's
+    configuration attribute.
+
+    This mixin expects the class it is attached to have a 'config'
+    attribute that is either of type dict or MungeConfig
+    """
+
     @property
     def log(self):
         if hasattr(self, "_log"):

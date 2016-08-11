@@ -13,7 +13,12 @@ applications = {}
 
 def register(cls):
     """
-    Register an application
+    Register an application.
+
+    Can be used as a decorator.
+
+    Args:
+        cls (class): the class to register as a vodka application
     """
 
     if cls.handle in applications:
@@ -22,7 +27,16 @@ def register(cls):
 
 def get_application(handle):
     """
-    Wrapper function to retrieve registered application
+    Wrapper function to retrieve registered application class
+
+    Args:
+        handle (str): application handle as defined in the application class
+
+    Returns:
+        the application class with the matching handle
+
+    Raises:
+        KeyError: Application with specified handle is not registered
     """
 
     if handle in applications:
@@ -34,11 +48,24 @@ def get_application(handle):
 class Application(vodka.component.Component):
     """
     Base application class
+
+    Attributes:
+        handle (str): unique handle for the application, override when
+            extending
     """
 
     handle = "base"
 
     def __init__(self, config=None, config_dir=None):
+        
+        """
+        Kwargs:
+            config (dict or MungeConfig): configuration object, note that
+                either this or config_dir need to be specified.
+            config_dir (str): path to config directory, will attempt to
+                read into a new MungeConfig instance from there.
+        """
+
         if config:
             self.config = config
         elif config_dir:
@@ -47,13 +74,17 @@ class Application(vodka.component.Component):
             raise ValueError("No configuration specified")
 
     def setup(self):
+        """
+        Soft initialization method with no arguments that can easily be 
+        overwritten by extended classes
+        """
         pass
 
 
 
 class WebApplication(Application):
     """
-    Application targeted at serving content to the web.
+    Application wrapper for serving content via a web server.
     """
 
     # Configuration handler
@@ -77,12 +108,26 @@ class WebApplication(Application):
 
     @property
     def template_path(self):
+        """ absolute path to template directory """
         return self.get_config("templates")
 
     def render(self, tmpl_name, request_env):
+        """
+        Render the specified template and return the output.
+
+        Args:
+            tmpl_name (str): file name of the template
+            request_env (dict): request environment
+        
+
+        Returns:
+            str - the rendered template 
+        """
         return self.tmpl._render(tmpl_name, request_env)
 
     def setup(self):
         import twentyc.tmpl
+
+        # set up the template engine
         eng = twentyc.tmpl.get_engine(self.config.get("tmpl_engine", "jinja2"))
         self.tmpl = eng(tmpl_dir=self.template_path)

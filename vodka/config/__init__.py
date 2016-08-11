@@ -31,6 +31,23 @@ class Attribute(object):
     """
 
     def __init__(self, expected_type, default=None, help_text=None, handler=None, choices=None, prepare=None):
+        """
+        Args:
+            expected_type (class or function): type expected for this attribute, if specified
+                as a function the result of the function will determine whether or not the value
+                passed type validation.
+        
+        Kwargs:
+            default: if specified this value will be used as a default value, if not specified then
+                configuration of this attribute is treated as mandatory
+            help_text (str): explains the attribute
+            choices (list): list of valid value choices for this attribute, if set any value not 
+                matching any of the choices will raise a configuration error
+            handler (function): when the value for this attribute is a collection of configuration 
+                attributes (e.g. nested config) use this function to return the aproporiate config
+                handler class to use to validate them
+            prepare (function): allows you to prepare value for this attribute
+        """
         self.expected_type = expected_type
         self.default = default
         self.help_text = help_text

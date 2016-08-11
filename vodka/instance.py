@@ -5,6 +5,15 @@ instances = {}
 def get_instance(name):
     """
     wrapper function to retrieve instance
+
+    Args:
+        name (str): instance name - identical to appliction class handle value
+
+    Returns:
+        application instance with the matching name
+
+    Raises:
+        KeyError: No instance found for specified name
     """
 
     if name in instances:
@@ -15,6 +24,9 @@ def instantiate(config):
 
     """
     instantiate all registered vodka applications
+
+    Args:
+        config (dict or MungeConfig): configuration object
     """
     
     for handle, cfg in config["apps"].items():

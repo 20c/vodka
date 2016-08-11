@@ -14,9 +14,18 @@ handlers = {}
 class register(object):
     """
     Register a data handler with a unique handle name
+
+    Can be used as a decorator.
     """
 
     def __init__(self, name):
+        """
+        Args:
+            name (str): unique data handler name 
+
+        Raises:
+            KeyError: Data handler with name already exists
+        """
         if name in handlers:
             raise KeyError("Data handler name '%s' already exists" % name)
         self.name = name
@@ -50,10 +59,27 @@ def instantiate_for_data_type(name, data_id=None):
 
 class Handler(vodka.component.Component):
 
+    """
+    Base data handler class. A data handler can be attached to a data type
+    to manipulate data of that type as it enters vodka.
+
+    Attribues:
+        config (dict or MungeConfg): configuration collection
+        data_id (str): data id for this handler
+
+    Classes:
+        Configuration: Configuration Handler
+    """
+
     class Configuration(vodka.config.ComponentHandler):
         pass
 
     def __init__(self, config, data_id):
+        """
+        Args:
+            config (dict or MungeConfig): configuration collection
+            data_id (str): data id for this handler, needs to be unique
+        """
         self.config = config
         self.data_id = data_id
         self.init()
@@ -67,6 +93,11 @@ class Handler(vodka.component.Component):
 
 @register("index")
 class IndexHandler(Handler):
+    
+    """
+    Will re-index data in a dictorary, indexed to the
+    key specified in the config
+    """
 
     class Configuration(Handler.Configuration):
         index = vodka.config.Attribute(
@@ -82,6 +113,11 @@ class IndexHandler(Handler):
 
 @register("store")
 class StorageHandler(Handler):
+    
+    """
+    Will store the data in the vodka storage.
+    Data will be stored using data type and data id as keys
+    """
 
     class Configuration(Handler.Configuration):
         container = vodka.config.Attribute(
