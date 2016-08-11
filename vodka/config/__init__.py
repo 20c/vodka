@@ -24,33 +24,6 @@ def prepare_home_path(value):
     return value.format(**paths)
 
 
-def ref_iter(config):
-
-    if type(config) == dict:
-        for k, v in config.items():
-            if isinstance(v, dict):
-                ref_iter(v)
-            elif isinstance(v, list):
-                i = 0
-                for item in v:
-                    ref_iter(item)
-                    v[i] = ref(item)
-                    i += 1
-            else:
-                config[k] = ref(v)
-
-
-def ref(value, default=None):
-    """
-    If value is a string prefixed with '@' it is assumed to be
-    a period delimited path to be referenced from raw config
-    """
-
-    if type(value) in [str, unicode] and value and value[0] == "@":
-        return vodka.util.dict_get_path(raw, value[1:], default=default)
-    return value
-
-
 class Attribute(object):
 
     """

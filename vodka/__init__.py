@@ -51,8 +51,6 @@ def init(config, rawConfig):
     vodka.config.instance["home"] = cfg[
         "home"] = vodka.config.prepare_home_path(cfg["home"])
 
-    vodka.config.ref_iter(vodka.config.instance)
-
     #app = imp.load_source("vodka_app", os.path.join(app_home, "app.py"))
     app_home = cfg.get("home")
     vodka.log.debug("importing app from: %s" % app_home)

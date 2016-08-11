@@ -28,33 +28,6 @@ class TestConfig(unittest.TestCase):
         c,w = ConfigHandler.validate(cfg)
         self.assertEqual(cfg["h"], 2)
 
-    def test_ref(self):
-        vodka.config.raw = {
-            "a" : {
-                "b" : 1
-            }
-        }
-
-        config = {
-            "a" : 0,
-            "b" : "@a.b",
-            "c" : "@a.b.c",
-            "d" : [
-                0,
-                "@a.b",
-                "@a.b.c",
-                {
-                    "a" : 0,
-                    "b" : "@a.b",
-                    "c" : "@a.b.c"
-                }
-            ]
-        }
-
-        vodka.config.ref_iter(config)
-
-        self.assertEqual(config, {"a":0,"b":1,"c":None,"d":[0,1,None,{"a":0,"b":1,"c":None}]})
-    
     def test_validation(self):
         
         # this should validate without errors
