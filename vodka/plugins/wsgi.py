@@ -58,6 +58,9 @@ class WSGIPlugin(vodka.plugins.PluginBase):
     def set_wsgi_app(cls, app):
         WSGIPlugin.wsgi_application = app
 
+    def setup(self):
+        self.set_routes()
+
     def set_server(self, wsgi_app, fnc_serve=None):
         """
         figures out how the wsgi application is to be served
@@ -107,8 +110,6 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         else:
 
             self.worker = fnc_serve
-
-        self.set_routes()
 
     def run(self):
         pass
