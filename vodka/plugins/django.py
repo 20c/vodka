@@ -9,6 +9,11 @@ import vodka.config
 @vodka.plugin.register('django')
 class DjangoPlugin(vodka.plugins.PluginBase): 
 
+    """
+    This plugin allows you to use the django ORM in your
+    vodka application
+    """
+
     class Configuration(vodka.plugins.PluginBase.Configuration):
         
         project_path = vodka.config.Attribute(
