@@ -1,5 +1,7 @@
 import pluginmgr
 import time
+import urlparse
+
 import vodka
 import vodka.log
 import vodka.config
@@ -37,6 +39,17 @@ class PluginBase(vodka.component.Component, pluginmgr.PluginBase):
             default=lambda x, i: i.type,
             help_text="plugin instance name, needs to be unique"
         )
+
+    def init(self):
+        """ executed during plugin initialization, app instances not available yet """
+        pass
+
+    def setup(self):
+        """ executed before plugin is started, app instances available """
+        pass
+
+    def start(self):
+        pass
 
 
 class TimedPlugin(PluginBase):
@@ -99,3 +112,4 @@ class DataPlugin(TimedPlugin):
 
     def work(self, data):
         return vodka.data.handle(self.data_type, data, data_id=self.name, caller=self)
+
