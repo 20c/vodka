@@ -51,23 +51,23 @@ def init(config, rawConfig):
     vodka.config.instance["home"] = cfg[
         "home"] = vodka.config.prepare_home_path(cfg["home"])
 
-    #app = imp.load_source("vodka_app", os.path.join(app_home, "app.py"))
-    app_home = cfg.get("home")
-    vodka.log.debug("importing app from: %s" % app_home)
-    load(app_home)
-
     # instantiate data types
     vodka.log.debug("instantiating data types")
     vodka.data.data_types.instantiate_from_config(cfg.get("data", []))
+
+    # instantiate plugins
+    vodka.log.debug("instantiating plugins")
+    plugin.instantiate(cfg["plugins"])
+
+    # import main application
+    app_home = cfg.get("home")
+    vodka.log.debug("importing app from: %s" % app_home)
+    load(app_home)
 
     # instantiate vodka applications
     vodka.log.debug("instantiating applications")
     instantiate(cfg)
 
-    vodka.log.debug("instantiating plugins")
-
-    # instantiate plugins
-    plugin.instantiate(cfg["plugins"])
 
     vodka.log.debug("making sure configuration is sane ...")
 
@@ -85,10 +85,13 @@ def init(config, rawConfig):
 
     for pcfg in cfg["plugins"]:
         p = plugin.get_instance(pcfg["name"])
+        
+        p.setup()
+
         if pcfg.get("start_manual", False):
             continue
         vodka.log.debug("starting %s .." % pcfg["name"])
-        async = pcfg.get("async", "gevent")
+        async = pcfg.get("async", "thread")
 
         if hasattr(p, "worker"):
             worker = p.worker
@@ -112,7 +115,6 @@ def init(config, rawConfig):
 def start(gevent_workers=None, thread_workers=None):
     if gevent_workers:
         import gevent
-        print "joining", gevent_workers
         gevent.joinall(gevent_workers)
     if thread_workers:
         import threading
