@@ -1,17 +1,13 @@
+from __future__ import absolute_import
+
 from flask import Flask, request
 import vodka.plugins.wsgi
 import vodka
-
-# keep all the flask enabled apps here
-
 
 @vodka.plugin.register('flask')
 class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
 
     def init(self):
-
-        print "STATIC_FOLDER", self.get_config("static_url_path")
-
         # flask app
         flask_app = Flask(
             "__main__",
