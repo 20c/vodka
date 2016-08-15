@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import os
 import sys
 
 import vodka
@@ -23,15 +24,28 @@ class DjangoPlugin(vodka.plugins.PluginBase):
 
         settings = vodka.config.Attribute(
             dict,
-            help_text="django settings object - use uppercase keys as you would inside the actual django settings.py file. Needs INSTALLED_APPS, DATABASES and SECRET_KEY at minimum to function."
+            default={},
+            help_text="django settings object - use uppercase keys as you would inside the actual django settings.py file. Needs INSTALLED_APPS, DATABASES and SECRET_KEY at minimum to function. If omitted, settings located within the django project will be used."
         )
 
 
     def init(self):
-        # manually configure settings
-        from django.conf import settings
-        settings.configure(**self.get_config("settings"))
+        p_path = self.get_config("project_path")
 
+        self.log.debug("initializing django from project: %s" % p_path)
+
+        # manually configure settings
+        if self.get_config("settings"):
+            # settings from vodka config
+            from django.conf import settings
+            settings.configure(**self.get_config("settings"))
+        else:
+            # settings from django project
+            for f in os.listdir(p_path):
+                if os.path.exists(os.path.join(p_path, f, "settings.py")):
+                    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "%s.settings" % f)
+                    break
+                
         # so we can import the apps from the django project
         sys.path.append(self.get_config("project_path"))
         
