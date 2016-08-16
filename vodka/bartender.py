@@ -1,3 +1,5 @@
+import os
+import os.path
 import click
 import vodka
 import vodka.config
@@ -42,7 +44,7 @@ def check_config(config):
 
 @bartender.command()
 @options
-def gen_config(config):
+def config(config):
     """
     Generates configuration file from config specifications
     """
@@ -60,7 +62,16 @@ def gen_config(config):
     configurator = ClickConfigurator(vodka.plugin)
     configurator.configure(vodka.config.instance, vodka.config.InstanceHandler)
     
-    dst = munge_config.parse_url(config)
+    try:
+        dst = munge_config.parse_url(config)
+    except ValueError:
+        config = os.path.join(config, "config.yaml")
+        dst = munge_config.parse_url(config)
+
+    config_dir = os.path.dirname(config)
+    if not os.path.exists(config_dir) and config_dir:
+        os.makedirs(config_dir)
+
     dst.cls().dumpu(vodka.config.instance, dst.url.path)
 
     print vodka.config.instance
