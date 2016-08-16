@@ -1,6 +1,11 @@
 import click
 import vodka
 import vodka.config
+import vodka.config.configurator
+import types
+
+import munge.codec.all
+from munge import config as munge_config
 
 def options(f):
     """
@@ -35,7 +40,31 @@ def check_config(config):
 
     click.echo("%d config ERRORS, %d config WARNINGS" % (num_crit, num_warn))
 
-    # check app config
+@bartender.command()
+@options
+def gen_config(config):
+    """
+    Generates configuration file from config specifications
+    """
+
+    class ClickConfigurator(vodka.config.configurator.Configurator):
+        """
+        Configurator class with prompt and echo wired to click
+        """
+        def echo(self, msg):
+            click.echo(msg)
+
+        def prompt(self, *args, **kwargs):
+            return click.prompt(*args, **kwargs)
+
+    configurator = ClickConfigurator(vodka.plugin)
+    configurator.configure(vodka.config.instance, vodka.config.InstanceHandler)
+    
+    dst = munge_config.parse_url(config)
+    dst.cls().dumpu(vodka.config.instance, dst.url.path)
+
+    click.echo("Config written to %s" % dst.url.path)
+
 
 @bartender.command()
 @options

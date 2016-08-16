@@ -13,13 +13,12 @@ import validators
 raw = {}
 
 instance = {
-    "home": "."
 }
-
 
 def prepare_home_path(value):
     paths = {
-        "site_packages": os.path.join(os.path.dirname(os.__file__), "site-packages")
+        "site_packages": os.path.join(os.path.dirname(os.__file__), "site-packages"),
+        "home" : instance["home"]
     }
     return value.format(**paths)
 
@@ -233,6 +232,20 @@ class Handler(object):
             return attr.default(key_name, inst)
         return attr.default
 
+    @classmethod
+    def attributes(cls):
+        """ 
+        yields tuples for all attributes defined on this handler
+        
+        tuple yielded:
+            name (str), attribute (Attribute)
+        """
+
+        for k in dir(cls):
+            v = getattr(cls, k)
+            if isinstance(v, Attribute):
+                yield k,v
+
 
 class ComponentHandler(Handler):
 
@@ -270,12 +283,48 @@ class InstanceHandler(Handler):
         default=[]
     )
     home = Attribute(
-        str,
+        validators.path,
         help_text="Path to application base directory"
     )
     logging = Attribute(
         dict, help_text="Python logger configuration", default={"version": 1})
 
+
+    @classmethod
+    def configure_plugins(cls, configurator, cfg, path):
+        configurator.echo("")
+        configurator.echo("Confgiure plugins")
+        configurator.echo("")
+        plugin_type = configurator.prompt("Add plugin", default="skip")
+        if "plugins" not in cfg:
+            cfg["plugins"] = []
+ 
+        while plugin_type != "skip":
+            plugin_name = configurator.prompt("Name", default=plugin_type)
+            try:
+                plugin_class = configurator.plugin_manager.get_plugin_class(plugin_name)
+                plugin_cfg = {"type":plugin_type, "name":plugin_name}
+                configurator.configure(plugin_cfg, plugin_class.Configuration, path="%s.%s"%(path, plugin_name))
+                cfg["plugins"].append(plugin_cfg)
+            except Exception, inst:
+                configurator.echo(inst)
+            plugin_type = configurator.prompt("Add plugin", default="skip")
+
+
+    @classmethod
+    def configure_apps(cls, configurator, cfg, path):
+        vodka.app.load(instance.get("home"))
+
+        if "apps" not in cfg:
+            cfg["apps"] = {}
+ 
+        for name, app in vodka.app.applications.items():
+            configurator.echo("")
+            configurator.echo("Configure application: %s" % name)
+            app_class = vodka.app.get_application(name)
+            app_cfg = {}
+            configurator.configure(app_cfg, app.Configuration, path="%s.%s" % (path, name))
+            cfg["apps"][name] = app_cfg
 
 class Config(munge.Config):
     defaults = {
