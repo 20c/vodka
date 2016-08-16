@@ -293,7 +293,7 @@ class InstanceHandler(Handler):
     @classmethod
     def configure_plugins(cls, configurator, cfg, path):
         configurator.echo("")
-        configurator.echo("Confgiure plugins")
+        configurator.echo("Configure plugins")
         configurator.echo("")
         plugin_type = configurator.prompt("Add plugin", default="skip")
         if "plugins" not in cfg:
@@ -302,7 +302,7 @@ class InstanceHandler(Handler):
         while plugin_type != "skip":
             plugin_name = configurator.prompt("Name", default=plugin_type)
             try:
-                plugin_class = configurator.plugin_manager.get_plugin_class(plugin_name)
+                plugin_class = configurator.plugin_manager.get_plugin_class(plugin_type)
                 plugin_cfg = {"type":plugin_type, "name":plugin_name}
                 configurator.configure(plugin_cfg, plugin_class.Configuration, path="%s.%s"%(path, plugin_name))
                 cfg["plugins"].append(plugin_cfg)
