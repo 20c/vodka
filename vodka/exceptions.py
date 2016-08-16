@@ -73,7 +73,7 @@ class ConfigErrorType(ConfigErrorMixin, TypeError):
     def __init__(self, var_name, attr, level="critical"):
         TypeError.__init__(
             self,
-            "%s should be of type '%s'" % (var_name, attr.expected_type)
+            "%s should be of type '%s'" % (var_name, attr.expected_type.__name__)
         )
         ConfigErrorMixin.__init__(self, attr=attr, level=level)
 
