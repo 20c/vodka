@@ -65,9 +65,7 @@ class TestData(unittest.TestCase):
         self.assertEqual(handlers[1].get_config("extra"), 123)
 
     def test_handlers_call(self):
-
         handlers = vodka.data.handlers.instantiate_for_data_type("test")
-
         data = {"data" : {"this":"is a test"}}
         expected = {"data" : {"this":"is a test", "a":True, "b":True}}
 
@@ -75,6 +73,11 @@ class TestData(unittest.TestCase):
             data = h(data)
 
         self.assertEqual(data, expected)
+
+    def test_handle(self):
+        data = {"data" : {"this":"is a test"}}
+        expected = {"data" : {"this":"is a test", "a":True, "b":True}}
+        self.assertEqual(vodka.data.handle("test",data), expected)
 
     def test_handler_index(self):
         handler = vodka.data.handlers.instantiate({
