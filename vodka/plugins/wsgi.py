@@ -15,11 +15,13 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
         host = vodka.config.Attribute(
             str,
+            default="localhost",
             help_text="host address"
         )
 
         port = vodka.config.Attribute(
             int,
+            default=80,
             help_text="host port"
         )
 
