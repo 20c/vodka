@@ -9,6 +9,7 @@ from vodka.instance import (
 )
 
 from vodka.app import (
+    load,
     applications,
     get_application
 )
@@ -18,11 +19,6 @@ import vodka.config
 import vodka.log
 
 plugin = PluginManager("vodka.plugins")
-
-
-def load(app_home):
-    sys.path.append(app_home)
-    import application
 
 
 def init(config, rawConfig):

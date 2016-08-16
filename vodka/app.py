@@ -3,6 +3,8 @@ Vodka application foundation classes. Each vodka app should extend one
 of these.
 """
 
+import sys
+
 import vodka.config 
 import vodka.log
 import vodka.component
@@ -42,6 +44,18 @@ def get_application(handle):
     if handle in applications:
         return applications.get(handle)
     raise KeyError("Application with handle '%s' not registered" % handle)
+
+def load(app_home):
+    """ 
+    load applications located in path specified by app_home 
+
+    Args:
+        app_home (str): path to application home directory, expected to
+            contain application.py file
+    """
+    sys.path.append(app_home)
+    import application
+
 
 # CLASSES
 
