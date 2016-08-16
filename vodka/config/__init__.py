@@ -321,7 +321,6 @@ class InstanceHandler(Handler):
         for name, app in vodka.app.applications.items():
             configurator.echo("")
             configurator.echo("Configure application: %s" % name)
-            app_class = vodka.app.get_application(name)
             app_cfg = {}
             configurator.configure(app_cfg, app.Configuration, path="%s.%s" % (path, name))
             cfg["apps"][name] = app_cfg

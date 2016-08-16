@@ -15,7 +15,7 @@ applications = {}
 # FUNCTIONS
 
 class register(vodka.util.register):
-    class Meta:
+    class Meta(object):
         name = "application"
         objects = applications
 

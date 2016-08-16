@@ -45,7 +45,7 @@ class register(object):
     can be used as a decorator
     """
 
-    class Meta:
+    class Meta(object):
         name = "object"
         objects = {}
     

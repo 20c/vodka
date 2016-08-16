@@ -4,7 +4,6 @@ import click
 import vodka
 import vodka.config
 import vodka.config.configurator
-import types
 
 import munge.codec.all
 from munge import config as munge_config
