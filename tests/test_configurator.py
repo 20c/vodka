@@ -59,6 +59,31 @@ class TestConfigurator(unittest.TestCase):
         ])
        
  
+    def test_configurator_skip_defaults(self):
+        configurator = Configurator(None, skip_defaults=True)
+
+        cfg = {}
+        configurator.set_values(**{
+            "a" : "what",
+            "b" : "other",
+            "c" : "nope",
+            "d" : "nope",
+            "e.test.a" : "who",
+            "e.test.b" : "where"
+        })
+        configurator.configure(cfg, Handler)
+        self.assertEqual(cfg, {
+            "a" : "what", 
+            "b" : "something", 
+            "e" : {
+                "test" : { 
+                    "a" : "who",
+                    "b" : "else"
+                }
+            }
+        })
+
+
     def test_configurator_override_defaults(self):
         configurator = Configurator(None)
 
