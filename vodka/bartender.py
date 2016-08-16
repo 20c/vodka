@@ -63,6 +63,15 @@ def gen_config(config):
     dst = munge_config.parse_url(config)
     dst.cls().dumpu(vodka.config.instance, dst.url.path)
 
+    print vodka.config.instance
+    if configurator.action_required:
+        click.echo("")
+        click.echo("not all required values could be set by this script, please manually edit the config and set the following values")
+        click.echo("")
+        for item in configurator.action_required:
+            click.echo("- %s" % item)
+        click.echo("")
+
     click.echo("Config written to %s" % dst.url.path)
 
 

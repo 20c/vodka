@@ -9,6 +9,7 @@ class Handler(vodka.config.Handler):
     c = vodka.config.Attribute(list, default=[])
     d = vodka.config.Attribute(dict, default={})
     e = vodka.config.Attribute(dict, default={})
+    f = vodka.config.Attribute(dict, help_text="manually")
 
     @classmethod
     def configure_e(cls, configurator, cfg, path):
@@ -52,7 +53,12 @@ class TestConfigurator(unittest.TestCase):
                 }
             }
         })
+
+        self.assertEqual(configurator.action_required, [
+            "f: manually"
+        ])
        
+ 
     def test_configurator_override_defaults(self):
         configurator = Configurator(None)
 

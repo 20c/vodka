@@ -14,6 +14,7 @@ class Configurator(object):
 
     def __init__(self, plugin_manager):
         self.plugin_manager = plugin_manager
+        self.action_required = []
 
     def configure(self, cfg, handler, path=""):
         
@@ -32,6 +33,8 @@ class Configurator(object):
                 continue
             if not hasattr(attr.expected_type, "__iter__"):
                 cfg[name] = self.set(handler, attr, name, path)
+            elif attr.default is None and not hasattr(handler, "configure_%s" % name):
+                self.action_required.append(("%s.%s: %s" % (path, name, attr.help_text)).strip("."))
         
         # configure attributes that have complex handlers defined
         # on the config Handler class (class methods prefixed by
@@ -42,6 +45,11 @@ class Configurator(object):
             if hasattr(handler, "configure_%s" % name):
                 fn = getattr(handler, "configure_%s" % name)
                 fn(self, cfg, "%s.%s"% (path, name))
+                if hasattr(attr.expected_type, "__iter__") and not cfg.get(name):
+                    try:
+                        del cfg[name]
+                    except KeyError:
+                        pass
 
 
     def set(self, handler, attr, name, path):
