@@ -35,3 +35,36 @@ def dict_get_path(data, path, default=None):
         else:
             return default
     return data 
+
+
+class register(object):
+
+    """
+    allows you index a class in a register
+   
+    can be used as a decorator
+    """
+
+    class Meta:
+        name = "object"
+        objects = {}
+    
+    def __init__(self, handle):
+        
+        """
+        Args:
+            handle (str): unique class handle 
+
+        Raises:
+            KeyError: class with handle already exists"
+        """
+ 
+        if handle in self.Meta.objects:
+            raise KeyError("%s with handle '%s' already registered" % (self.Meta.name, handle))
+        self.handle = handle
+
+
+    def __call__(self, cls):
+        cls.handle = self.handle
+        self.Meta.objects[cls.handle] = cls
+        return cls

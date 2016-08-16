@@ -8,24 +8,16 @@ import sys
 import vodka.config 
 import vodka.log
 import vodka.component
+import vodka.util
 
 applications = {}
 
 # FUNCTIONS
 
-def register(cls):
-    """
-    Register an application.
-
-    Can be used as a decorator.
-
-    Args:
-        cls (class): the class to register as a vodka application
-    """
-
-    if cls.handle in applications:
-        raise KeyError("Application with handle '%s' already registered" % cls.handle)
-    applications[cls.handle] = cls
+class register(vodka.util.register):
+    class Meta:
+        name = "application"
+        objects = applications
 
 def get_application(handle):
     """

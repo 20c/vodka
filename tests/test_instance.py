@@ -3,17 +3,16 @@ import unittest
 import vodka.app
 import vodka.instance
 
+@vodka.app.register('app_a2')
 class AppA(vodka.app.Application):
-    handle = "app_a2"
     initialized = False
 
     def setup(self):
         self.initialized = True
-vodka.app.register(AppA)
 
+@vodka.app.register('app_b2')
 class AppB(vodka.app.Application):
-    handle = "app_b2"
-vodka.app.register(AppB)
+    pass
 
 APP_CONFIG = {
     "apps" : {

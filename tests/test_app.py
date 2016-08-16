@@ -1,11 +1,13 @@
 import unittest
 import vodka.app
 
+@vodka.app.register('app_a')
 class AppA(vodka.app.Application):
-    handle = "app_a"
+    pass
 
+@vodka.app.register('app_b')
 class AppB(vodka.app.Application):
-    handle = "app_b"
+    pass
 
 
 class TestApp(unittest.TestCase):
@@ -14,7 +16,9 @@ class TestApp(unittest.TestCase):
         vodka.app.register(AppA)
         assert vodka.app.applications.get("app_a") == AppA
         with self.assertRaises(KeyError):
-            vodka.app.register(AppA)
+            @vodka.app.register('app_a')
+            class AppC(vodka.app.Application):
+                pass
 
 
     def test_get_application(self):

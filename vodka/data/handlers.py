@@ -7,33 +7,15 @@ import vodka.config
 import vodka.component
 import vodka.storage
 import vodka.data.data_types
+import vodka.util
 
 handlers = {}
 
 
-class register(object):
-    """
-    Register a data handler with a unique handle name
-
-    Can be used as a decorator.
-    """
-
-    def __init__(self, name):
-        """
-        Args:
-            name (str): unique data handler name 
-
-        Raises:
-            KeyError: Data handler with name already exists
-        """
-        if name in handlers:
-            raise KeyError("Data handler name '%s' already exists" % name)
-        self.name = name
-
-    def __call__(self, cls):
-        cls.handle = self.name
-        handlers[self.name] = cls
-        return cls
+class register(vodka.util.register):
+    class Meta(object):
+        objects = handlers
+        name = "data handler"
 
 
 def get(handle):
