@@ -1,13 +1,20 @@
 from __future__ import absolute_import
-
-from flask import Flask, request
 import vodka.plugins.wsgi
 import vodka
+
+try:
+    from flask import Flask, request
+except ImportError:
+    Flask = None
 
 @vodka.plugin.register('flask')
 class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
 
     def init(self):
+        
+        if not Flask:
+            raise Exception("Flask could not be imported, make sure flask module is installed")
+
         # flask app
         flask_app = Flask(
             "__main__",
