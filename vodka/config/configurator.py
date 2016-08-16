@@ -10,11 +10,16 @@ class Configurator(object):
     Attributes:
         plugin_manager (PluginManager): plugin manager instance to use
             during plugin configuration
+        skip_defaults (bool): if True dont prompt for config variables
+            that have a default value assigned
+        action_required (list): will hold list of actions required after
+            configure call has been completed (if any)
     """
 
-    def __init__(self, plugin_manager):
+    def __init__(self, plugin_manager, skip_defaults=False):
         self.plugin_manager = plugin_manager
         self.action_required = []
+        self.skip_defaults = skip_defaults
 
     def configure(self, cfg, handler, path=""):
         
@@ -60,6 +65,8 @@ class Configurator(object):
 
         Also does validation on user input
         """
+
+        full_name = ("%s.%s" % (path, name)).strip(".")
         
         # obtain default value
         if attr.default is None:
@@ -68,9 +75,12 @@ class Configurator(object):
             try:
                 comp = vodka.component.Component()
                 default = handler.default(name, inst=comp)
+                if self.skip_defaults:
+                    self.echo("%s: %s [default]" % (full_name, default))
+                    return default
             except Exception:
                 raise
-        
+
         # render explanation
         self.echo("")
         self.echo(attr.help_text)
@@ -83,9 +93,10 @@ class Configurator(object):
         while not b:
             try:
                 if type(attr.expected_type) == type:
-                    r = self.prompt(("%s.%s" % (path, name)).strip("."), default=default, type=attr.expected_type)
+                    r = self.prompt(full_name, default=default, type=attr.expected_type)
+                    r = attr.expected_type(r)
                 else:
-                    r = self.prompt(("%s.%s" % (path, name)).strip("."), default=default, type=str)
+                    r = self.prompt(full_name, default=default, type=str)
             except ValueError:
                 self.echo("Value expected to be of type %s"% attr.expected_type)
             try:

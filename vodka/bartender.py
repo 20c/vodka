@@ -14,7 +14,7 @@ def options(f):
     Shared options, used by all bartender commands
     """
 
-    f = click.option('--config', envvar='VODKA_HOME', default=click.get_app_dir('vodka'))(f)
+    f = click.option('--config', envvar='VODKA_HOME', default=click.get_app_dir('vodka'), help="location of config file")(f)
     return f
 
 @click.group()
@@ -44,7 +44,8 @@ def check_config(config):
 
 @bartender.command()
 @options
-def config(config):
+@click.option('--skip-defaults/--no-skip-defaults', default=False, help="skip config variables that have a default value")
+def config(config, skip_defaults):
     """
     Generates configuration file from config specifications
     """
@@ -59,7 +60,11 @@ def config(config):
         def prompt(self, *args, **kwargs):
             return click.prompt(*args, **kwargs)
 
-    configurator = ClickConfigurator(vodka.plugin)
+    configurator = ClickConfigurator(
+        vodka.plugin, 
+        skip_defaults=skip_defaults
+    )
+
     configurator.configure(vodka.config.instance, vodka.config.InstanceHandler)
     
     try:
@@ -74,7 +79,6 @@ def config(config):
 
     dst.cls().dumpu(vodka.config.instance, dst.url.path)
 
-    print vodka.config.instance
     if configurator.action_required:
         click.echo("")
         click.echo("not all required values could be set by this script, please manually edit the config and set the following values")
