@@ -81,7 +81,7 @@ def init(config, rawConfig):
 
     for pcfg in cfg["plugins"]:
         p_name = pcfg.get("name", pcfg.get("type"))
-        p = plugin.get_instance(pcfg)
+        p = plugin.get_instance(p_name)
         
         p.setup()
 
