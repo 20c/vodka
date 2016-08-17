@@ -145,7 +145,13 @@ class Handler(object):
             for k in keys:
                 if not hasattr(value[k], "__iter__"):
                     continue
-                h = getattr(attr.handler(k, value[k]), "Configuration", None)
+                handler = attr.handler(k, value[k])
+                if issubclass(handler, Handler):
+                    h = handler
+                else:
+                    h = getattr(handler, "Configuration", None)
+
+                #h = getattr(attr.handler(k, value[k]), "Configuration", None)
                 if h:
                     if type(k) == int and type(value[k]) == dict and value[k].get("name"):
                         _path = "%s.%s" % (
