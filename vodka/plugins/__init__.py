@@ -70,6 +70,9 @@ class TimedPlugin(PluginBase):
     def start(self):
         self.run()
 
+    def stop(self):
+        self.run_level = 0
+
     def work(self):
         pass
 
