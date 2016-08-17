@@ -80,13 +80,14 @@ def init(config, rawConfig):
     thread_workers = []
 
     for pcfg in cfg["plugins"]:
-        p = plugin.get_instance(pcfg["name"])
+        p_name = pcfg.get("name", pcfg.get("type"))
+        p = plugin.get_instance(pcfg)
         
         p.setup()
 
         if pcfg.get("start_manual", False):
             continue
-        vodka.log.debug("starting %s .." % pcfg["name"])
+        vodka.log.debug("starting %s .." % p_name)
         async = pcfg.get("async", "thread")
 
         if hasattr(p, "worker"):
