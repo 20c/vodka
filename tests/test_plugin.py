@@ -44,9 +44,11 @@ class TestTimedPlugin(unittest.TestCase):
             "interval" : 0.01
         })
         vodka.start(thread_workers=[plugin])
-        time.sleep(0.051)
+        time.sleep(0.05)
+        plugin.stop()
 
-        self.assertEqual(plugin.counter, 6)
+        self.assertGreater(plugin.counter, 3)
+        self.assertLess(plugin.counter, 7)
 
 
 class TestDataPlugin(unittest.TestCase):
