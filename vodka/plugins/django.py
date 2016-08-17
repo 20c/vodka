@@ -13,6 +13,8 @@ class DjangoPlugin(vodka.plugins.PluginBase):
     """
     This plugin allows you to use the django ORM in your
     vodka application
+
+    Supports django >= 1.8.14
     """
 
     class Configuration(vodka.plugins.PluginBase.Configuration):
