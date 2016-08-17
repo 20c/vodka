@@ -6,6 +6,19 @@ import vodka.exceptions as exc
 def validator(value):
     return value < 5, "needs to be smaller than 5"
 
+class ListHandler(vodka.config.Handler):
+    a = vodka.config.Attribute(int, default=1, help_text="lh:a")
+    b = vodka.config.Attribute(int, help_text="lh:b")
+
+class DictHandler(vodka.config.Handler):
+    a = vodka.config.Attribute(int, default=1, help_text="dh:a")
+    b = vodka.config.Attribute(int, help_text="dh:b")
+
+class DictHandlerProxy(vodka.component.Component):
+    class Configuration(vodka.config.Handler):
+      a = vodka.config.Attribute(int, default=1, help_text="dh:a")
+      b = vodka.config.Attribute(int, help_text="dh:b")
+
 class ConfigHandler(vodka.config.Handler):
     a = vodka.config.Attribute(int, default=1, help_text="ht:a")
     b = vodka.config.Attribute(int, help_text="ht:b")
@@ -14,10 +27,18 @@ class ConfigHandler(vodka.config.Handler):
     f = vodka.config.Attribute(validator, default=1, help_text="ht:f")
     g = vodka.config.Attribute(int, default=lambda x,i: getattr(i,"default_g"), help_text="ht:g")
     h = vodka.config.Attribute(int, default=1, prepare=[lambda x:x+1])
+    i = vodka.config.Attribute(int, default=1)
+    j = vodka.config.Attribute(list, default=[], handler=lambda x,y: ListHandler)
+    k = vodka.config.Attribute(dict, default={}, handler=lambda x,y: DictHandler)
+    l = vodka.config.Attribute(dict, default={}, handler=lambda x,y: DictHandlerProxy)
     
     @classmethod
     def validate_e(self, value):
         return value < 5, "needs to be smaller than 5"
+    
+    @classmethod
+    def prepare_i(self, value, config=None):
+        return value + 1
 
 class TestConfig(unittest.TestCase):
 
@@ -27,6 +48,46 @@ class TestConfig(unittest.TestCase):
         cfg = {"h" : 1, "b": 1}
         c,w = ConfigHandler.validate(cfg)
         self.assertEqual(cfg["h"], 2)
+
+    def test_prepare_via_handler(self):
+        cfg = {"i" : 1, "b": 1}
+        c,w = ConfigHandler.validate(cfg)
+        self.assertEqual(cfg["i"], 2)
+
+    def test_nested_validation(self):
+        
+        # should pass validation
+        cfg = {"b":1, "j":[{"a":1, "b":1}]}
+        c,w = ConfigHandler.validate(cfg)
+        self.assertEqual(c, 0)
+        self.assertEqual(w, 0)
+        
+        # should detect b missing from list element
+        cfg = {"b":1, "j":[{"a":1}]}
+        c,w = ConfigHandler.validate(cfg)
+        self.assertEqual(c, 1)
+        self.assertEqual(w, 0)
+
+        # should detect b missing from dict element
+        cfg = {"b":1, "k":{"1":{"a":1}}}
+        c,w = ConfigHandler.validate(cfg)
+        self.assertEqual(c, 1)
+        self.assertEqual(w, 0)
+
+        # should detect b value mismatch in list element 
+        cfg = {"b":1, "j":[{"a":1,"b":"z"}]}
+        c,w = ConfigHandler.validate(cfg)
+        self.assertEqual(c, 1)
+        self.assertEqual(w, 0)
+
+        # should detect b missing from dict element and a value mismatch
+        cfg = {"b":1, "l":{"1":{"a":"z"}}}
+        c,w = ConfigHandler.validate(cfg)
+        self.assertEqual(c, 2)
+        self.assertEqual(w, 0)
+
+
+
 
     def test_validation(self):
         
