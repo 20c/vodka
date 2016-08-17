@@ -4,6 +4,7 @@ of these.
 """
 
 import sys
+import imp
 
 import vodka.config 
 import vodka.log
@@ -11,6 +12,7 @@ import vodka.component
 import vodka.util
 
 applications = {}
+loaded_paths = []
 
 # FUNCTIONS
 
@@ -45,8 +47,10 @@ def load(app_home):
         app_home (str): path to application home directory, expected to
             contain application.py file
     """
-    sys.path.append(app_home)
-    import application
+    if app_home in loaded_paths:
+        return
+    imp.load_source("application", "%s/application.py" % app_home)
+    loaded_paths.append(app_home)
 
 
 # CLASSES
