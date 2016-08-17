@@ -8,6 +8,17 @@ import vodka.config.configurator
 import munge.codec.all
 from munge import config as munge_config
 
+class ClickConfigurator(vodka.config.configurator.Configurator):
+    """
+    Configurator class with prompt and echo wired to click
+    """
+    def echo(self, msg):
+        click.echo(msg)
+
+    def prompt(self, *args, **kwargs):
+        return click.prompt(*args, **kwargs)
+
+
 def options(f):
     """
     Shared options, used by all bartender commands
@@ -31,7 +42,9 @@ def check_config(config):
     values in general
     """
 
+
     cfg = vodka.config.Config(read=config)
+
     vodka.log.set_loggers(cfg.get("logging"))
     vodka.load(cfg.get("home","."))
 
@@ -41,6 +54,7 @@ def check_config(config):
 
     click.echo("%d config ERRORS, %d config WARNINGS" % (num_crit, num_warn))
 
+
 @bartender.command()
 @options
 @click.option('--skip-defaults/--no-skip-defaults', default=False, help="skip config variables that have a default value")
@@ -48,16 +62,6 @@ def config(config, skip_defaults):
     """
     Generates configuration file from config specifications
     """
-
-    class ClickConfigurator(vodka.config.configurator.Configurator):
-        """
-        Configurator class with prompt and echo wired to click
-        """
-        def echo(self, msg):
-            click.echo(msg)
-
-        def prompt(self, *args, **kwargs):
-            return click.prompt(*args, **kwargs)
 
     configurator = ClickConfigurator(
         vodka.plugin, 
