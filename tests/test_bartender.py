@@ -113,7 +113,9 @@ class TestBartender(unittest.TestCase):
                 }
             ]
         }
-        self.assertEqual(expected.keys(), cfg.data.keys())
+        self.assertEqual("home" in cfg.data, True)
+        self.assertEqual("apps" in cfg.data, True)
+        self.assertEqual("plugins" in cfg.data, True)
         self.assertEqual(expected["home"], cfg.data["home"])
         # note: because other tests may register applications we
         # cannot directly compare the entire content of "apps"
