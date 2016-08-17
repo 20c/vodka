@@ -17,8 +17,8 @@ class TimedPlugin(vodka.plugins.TimedPlugin):
 
 
 CONFIG = {
-    # applications for this test be loaded from appdir/application.py
-    "home" : os.path.join(os.path.dirname(__file__), "appdir"),
+    # applications for this test be loaded from resources/appdir/application.py
+    "home" : os.path.join(os.path.dirname(__file__), "resources/appdir"),
     "apps" : {
         "test_start_app" : {
             "enabled" : True
