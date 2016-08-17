@@ -5,6 +5,7 @@
 ### Added
 - django orm plugin, allows you to use django's orm in your vodka application
 - plugin setup method that is called right before plugin is started
+- many more unittests
 
 ### Fixed
 
