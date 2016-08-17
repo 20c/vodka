@@ -1,4 +1,5 @@
 import os.path
+import time
 import unittest
 import vodka
 import vodka.plugins
@@ -71,6 +72,9 @@ class TestStart(unittest.TestCase):
         self.assertEqual(plugin.setup_done, True)
   
         vodka.start(**r)
+
+        # give some time for startup to complete
+        time.sleep(0.25)
         
         # make sure plugin is running
         self.assertEqual(plugin.run_level, 1)
