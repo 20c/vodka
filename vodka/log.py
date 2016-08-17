@@ -1,5 +1,29 @@
 import logging.config
 
+def default_config(level="DEBUG"):
+    return {
+        "version" : 1,
+        "formatters" : {
+            "simple" : {
+                "format" : "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
+             }
+        },
+        "handlers" : {
+            "console" : {
+                "class" : "logging.StreamHandler",
+                "level" : level.upper(),
+                "formatter" : "simple",
+                "stream" : "ext://sys.stdout"
+            }
+        },
+        "loggers" : {
+            "vodka" : {
+                "level" : level.upper(),
+                "handlers" : ["console"]
+            }
+        }
+    }
+    
 def log():
     """Return the default logger set up for vodka"""
     return logging.getLogger("vodka")
