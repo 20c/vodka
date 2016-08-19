@@ -3,8 +3,12 @@ Vodka application foundation classes. Each vodka app should extend one
 of these.
 """
 
+import os
 import sys
-import imp
+import importlib
+import inspect
+
+import pluginmgr
 
 import vodka.config 
 import vodka.log
@@ -39,18 +43,31 @@ def get_application(handle):
         return applications.get(handle)
     raise KeyError("Application with handle '%s' not registered" % handle)
 
-def load(app_home):
-    """ 
-    load applications located in path specified by app_home 
 
-    Args:
-        app_home (str): path to application home directory, expected to
-            contain application.py file
-    """
-    if app_home in loaded_paths:
-        return
-    imp.load_source("application", "%s/application.py" % app_home)
-    loaded_paths.append(app_home)
+def load(name, cfg):
+
+    mod = None
+
+    if not cfg.get("module") and not cfg.get("home"):
+        cfg["module"] = name
+    
+    if cfg.get("module"):
+        mod = importlib.import_module("%s.application" % cfg.get("module"))
+        print "MOD", mod
+        cfg["home"] = os.path.dirname(inspect.getfile(mod))
+    elif cfg.get("home"):
+        if cfg.get("home") not in loaded_paths:
+            imphook = vodka.util.SearchPathImporter(name, cfg["home"], True)
+            sys.meta_path.append(imphook)
+            mod = importlib.import_module("%s.application" % name)
+            loaded_paths.append(cfg.get("home"))
+    else:
+        raise KeyError("app config needs to contain 'home' or 'module' key")
+
+
+def load_all(cfg):
+    for name, app_cfg in cfg.get("apps", {}).items():
+        load(name, app_cfg)
 
 
 # CLASSES
@@ -65,6 +82,18 @@ class Application(vodka.component.Component):
     """
 
     handle = "base"
+
+    class Configuration(vodka.component.Component.Configuration):
+        home = vodka.config.Attribute(
+            vodka.config.validators.path,
+            default=".",
+            help_text="absolute path to this application. ignore this if application is to be loaded from an installed python module."
+        )
+        module = vodka.config.Attribute(
+            str,
+            default="",
+            help_text="app is contained in this module (pip installed application) - will override any value specified in 'home'."
+        )
 
     def __init__(self, config=None, config_dir=None):
         
