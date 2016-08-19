@@ -4,10 +4,17 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 2.0.3
+
+### Added
 - bartender command: 'newapp', generates a blank vodka application stucture
 - util.SearchPathImporter for vodka application loading
-
-### Fixed
 
 ### Changed
 - refactored app loading to allow each app to have a separate home location
@@ -18,10 +25,6 @@
 
 ### Deprecated
 - home config variable in vodka config root, replaced by app home
-
-### Removed
-
-### Security
 
 ## 2.0.2 
 
@@ -38,9 +41,3 @@
 ### Changed
 - plugins are now instantiated before applications
 - vodka.app.register now a decorator
-
-### Deprecated
-
-### Removed
-
-### Security
