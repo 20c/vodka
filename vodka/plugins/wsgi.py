@@ -1,3 +1,4 @@
+import os 
 from vodka import get_instance
 import vodka.plugins
 import vodka.config
@@ -31,23 +32,17 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             default=False
         )
 
-        static_url_path = vodka.config.Attribute(
-            str,
-            default="/static",
-            help_text="url path where static files can be requested from"
-        )
-
-        static_folder = vodka.config.Attribute(
-            vodka.config.validators.path,
-            help_text="location of static files",
-            default=lambda x, i: i.resource("static")
-        )
-
         server = vodka.config.Attribute(
             str,
             help_text="specify which wsgi server should be used",
             default="self",
             choices=["uwsgi", "self", "gevent"]
+        )
+
+        static_url_path = vodka.config.Attribute(
+            str,
+            default="/static",
+            help_text="url path where static files can be requested from"
         )
 
         routes = vodka.config.Attribute(
@@ -61,6 +56,9 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         WSGIPlugin.wsgi_application = app
 
     def setup(self):
+        self.static_url_prefixes = {}
+        for name, app in vodka.instances.items():
+            self.static_url_prefixes[name] = self.static_url_prefix(name)
         self.set_routes()
 
     def set_server(self, wsgi_app, fnc_serve=None):
@@ -119,15 +117,26 @@ class WSGIPlugin(vodka.plugins.PluginBase):
     def set_route(self, path, target, methods=None):
         pass
 
+    def static_url_prefix(self, app_name):
+        return os.path.join(self.get_config("static_url_path"), app_name, "")
+
     def request_env(self, req=None, **kwargs):
         renv = {
-            "static_url": "%s/" % self.get_config("static_url_path"),
             "request": req
         }
+        for name, app in vodka.instances.items():
+            appenv = {"static_url" : self.static_url_prefixes.get(name, "")}
+            renv[name] = appenv
         renv.update(**kwargs)
         return renv
+    
+    def set_static_routes(self):
+        pass
 
     def set_routes(self):
+        
+        self.set_static_routes()
+
         for path, target in self.get_config("routes").items():
 
             if type(target) == str:
