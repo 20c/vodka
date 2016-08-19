@@ -27,8 +27,14 @@ class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
     """
     
     values = [
-        # home
+        # add application,
+        "test_bartender_app",
+        # application home,
         HOME,
+        # application from module,
+        "",
+        # dont add another application
+        "skip",
         # add plugin type
         "test_bartender_a",
         # dont add another plugin
@@ -40,7 +46,7 @@ class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
             self.counter = 0
         
         # default value is provided, use that
-        if default and default != "skip":
+        if default and default != "skip" and default!="." and default != "":
             return default
         
         r = self.values[self.counter]
@@ -84,8 +90,7 @@ class TestBartender(unittest.TestCase):
 
         # create config to check, this should always validate
         self.config_file.write(json.dumps({
-            "logging" : vodka.log.default_config(),
-            "home" : HOME
+            "logging" : vodka.log.default_config()
         }))
         
         # run check_config
@@ -109,15 +114,20 @@ class TestBartender(unittest.TestCase):
         # run config (this will use SimPrompt
         r = self.cli.invoke(vodka.bartender.config, ["--config=%s/config.json" % str(self.tmpdir)])
 
+        vodka.log.set_loggers(vodka.log.default_config())
+
         # assert no errors
         self.assertEqual(r.exit_code, 0)
 
         cfg = vodka.config.Config(read=str(self.tmpdir))
-        print cfg.data
+
         expected = {
-            'home': HOME, 
             'apps': {
-                'test_bartender_app': {'enabled': True}
+                'test_bartender_app': {
+                    'enabled': True,
+                    'home': HOME,
+                    'module': ''
+                }
             }, 
             'plugins': [
                 {
@@ -128,10 +138,8 @@ class TestBartender(unittest.TestCase):
                 }
             ]
         }
-        self.assertEqual("home" in cfg.data, True)
         self.assertEqual("apps" in cfg.data, True)
         self.assertEqual("plugins" in cfg.data, True)
-        self.assertEqual(expected["home"], cfg.data["home"])
         # note: because other tests may register applications we
         # cannot directly compare the entire content of "apps"
         self.assertEqual(expected["apps"]["test_bartender_app"], cfg.data["apps"]["test_bartender_app"])

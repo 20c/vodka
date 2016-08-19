@@ -17,14 +17,17 @@ class TimedPlugin(vodka.plugins.TimedPlugin):
         self.counter += 1
 
 
+HOME = os.path.join(os.path.dirname(__file__), "resources/appdir")
+
 CONFIG = {
     # applications for this test be loaded from resources/appdir/application.py
-    "home" : os.path.join(os.path.dirname(__file__), "resources/appdir"),
     "apps" : {
         "test_start_app" : {
+            "home": HOME,
             "enabled" : True
         },
         "test_start_app_inactive" : {
+            "home": HOME,
             "enabled" : False
         }
     },
