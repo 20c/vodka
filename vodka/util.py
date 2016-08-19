@@ -1,7 +1,3 @@
-import pluginmgr 
-import imp
-import sys
-
 def dict_get_path(data, path, default=None):
     """
     Returns the value inside nested structure of data located
