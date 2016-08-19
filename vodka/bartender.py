@@ -1,5 +1,7 @@
 import os
 import os.path
+import inspect
+import shutil
 import click
 import vodka
 import vodka.config
@@ -7,6 +9,8 @@ import vodka.config.configurator
 
 import munge.codec.all
 from munge import config as munge_config
+
+VODKA_INSTALL_DIR = os.path.dirname(inspect.getfile(vodka))
 
 class ClickConfigurator(vodka.config.configurator.Configurator):
     """
@@ -91,6 +95,28 @@ def config(config, skip_defaults):
         click.echo("")
 
     click.echo("Config written to %s" % dst.url.path)
+
+
+
+@bartender.command()
+@click.option('--path', type=click.Path(), default=".", help="generate app files to this location")
+def newapp(path):
+    """
+    Generates all files for a new vodka app at the specified location.
+
+    Will generate to current directory if no path is specified
+    """
+
+    app_path = os.path.join(VODKA_INSTALL_DIR, "resources", "blank_app")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    elif os.path.exists(os.path.join(path, "application.py")):
+        click.error("There already exists a vodka app at %s, please specify a different path" % path)
+    os.makedirs(os.path.join(path, "plugins"))
+    shutil.copy(os.path.join(app_path, "application.py"), os.path.join(path, "application.py"))
+    shutil.copy(os.path.join(app_path, "plugins", "example.py"), os.path.join(path, "plugins", "example.py"))
+
+
 
 
 @bartender.command()

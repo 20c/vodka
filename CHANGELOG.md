@@ -4,6 +4,7 @@
 ## [Unreleased]
 
 ### Added
+- bartender command: 'newapp', generates a blank vodka application stucture
 
 ### Fixed
 
