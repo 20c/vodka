@@ -28,6 +28,7 @@ CONFIG = {
         },
         "test_start_app_inactive" : {
             "home": HOME,
+            "module" : "test_start_app",
             "enabled" : False
         }
     },
