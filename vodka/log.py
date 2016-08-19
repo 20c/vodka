@@ -1,6 +1,6 @@
 import logging.config
 
-def default_config(level="DEBUG"):
+def default_config(level="DEBUG", name="vodka"):
     return {
         "version" : 1,
         "formatters" : {
@@ -17,7 +17,7 @@ def default_config(level="DEBUG"):
             }
         },
         "loggers" : {
-            "vodka" : {
+            name : {
                 "level" : level.upper(),
                 "handlers" : ["console"]
             }
