@@ -53,12 +53,10 @@ def load(name, cfg):
     
     if cfg.get("module"):
         mod = importlib.import_module("%s.application" % cfg.get("module"))
-        print "MOD", mod
         cfg["home"] = os.path.dirname(inspect.getfile(mod))
     elif cfg.get("home"):
         if cfg.get("home") not in loaded_paths:
-            imphook = vodka.util.SearchPathImporter(name, cfg["home"], True)
-            sys.meta_path.append(imphook)
+            sys.path.append(os.path.split(cfg.get("home").rstrip("/"))[0])
             mod = importlib.import_module("%s.application" % name)
             loaded_paths.append(cfg.get("home"))
     else:
