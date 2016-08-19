@@ -24,7 +24,6 @@ class TestWSGI(unittest.TestCase):
     
     @classmethod
     def setUp(cls):
-        vodka.config.instance["home"] = "."
         cls.plugin = vodka.plugin.get_instance({
             "type" : "wsgi_test"
         })
@@ -42,6 +41,7 @@ class TestWSGI(unittest.TestCase):
         vodka.instance.instantiate({
             "apps" : {
                 "wsgi_test_app" : {
+                    "home" : ".",
                     "enabled" : True
                 }
             }
@@ -54,7 +54,6 @@ class TestWSGI(unittest.TestCase):
         self.assertEqual(self.plugin.get_config('host'), "localhost")
         self.assertEqual(self.plugin.get_config('port'), 80)
         self.assertEqual(self.plugin.get_config('static_url_path'), '/static')
-        self.assertEqual(self.plugin.get_config('static_folder'), './static')
         self.assertEqual(self.plugin.get_config('server'), 'self')
         self.assertEqual(self.plugin.get_config('routes'), {})
 
@@ -65,15 +64,13 @@ class TestWSGI(unittest.TestCase):
 
     def test_request_env(self):
         req = object()
+        self.plugin.setup()
         env = self.plugin.request_env(req=req, something="other")
-        self.assertEqual(
-            env,
-            {
-                "static_url" : "%s/" % self.plugin.get_config("static_url_path"),
-                "request" : req,
-                "something" : "other"
-            }
-        )
+        self.assertEqual(env["wsgi_test_app"], {
+            "static_url" : "/static/wsgi_test_app/"
+        })
+        self.assertEqual(env["request"], req)
+        self.assertEqual(env["something"], "other")
 
 
     def test_set_routes(self):

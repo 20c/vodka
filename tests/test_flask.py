@@ -9,7 +9,6 @@ class TestFlask(unittest.TestCase):
     
     @classmethod
     def setUp(cls):
-        vodka.config.instance["home"] = "."
         cls.plugin = vodka.plugin.get_instance({
             "type" : "flask",
             "name" : "flask"
@@ -24,7 +23,6 @@ class TestFlask(unittest.TestCase):
         self.assertEqual(
             {
                 "request" : request,
-                "static_url" : "/static/",
                 "something" : "else"
             },
             env
