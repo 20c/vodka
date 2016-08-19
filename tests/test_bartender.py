@@ -12,7 +12,7 @@ import vodka
 
 from click.testing import CliRunner
 
-HOME =  os.path.join(os.path.dirname(__file__), "resources", "bartender")
+HOME =  os.path.join(os.path.dirname(__file__), "resources", "test_bartender_app")
 
 @vodka.plugin.register('test_bartender_a')
 class Plugin(vodka.plugins.PluginBase):
