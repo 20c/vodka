@@ -57,7 +57,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
     def setup(self):
         self.static_url_prefixes = {}
-        for name, app in vodka.instances.items():
+        for name in vodka.instances.keys():
             self.static_url_prefixes[name] = self.static_url_prefix(name)
         self.set_routes()
 
@@ -124,7 +124,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         renv = {
             "request": req
         }
-        for name, app in vodka.instances.items():
+        for name in vodka.instances.keys():
             appenv = {"static_url" : self.static_url_prefixes.get(name, "")}
             renv[name] = appenv
         renv.update(**kwargs)
