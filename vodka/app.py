@@ -49,15 +49,18 @@ def load(name, cfg):
     mod = None
 
     if not cfg.get("module") and not cfg.get("home"):
-        cfg["module"] = name
+        cfg["module"] = "%s.application" % name
     
-    if cfg.get("module"):
-        mod = importlib.import_module("%s.application" % cfg.get("module"))
+    if cfg.get("module") and not cfg.get("home"):
+        mod = importlib.import_module(cfg.get("module"))
         cfg["home"] = os.path.dirname(inspect.getfile(mod))
     elif cfg.get("home"):
         if cfg.get("home") not in loaded_paths:
             sys.path.append(os.path.split(cfg.get("home").rstrip("/"))[0])
-            mod = importlib.import_module("%s.application" % name)
+            if cfg.get("module"):
+                mod = importlib.import_module(cfg.get("module"))
+            else:
+                mod = importlib.import_module("%s.application" % name)
             loaded_paths.append(cfg.get("home"))
     else:
         raise KeyError("app config needs to contain 'home' or 'module' key")
@@ -85,12 +88,12 @@ class Application(vodka.component.Component):
         home = vodka.config.Attribute(
             vodka.config.validators.path,
             default=".",
-            help_text="absolute path to this application. ignore this if application is to be loaded from an installed python module."
+            help_text="absolute path to application directory. you can ignore this if application is to be loaded from an installed python package."
         )
         module = vodka.config.Attribute(
             str,
             default="",
-            help_text="app is contained in this module (pip installed application) - will override any value specified in 'home'."
+            help_text="name of the python module containing this application (usually <namespace>.application)"
         )
 
     def __init__(self, config=None, config_dir=None):
