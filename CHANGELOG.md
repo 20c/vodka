@@ -5,9 +5,14 @@
 
 ### Added
 ### Fixed
+- module name specified in application config is now always respected
+- newapp command will now create an __init__.py file
+
 ### Changed
 ### Deprecated
 ### Removed
+- util.SearchPathImporter as it was redundant
+
 ### Security
 
 ## 2.0.3
