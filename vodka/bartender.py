@@ -115,6 +115,7 @@ def newapp(path):
         click.error("There already exists a vodka app at %s, please specify a different path" % path)
     os.makedirs(os.path.join(path, "plugins"))
     shutil.copy(os.path.join(app_path, "application.py"), os.path.join(path, "application.py"))
+    shutil.copy(os.path.join(app_path, "__init__.py"), os.path.join(path, "__init__.py"))
     shutil.copy(os.path.join(app_path, "plugins", "example.py"), os.path.join(path, "plugins", "example.py"))
 
 
