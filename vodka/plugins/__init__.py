@@ -40,6 +40,9 @@ class PluginBase(vodka.component.Component, pluginmgr.PluginBase):
             help_text="plugin instance name, needs to be unique"
         )
 
+    def __init__(self, config, *args, **kwargs):
+        pluginmgr.PluginBase.__init__(self, config, *args, **kwargs)
+
     def init(self):
         """ executed during plugin initialization, app instances not available yet """
         pass

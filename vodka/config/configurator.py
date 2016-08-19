@@ -37,7 +37,7 @@ class Configurator(object):
             if cfg.get(name) is not None:
                 continue
             if not hasattr(attr.expected_type, "__iter__"):
-                cfg[name] = self.set(handler, attr, name, path)
+                cfg[name] = self.set(handler, attr, name, path, cfg)
             elif attr.default is None and not hasattr(handler, "configure_%s" % name):
                 self.action_required.append(("%s.%s: %s" % (path, name, attr.help_text)).strip("."))
         
@@ -57,7 +57,7 @@ class Configurator(object):
                         pass
 
 
-    def set(self, handler, attr, name, path):
+    def set(self, handler, attr, name, path, cfg):
         
         """
         Obtain value for config variable, by prompting the user
@@ -73,7 +73,7 @@ class Configurator(object):
             default = None
         else:
             try:
-                comp = vodka.component.Component()
+                comp = vodka.component.Component(cfg)
                 default = handler.default(name, inst=comp)
                 if self.skip_defaults:
                     self.echo("%s: %s [default]" % (full_name, default))

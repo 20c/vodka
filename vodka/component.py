@@ -20,10 +20,13 @@ class Component(vodka.log.LoggerMixin):
     class Configuration(vodka.config.ComponentHandler):
         pass
 
+    def __init__(self, config):
+        self.config = config
+
     @property
     def home(self):
         """ absolute path to the project home directory """
-        return vodka.config.instance.get("home")
+        return self.get_config('home')
 
     def get_config(self, key_name):
         """
@@ -38,7 +41,9 @@ class Component(vodka.log.LoggerMixin):
             class specified inside this component
 
         """
-        return self.config.get(key_name, self.Configuration.default(key_name, inst=self))
+        if key_name in self.config:
+            return self.config.get(key_name)
+        return self.Configuration.default(key_name, inst=self)
 
     def resource(self, path):
         """
