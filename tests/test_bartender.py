@@ -59,8 +59,23 @@ class TestBartender(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def setup(self, tmpdir):
         self.tmpdir = tmpdir
+        self.appdir = tmpdir.mkdir("app")
         self.config_file = tmpdir.join("config.json")
         self.cli = CliRunner()
+
+    def test_newapp(self):
+        """
+        Tests the newapp command which should generate a blank app
+        structure at the provided directory
+        """
+        
+        p = str(self.appdir)
+        r = self.cli.invoke(vodka.bartender.newapp, ["--path=%s" % p])
+
+        self.assertEqual(r.exit_code, 0)
+
+        self.assertEqual(os.path.exists(os.path.join(p, "application.py")), True)
+        self.assertEqual(os.path.exists(os.path.join(p, "plugins", "example.py")), True)
 
     def test_check_config(self):
         """
