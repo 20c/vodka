@@ -4,6 +4,7 @@ import inspect
 import shutil
 import click
 import vodka
+import vodka.app
 import vodka.config
 import vodka.config.configurator
 
@@ -50,7 +51,7 @@ def check_config(config):
     cfg = vodka.config.Config(read=config)
 
     vodka.log.set_loggers(cfg.get("logging"))
-    vodka.load(cfg.get("home","."))
+    vodka.app.load_all(cfg)
 
     click.echo("Checking config at %s for errors ..." % config)
 

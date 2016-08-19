@@ -15,14 +15,6 @@ raw = {}
 instance = {
 }
 
-def prepare_home_path(value):
-    paths = {
-        "site_packages": os.path.join(os.path.dirname(os.__file__), "site-packages"),
-        "home" : instance["home"]
-    }
-    return value.format(**paths)
-
-
 class Attribute(object):
 
     """
@@ -288,10 +280,6 @@ class InstanceHandler(Handler):
         help_text="Data type configuration",
         default=[]
     )
-    home = Attribute(
-        validators.path,
-        help_text="Path to application base directory"
-    )
     logging = Attribute(
         dict, help_text="Python logger configuration", default={"version": 1})
 
@@ -319,17 +307,23 @@ class InstanceHandler(Handler):
 
     @classmethod
     def configure_apps(cls, configurator, cfg, path):
-        vodka.app.load(instance.get("home"))
-
+        configurator.echo("")
+        configurator.echo("Configure applications")
+        configurator.echo("")
+ 
         if "apps" not in cfg:
             cfg["apps"] = {}
- 
-        for name, app in vodka.app.applications.items():
-            configurator.echo("")
-            configurator.echo("Configure application: %s" % name)
+
+        name = configurator.prompt("Add application (name)", default="skip")
+        while name != "skip":
             app_cfg = {}
-            configurator.configure(app_cfg, app.Configuration, path="%s.%s" % (path, name))
+            configurator.configure(app_cfg, vodka.app.Application.Configuration, path="%s.%s" % (path,name))
+            vodka.app.load(name, app_cfg)
+            app = vodka.app.get_application(name)
+            configurator.configure(app_cfg, app.Configuration, path="%s.%s" % (path,name))
             cfg["apps"][name] = app_cfg
+            name = configurator.prompt("Add application (name)", default="skip")
+
 
 class Config(munge.Config):
     defaults = {

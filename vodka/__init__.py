@@ -9,7 +9,7 @@ from vodka.instance import (
 )
 
 from vodka.app import (
-    load,
+    load_all,
     applications,
     get_application
 )
@@ -40,13 +40,6 @@ def init(config, rawConfig):
     # set up loggers
     vodka.log.set_loggers(cfg.get("logging", {}))
 
-    if "home" not in cfg:
-        raise KeyError(
-            "Need to specify vodka application home in config 'home' variable")
-
-    vodka.config.instance["home"] = cfg[
-        "home"] = vodka.config.prepare_home_path(cfg["home"])
-
     # instantiate data types
     vodka.log.debug("instantiating data types")
     vodka.data.data_types.instantiate_from_config(cfg.get("data", []))
@@ -54,11 +47,9 @@ def init(config, rawConfig):
     # instantiate plugins
     vodka.log.debug("instantiating plugins")
     plugin.instantiate(cfg["plugins"])
-
-    # import main application
-    app_home = cfg.get("home")
-    vodka.log.debug("importing app from: %s" % app_home)
-    load(app_home)
+    
+    # import applications
+    load_all(cfg)
 
     # instantiate vodka applications
     vodka.log.debug("instantiating applications")
