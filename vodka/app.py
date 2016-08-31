@@ -87,7 +87,7 @@ class Application(vodka.component.Component):
     class Configuration(vodka.component.Component.Configuration):
         home = vodka.config.Attribute(
             vodka.config.validators.path,
-            default=".",
+            default="",
             help_text="absolute path to application directory. you can ignore this if application is to be loaded from an installed python package."
         )
         module = vodka.config.Attribute(
