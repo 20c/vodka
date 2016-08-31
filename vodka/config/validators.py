@@ -12,4 +12,6 @@ import os
 
 def path(value):
     """ Validates that the value is an existing path """
+    if not value:
+        return (True, "")
     return (os.path.exists(value), "path does not exist: %s" % value)
