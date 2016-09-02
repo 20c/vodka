@@ -1,4 +1,4 @@
-Create a file called uwsgi_app.py in your vodka application directory
+Create a file called wsgi_app.py in your vodka application directory
 
     import os
     import vodka
@@ -9,11 +9,11 @@ Create a file called uwsgi_app.py in your vodka application directory
     config = vodka.config.Config()
     config.read(config_dir=os.environ.get("VODKA_HOME", "."))
     
-    vodka.run(config, config)
+    vodka.run(config)
     
     application = WSGIPlugin.wsgi_application
     
 
 Then run uwsgi against it
 
-    uwsgi -H $VIRTUAL_ENV --socket=0.0.0.0:8021 -w uwsgi_app:application --enable-threads
+    gunicorn -b 0.0.0.0:7026 wsgi_app:application
