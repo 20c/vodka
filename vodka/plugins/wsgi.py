@@ -111,7 +111,6 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             if ssl_config.get("enabled"):
                 ssl_context["certfile"] = ssl_config.get("cert")
                 ssl_context["keyfile"] = ssl_config.get("key")
-                self.log.debug("Enabling SSL: %s" % ssl_context)
 
             from gevent.pywsgi import WSGIServer
 
