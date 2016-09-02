@@ -116,5 +116,7 @@ def start(gevent_workers=None, thread_workers=None):
             t.start()
 
 
-def run(config, rawConfig):
+def run(config, rawConfig=None):
+    if not rawConfig:
+        rawConfig=config
     start(**init(config, rawConfig))
