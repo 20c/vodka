@@ -46,7 +46,7 @@ class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
             self.counter = 0
         
         # default value is provided, use that
-        if default and default != "skip" and default!="." and default != "":
+        if default != "skip" and default!="." and default != "":
             return default
         
         r = self.values[self.counter]
@@ -133,6 +133,7 @@ class TestBartender(unittest.TestCase):
                 {
                     'async': 'thread', 
                     'enabled': True, 
+                    'start_manual': False,
                     'name': 'test_bartender_a', 
                     'type': 'test_bartender_a'
                 }
