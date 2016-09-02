@@ -7,6 +7,31 @@ import vodka.config
 def application():
     return WSGIPlugin.wsgi_application
 
+class SSLConfiguration(vodka.config.Handler):
+    
+    """
+    Allows you to configure the ssl context of a wsgi
+    plugin
+    """
+    
+    enabled = vodka.config.Attribute(
+        bool,
+        default=False,
+        help_text="enable ssl encryption"
+    )
+
+    key = vodka.config.Attribute(
+        vodka.config.validators.path,
+        default="",
+        help_text="location of your ssl private key file"
+    )
+
+    cert = vodka.config.Attribute(
+        vodka.config.validators.path,
+        default="",
+        help_text="location of your ssl certificate file"
+    )
+
 
 class WSGIPlugin(vodka.plugins.PluginBase):
 
@@ -36,7 +61,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             str,
             help_text="specify which wsgi server should be used",
             default="self",
-            choices=["uwsgi", "self", "gevent"]
+            choices=["uwsgi", "gunicorn", "self", "gevent"]
         )
 
         static_url_path = vodka.config.Attribute(
@@ -49,6 +74,13 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             dict,
             help_text="routing of request endpoints to vodka application end points",
             default={}
+        )
+
+        ssl = vodka.config.Attribute(
+            dict,
+            help_text="ssl encryption",
+            default={},
+            handler=SSLConfiguration
         )
 
     @classmethod
@@ -71,22 +103,32 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
         host = self.get_config("host")
         port = self.get_config("port")
+        ssl_config = self.get_config("ssl")
+        ssl_context = {}
 
         if self.get_config("server") == "gevent":
 
-            # serve via gevent.WSGIServer
-            from gevent.wsgi import WSGIServer
+            if ssl_config.get("enabled"):
+                ssl_context["certfile"] = ssl_config.get("cert")
+                ssl_context["keyfile"] = ssl_config.get("key")
+                self.log.debug("Enabling SSL: %s" % ssl_context)
+
+            from gevent.pywsgi import WSGIServer
 
             http_server = WSGIServer(
                 (host, port),
-                wsgi_app
+                wsgi_app,
+                **ssl_context
             )
 
-            self.log.debug("Serving WSGI via gevent.WSGIServer")
+            self.log.debug("Serving WSGI via gevent.pywsgi.WSGIServer")
 
             fnc_serve = http_server.serve_forever
 
         elif self.get_config("server") == "uwsgi":
+            self.config["start_manual"] = True
+
+        elif self.get_config("server") == "gunicorn":
             self.config["start_manual"] = True
 
         elif self.get_config("server") == "self":

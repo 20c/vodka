@@ -41,5 +41,16 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
             '%s/' % path, view_func=target, methods=methods)
 
     def run(self):
-        self.wsgi_application.run(self.get_config(
-            "host"), self.get_config("port"), use_reloader=False)
+        
+        ssl_config = self.get_config("ssl")
+        if ssl_config.get("enabled"):
+            ssl_context = (ssl_config.get("cert"), ssl_config.get("key"))
+        else:
+            ssl_context = None
+
+        self.wsgi_application.run(
+            self.get_config("host"), 
+            self.get_config("port"), 
+            use_reloader=False,
+            ssl_context=ssl_context
+        )
