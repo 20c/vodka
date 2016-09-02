@@ -39,6 +39,11 @@ class PluginBase(vodka.component.Component, pluginmgr.PluginBase):
             default=lambda x, i: i.type,
             help_text="plugin instance name, needs to be unique"
         )
+        start_manual = vodka.config.Attribute(
+            bool,
+            default=False,
+            help_text="disable automatic start of this plugin"
+        )
 
     def __init__(self, config, *args, **kwargs):
         pluginmgr.PluginBase.__init__(self, config, *args, **kwargs)
