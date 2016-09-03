@@ -67,8 +67,23 @@ def load(name, cfg):
 
 
 def load_all(cfg):
+    imported = []
+
+    # load all apps
     for name, app_cfg in cfg.get("apps", {}).items():
-        load(name, app_cfg)
+        
+        # make sure required apps are loaded first
+        for req in app_cfg.get("requires", []):
+            if req not in imported:
+                print "loading req", req
+                load(req, cfg["apps"].get(req))
+                imported.append(req)
+        
+        # load the app
+        if name not in imported:
+            print "loading", name
+            load(name, app_cfg)
+            imported.append(name)
 
 
 # CLASSES
@@ -94,6 +109,12 @@ class Application(vodka.component.Component):
             str,
             default="",
             help_text="name of the python module containing this application (usually <namespace>.application)"
+        )
+
+        requires = vodka.config.Attribute(
+            list,
+            default=[],
+            help_text="list of vodka apps required by this app"
         )
 
     def __init__(self, config=None, config_dir=None):
