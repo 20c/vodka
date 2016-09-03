@@ -40,6 +40,9 @@ def init(config, rawConfig):
     # set up loggers
     vodka.log.set_loggers(cfg.get("logging", {}))
 
+    # import applications
+    load_all(cfg)
+
     # instantiate data types
     vodka.log.debug("instantiating data types")
     vodka.data.data_types.instantiate_from_config(cfg.get("data", []))
@@ -48,9 +51,6 @@ def init(config, rawConfig):
     vodka.log.debug("instantiating plugins")
     plugin.instantiate(cfg["plugins"])
     
-    # import applications
-    load_all(cfg)
-
     # instantiate vodka applications
     vodka.log.debug("instantiating applications")
     instantiate(cfg)
