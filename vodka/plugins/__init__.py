@@ -76,7 +76,7 @@ class TimedPlugin(PluginBase):
             time.sleep(n)
 
     def start(self):
-        self.run()
+        self._run()
 
     def stop(self):
         self.run_level = 0
@@ -84,7 +84,7 @@ class TimedPlugin(PluginBase):
     def work(self):
         pass
 
-    def run(self):
+    def _run(self):
         self.run_level = 1
         interval = self.get_config("interval")
         while self.run_level:

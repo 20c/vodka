@@ -75,13 +75,11 @@ def load_all(cfg):
         # make sure required apps are loaded first
         for req in app_cfg.get("requires", []):
             if req not in imported:
-                print "loading req", req
                 load(req, cfg["apps"].get(req))
                 imported.append(req)
         
         # load the app
         if name not in imported:
-            print "loading", name
             load(name, app_cfg)
             imported.append(name)
 

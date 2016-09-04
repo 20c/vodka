@@ -88,7 +88,6 @@ def init(config, rawConfig):
 
         if async == "gevent":
             gevent_workers.append(worker)
-            worker.start()
         elif async == "thread":
             thread_workers.append(worker)
 
@@ -101,10 +100,7 @@ def init(config, rawConfig):
 
 
 def start(gevent_workers=None, thread_workers=None):
-    if gevent_workers:
-        import gevent
-        gevent.joinall(gevent_workers)
-    if thread_workers:
+   if thread_workers:
         import threading
         for w in thread_workers:
             if hasattr(w, "start"):
@@ -115,6 +111,20 @@ def start(gevent_workers=None, thread_workers=None):
             t.daemon = True
             t.start()
 
+   if gevent_workers:
+        import gevent
+        _workers = []
+        for worker in gevent_workers:
+            if isinstance(worker, gevent.Greenlet):
+                _workers.append(worker)
+            else:
+                if hasattr(worker, "run"):
+                    _workers.append(gevent.Greenlet(worker.run))
+                else:
+                    _workers.append(gevent.Greenlet(worker))
+
+        gevent.joinall(_workers)
+ 
 
 def run(config, rawConfig=None):
     if not rawConfig:
