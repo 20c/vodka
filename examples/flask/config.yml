@@ -1,0 +1,25 @@
+plugins:
+- name: http
+  type: flask
+
+  # server website to host and port
+  host: 0.0.0.0
+  port: 7041
+  
+  # flask debug logging on or off
+  debug: true
+  # specify which wsgi server to use
+  server: gevent
+  # specify which way you want to handle running the server async
+  async: gevent
+
+  routes:
+    # route url path '/' to application 'my_app', method 'index'
+    /: my_app->index
+    # route url path '/view/<id>' to application 'my_app', method 'view' with argument 'id'
+    /view/<id>: my_app->view
+    # allow post method to '/create'
+    /create:
+      methods:
+        - POST
+      target: my_app->create

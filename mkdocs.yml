@@ -1,0 +1,13 @@
+site_name: vodka 
+site_url: https://github.com/20c/vodka
+
+theme: readthedocs
+
+pages:
+  - Home: index.md
+  - Configuration: config.md
+  - Bartender: bartender.md
+  - Serve: serve.md
+
+markdown_extensions:
+  - markdown_include.include

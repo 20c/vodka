@@ -1,0 +1,68 @@
+# vodka applications
+apps:
+  # my_app application
+  my_app:
+    
+    # load and start this app
+    enabled: True
+    
+    # when loading app from a directory specify the home here
+    home: /path/to/app
+
+    # when loading app from installed module, specify the module here
+    module: my_app.application
+
+    # ... remaining app config ...#
+    
+# plugins
+plugins:
+    
+  # first plugin
+  
+    # plugin type (As it was registered)
+  - type: flask
+     
+    # custom name that means something for you
+    name: http
+      
+    # specify which handler to use for async (thread or gevent)
+    async: gevent
+
+    # ... remaining plugin config ... #
+
+# data types
+
+data:
+  # first data type
+    # unique name
+  - type: test_data
+
+    # data handlers
+    handlers:
+      # ... handler config ... #
+
+
+# logging, follows standard python logger config structure
+
+logging:
+  version: 1
+  formatters:
+    simple:
+      format: '%(asctime)s - %(name)s - %(levelname)s: %(message)s'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: DEBUG
+      formatter: simple
+      stream: ext://sys.stdout
+  loggers:
+    vaping.plugins.flask:
+      level: DEBUG
+      handlers:
+        - console
+    vodka:
+      level: DEBUG
+      handlers:
+        - console
+  
+
