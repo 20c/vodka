@@ -8,11 +8,15 @@
 
 vodka is a plugin based real-time web service daemon.
 
-## Install
+### Install
 
 ```sh
 pip install vodka 
 ```
+
+### Documentation (work in progress)
+
+http://vodka.readthedocs.io/
 
 ### License
 
