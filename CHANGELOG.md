@@ -5,15 +5,27 @@
 
 ### Added
 ### Fixed
-- module name specified in application config is now always respected
-- newapp command will now create an __init__.py file
-
 ### Changed
 ### Deprecated
 ### Removed
-- util.SearchPathImporter as it was redundant
-
 ### Security
+
+## 2.0.4
+
+### Added
+- documentation
+- application configuration attribute: requires - allows an application to specify other applications as required to make sure they get loaded first in the app loading process
+- gunicorn wsgi server support
+- web application ssl support
+
+### Fixed
+- module name specified in application config is now always respected
+- newapp command will now create an __init__.py file
+- applications can now provide their own plugins
+- gevent async handler
+
+### Removed
+- util.SearchPathImporter as it was redundant
 
 ## 2.0.3
 
