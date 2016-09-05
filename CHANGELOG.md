@@ -10,6 +10,13 @@
 ### Removed
 ### Security
 
+## 2.0.5
+
+### Added
+- wsgi: support for route decorators in config
+- wsgi: added 'host' variable to template env 
+- flask: crossdomain route decorator
+
 ## 2.0.4
 
 ### Added
