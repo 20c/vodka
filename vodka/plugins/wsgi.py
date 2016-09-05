@@ -169,6 +169,8 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             appenv = {"static_url" : self.static_url_prefixes.get(name, "")}
             renv[name] = appenv
         renv.update(**kwargs)
+        if "url" in kwargs:
+            renv["host"] = "%s://%s" % (kwargs["url"].scheme, kwargs["url"].netloc)
         return renv
     
     def set_static_routes(self):
@@ -196,7 +198,16 @@ class WSGIPlugin(vodka.plugins.PluginBase):
                 # instance, this needs to change
                 inst.wsgi_plugin = self
 
-                self.set_route(path, getattr(inst, fnc_name),
+                meth = getattr(inst, fnc_name)
+                
+                # apply route decorators (specified by config keys other than
+                # "target" and "methods"
+                for k,v in target.items():
+                    decorator = getattr(self, "decorate_route_%s" % k, None)
+                    if decorator:
+                        meth = decorator(**v).__call__(meth)
+                
+                self.set_route(path, meth,
                                methods=target.get("methods", []))
             else:
                 # target is a static path
