@@ -130,7 +130,7 @@ class Handler(object):
 
         num_crit = 0
         num_warn = 0
-        if hasattr(value, "__iter__") and attr.handler:
+        if value in [dict, list] and attr.handler:
             if type(value) == dict:
                 keys = list(value.keys())
             elif type(value) == list:
@@ -138,7 +138,7 @@ class Handler(object):
             else:
                 return
             for k in keys:
-                if not hasattr(value[k], "__iter__"):
+                if value[k] not in [dict, list]:
                     continue
                 handler = attr.handler(k, value[k])
                 if issubclass(handler, Handler):

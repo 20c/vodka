@@ -15,6 +15,7 @@ from vodka.app import (
 )
 
 import vodka.data
+import vodka.data.data_types
 import vodka.config
 import vodka.log
 
