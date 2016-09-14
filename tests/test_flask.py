@@ -102,7 +102,7 @@ class TestFlask(unittest.TestCase):
 
     def test_crossdomain_decorator(self):
         rv = self.client.get("/crossdomain_test", follow_redirects=True)
-        self.assertEqual(rv.data, "crossdomain_test: nothing")
+        self.assertEqual(rv.data, b"crossdomain_test: nothing")
         self.assertEqual(rv.headers.get("Access-Control-Allow-Origin"), "*")
         self.assertEqual(
             sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")), 
@@ -110,7 +110,7 @@ class TestFlask(unittest.TestCase):
         )
 
         rv = self.client.get("/crossdomain_test_2", follow_redirects=True)
-        self.assertEqual(rv.data, "crossdomain_test: nothing")
+        self.assertEqual(rv.data, b"crossdomain_test: nothing")
         self.assertEqual(rv.headers.get("Access-Control-Allow-Origin"), "a.com, b.com")
         self.assertEqual(
             sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")), 
@@ -119,7 +119,7 @@ class TestFlask(unittest.TestCase):
 
 
         rv = self.client.get("/crossdomain_test_3", follow_redirects=True)
-        self.assertEqual(rv.data, "crossdomain_test: nothing")
+        self.assertEqual(rv.data, b"crossdomain_test: nothing")
         self.assertEqual(rv.headers.get("Access-Control-Allow-Origin"), "a.com, b.com")
         self.assertEqual(rv.headers.get("Access-Control-Allow-Headers"), "ANOTHER-HEADER, TEST-HEADER")
         self.assertEqual(

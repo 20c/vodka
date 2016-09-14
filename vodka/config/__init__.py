@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from builtins import range
+from builtins import object
 import munge
 import types
 import os
@@ -8,7 +11,7 @@ import vodka.exceptions
 import vodka.log
 import vodka.util
 
-import validators
+from . import validators
 
 raw = {}
 
@@ -129,9 +132,9 @@ class Handler(object):
         num_warn = 0
         if hasattr(value, "__iter__") and attr.handler:
             if type(value) == dict:
-                keys = value.keys()
+                keys = list(value.keys())
             elif type(value) == list:
-                keys = range(0, len(value))
+                keys = list(range(0, len(value)))
             else:
                 return
             for k in keys:
@@ -171,9 +174,9 @@ class Handler(object):
         num_warn = 0
 
         if type(cfg) in [dict, Config]:
-            keys = cfg.keys()
+            keys = list(cfg.keys())
         elif type(cfg) == list:
-            keys = range(0, len(cfg))
+            keys = list(range(0, len(cfg)))
         else:
             raise ValueError("Cannot validate non-iterable config value")
 
@@ -191,7 +194,7 @@ class Handler(object):
                             attr_full_name = name
                         raise vodka.exceptions.ConfigErrorMissing(
                             attr_full_name, attr)
-            except vodka.exceptions.ConfigErrorMissing, inst:
+            except vodka.exceptions.ConfigErrorMissing as inst:
                 if inst.level == "warn":
                     vodka.log.warn(inst.explanation)
                     num_warn += 1
@@ -209,7 +212,7 @@ class Handler(object):
                 vodka.exceptions.ConfigErrorUnknown,
                 vodka.exceptions.ConfigErrorValue,
                 vodka.exceptions.ConfigErrorType
-            ), inst:
+            ) as inst:
                 if inst.level == "warn":
                     vodka.log.warn(inst.explanation)
                     num_warn += 1
@@ -300,7 +303,7 @@ class InstanceHandler(Handler):
                 plugin_cfg = {"type":plugin_type, "name":plugin_name}
                 configurator.configure(plugin_cfg, plugin_class.Configuration, path="%s.%s"%(path, plugin_name))
                 cfg["plugins"].append(plugin_cfg)
-            except Exception, inst:
+            except Exception as inst:
                 configurator.echo(inst)
             plugin_type = configurator.prompt("Add plugin", default="skip")
 

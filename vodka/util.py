@@ -1,3 +1,4 @@
+from builtins import object
 def dict_get_path(data, path, default=None):
     """
     Returns the value inside nested structure of data located

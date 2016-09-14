@@ -2,6 +2,7 @@
 vodka data handlers, allows to modify data retrieved by
 vodka data plugins
 """
+from builtins import object
 
 import vodka.config
 import vodka.component

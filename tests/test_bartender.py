@@ -116,6 +116,8 @@ class TestBartender(unittest.TestCase):
 
         vodka.log.set_loggers(vodka.log.default_config())
 
+        print(r.output)
+
         # assert no errors
         self.assertEqual(r.exit_code, 0)
 

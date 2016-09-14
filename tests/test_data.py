@@ -1,5 +1,7 @@
 import unittest
 import vodka.data
+import vodka.data.handlers
+import vodka.data.renderers
 import vodka.config
 import json
 

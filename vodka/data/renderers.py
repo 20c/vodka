@@ -2,6 +2,8 @@
 vodka data renderers, takes a dict and returns munge formatted
 string 
 """
+from builtins import str
+from builtins import object
 
 import munge
 import munge.codec.all
@@ -46,7 +48,7 @@ class RPC(DataRenderer):
                        "meta"], *args, **kwargs)
                 else:
                     fn(resp["data"], meta=resp["meta"], *args, **kwargs)
-            except Exception,  inst:
+            except Exception as inst:
                 if self.errors:
                     resp["meta"]["error"] = str(inst)
                 else:

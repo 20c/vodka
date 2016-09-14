@@ -4,6 +4,8 @@
 ## [Unreleased]
 
 ### Added
+- Python 3 support
+
 ### Fixed
 ### Changed
 ### Deprecated

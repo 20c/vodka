@@ -1,6 +1,8 @@
+from future import standard_library
+standard_library.install_aliases()
 import pluginmgr
 import time
-import urlparse
+import urllib.parse
 
 import vodka
 import vodka.log

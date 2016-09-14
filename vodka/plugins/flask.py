@@ -1,9 +1,12 @@
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from past.builtins import basestring
 import os
 import vodka.plugins.wsgi
 import vodka
 import vodka.log
-import urlparse
+import urllib.parse
 
 from functools import update_wrapper
 
@@ -89,7 +92,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
         self.set_server(flask_app, fnc_serve=flask_app.run)
 
     def request_env(self, req=None, **kwargs):
-        url=urlparse.urlparse(request.url)
+        url=urllib.parse.urlparse(request.url)
         return super(VodkaFlask, self).request_env(
             req=request, 
             url=url,

@@ -1,3 +1,4 @@
+from builtins import object
 import logging.config
 
 def default_config(level="DEBUG", name="vodka"):

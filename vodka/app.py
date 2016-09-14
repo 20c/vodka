@@ -2,6 +2,7 @@
 Vodka application foundation classes. Each vodka app should extend one
 of these.
 """
+from builtins import object
 
 import os
 import sys
@@ -70,7 +71,7 @@ def load_all(cfg):
     imported = []
 
     # load all apps
-    for name, app_cfg in cfg.get("apps", {}).items():
+    for name, app_cfg in list(cfg.get("apps", {}).items()):
         
         # make sure required apps are loaded first
         for req in app_cfg.get("requires", []):

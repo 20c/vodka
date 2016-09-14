@@ -1,7 +1,3 @@
-import handlers
-import renderers
-import data_types
-
 _handlers = {}
 
 
@@ -32,7 +28,7 @@ def handle(data_type, data, data_id=None, caller=None):
         _handlers[data_id] = dict(
             [(h.handle, h) for h in handlers.instantiate_for_data_type(data_type, data_id=data_id)])
 
-    for handler in _handlers[data_id].values():
+    for handler in list(_handlers[data_id].values()):
         data = handler(data, caller=caller)
 
     return data

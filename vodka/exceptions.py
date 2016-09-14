@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 class ConfigErrorMixin(object):
 
     handle = "config error"
