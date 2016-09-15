@@ -43,6 +43,14 @@ def init(config, rawConfig):
 
     # import applications
     load_all(cfg)
+    
+    # validating configuration
+    vodka.log.debug("making sure configuration is sane ...")
+    num_crit, num_warn = vodka.config.InstanceHandler.validate(cfg)
+    if num_crit > 0:
+        vodka.log.error(
+            "There have been %d critical errors detected in the configuration, please fix them and try again" % num_crit)
+        sys.exit()
 
     # instantiate data types
     vodka.log.debug("instantiating data types")
@@ -56,15 +64,6 @@ def init(config, rawConfig):
     vodka.log.debug("instantiating applications")
     instantiate(cfg)
 
-
-    vodka.log.debug("making sure configuration is sane ...")
-
-    num_crit, num_warn = vodka.config.InstanceHandler.validate(cfg)
-
-    if num_crit > 0:
-        vodka.log.error(
-            "There have been %d critical errors detected in the configuration, please fix them and try again" % num_crit)
-        sys.exit()
 
     vodka.log.debug("starting plugins")
 
