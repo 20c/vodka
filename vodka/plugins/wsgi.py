@@ -2,6 +2,7 @@ import os
 from vodka import get_instance
 import vodka.plugins
 import vodka.config
+import vodka.config.validators
 
 
 def application():
@@ -38,17 +39,26 @@ class WSGIPlugin(vodka.plugins.PluginBase):
     wsgi_application = None
 
     class Configuration(vodka.plugins.PluginBase.Configuration):
-
+        # DEPRECATE: 2.2.0
         host = vodka.config.Attribute(
             str,
             default="localhost",
-            help_text="host address"
+            help_text="host address",
+            deprecated="2.2.0, it's being replaced by the 'bind' config attribute"
         )
 
+        # DEPRECATE: 2.2.0
         port = vodka.config.Attribute(
             int,
             default=80,
-            help_text="host port"
+            help_text="host port",
+            deprecated="2.2.0, it's being replaced by the 'bind' config attribute"
+        )
+
+        bind = vodka.config.Attribute(
+            vodka.config.validators.host,
+            default="localhost:80",
+            help_text="bind server to this address. e.g localhost:80"
         )
 
         debug = vodka.config.Attribute(
@@ -87,7 +97,20 @@ class WSGIPlugin(vodka.plugins.PluginBase):
     def set_wsgi_app(cls, app):
         WSGIPlugin.wsgi_application = app
 
+    def init(self):
+        if "bind" in self.config:
+            (host, port) = self.get_config("bind").split(":")
+            self.host = host
+            self.port = int(port)
+
+        # DEPRECATE: 2.2.0
+        else:
+            self.host = self.get_config("host")
+            self.port = self.get_config("port")
+ 
+
     def setup(self):
+       
         self.static_url_prefixes = {}
         for name in list(vodka.instances.keys()):
             self.static_url_prefixes[name] = self.static_url_prefix(name)
@@ -101,8 +124,6 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
         self.set_wsgi_app(wsgi_app)
 
-        host = self.get_config("host")
-        port = self.get_config("port")
         ssl_config = self.get_config("ssl")
         ssl_context = {}
 
@@ -115,7 +136,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             from gevent.pywsgi import WSGIServer
 
             http_server = WSGIServer(
-                (host, port),
+                (self.host, self.port),
                 wsgi_app,
                 **ssl_context
             )

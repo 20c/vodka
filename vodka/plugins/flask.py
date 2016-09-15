@@ -79,6 +79,8 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
 
     def init(self):
         
+        super(VodkaFlask, self).init()
+        
         if not Flask:
             raise Exception("Flask could not be imported, make sure flask module is installed")
 
@@ -120,8 +122,8 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
             ssl_context = None
 
         self.wsgi_application.run(
-            self.get_config("host"), 
-            self.get_config("port"), 
+            self.host,
+            self.port,
             use_reloader=False,
             ssl_context=ssl_context
         )
