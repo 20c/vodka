@@ -12,6 +12,8 @@
 - Configuration validation for plugins that used config attributes in their initialization
 
 ### Changed
+- WebApplication: **tmpl_engine** config attribute renamed to **template_engine**
+
 ### Deprecated
 ### Removed
 ### Security
