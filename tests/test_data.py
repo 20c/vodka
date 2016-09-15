@@ -170,6 +170,6 @@ class TestData(unittest.TestCase):
                  data.extend(expected_list.get("data"))
 
         t = Test()
-        self.assertEqual(t.output(), json.dumps(expected_list))
+        self.assertEqual(json.loads(t.output()), expected_list)
 
  
