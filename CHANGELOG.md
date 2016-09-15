@@ -5,8 +5,12 @@
 
 ### Added
 - Python 3 support
+- config attribute deprecation indication
+- wsgi plugin: added 'bind' config attribute that will replace 'host' and 'port' in a future version. Right now 'bind', 'host' and 'port' are all set 'bind' will be given priority.
 
 ### Fixed
+- Configuration validation for plugins that used config attributes in their initialization
+
 ### Changed
 ### Deprecated
 ### Removed
