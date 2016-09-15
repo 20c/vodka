@@ -157,7 +157,7 @@ class WebApplication(Application):
             help_text="location of your template files"
         )
 
-        tmpl_engine = vodka.config.Attribute(
+        template_engine = vodka.config.Attribute(
             str, 
             default="jinja2", 
             choices=["jinja2"], 
@@ -189,5 +189,5 @@ class WebApplication(Application):
         import twentyc.tmpl
 
         # set up the template engine
-        eng = twentyc.tmpl.get_engine(self.config.get("tmpl_engine", "jinja2"))
+        eng = twentyc.tmpl.get_engine(self.config.get("template_engine", "jinja2"))
         self.tmpl = eng(tmpl_dir=self.template_path)
