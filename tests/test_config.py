@@ -31,6 +31,7 @@ class ConfigHandler(vodka.config.Handler):
     j = vodka.config.Attribute(list, default=[], handler=lambda x,y: ListHandler)
     k = vodka.config.Attribute(dict, default={}, handler=lambda x,y: DictHandler)
     l = vodka.config.Attribute(dict, default={}, handler=lambda x,y: DictHandlerProxy)
+    depr = vodka.config.Attribute(int, default=1, help_text="ht:depr", deprecated="2.2.0")
     
     @classmethod
     def validate_e(self, value):
