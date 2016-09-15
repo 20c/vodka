@@ -37,7 +37,7 @@ class Attribute(object):
     A configuration attribute 
     """
 
-    def __init__(self, expected_type, default=None, help_text=None, handler=None, choices=None, prepare=None):
+    def __init__(self, expected_type, **kwargs):
         """
         Args:
             expected_type (class or function): type expected for this attribute, if specified
@@ -54,13 +54,17 @@ class Attribute(object):
                 attributes (e.g. nested config) use this function to return the aproporiate config
                 handler class to use to validate them
             prepare (function): allows you to prepare value for this attribute
+            deprecated (str): if not None indicates that this attribute is still functional but
+                deprecated and will be removed in the vodka version specified in the value
         """
+
         self.expected_type = expected_type
-        self.default = default
-        self.help_text = help_text
-        self.handler = handler
-        self.choices = choices
-        self.prepare = prepare or []
+        self.default = kwargs.get("default")
+        self.help_text = kwargs.get("help_text")
+        self.handler = kwargs.get("handler")
+        self.choices = kwargs.get("choices")
+        self.prepare = kwargs.get("prepare", [])
+        self.deprecated = kwargs.get("deprecated", False)
 
 
 class Handler(object):
@@ -89,6 +93,12 @@ class Handler(object):
         if not attr:
             # attribute specified by key_name is unknown, warn
             raise vodka.exceptions.ConfigErrorUnknown(attr_full_name)
+
+        if attr.deprecated:
+            vodka.log.warn("[config deprecated] %s is being deprecated in version %s" % (
+                attr_full_name,
+                attr.deprecated
+            ))
 
         # prepare data
         for prepare in attr.prepare:
