@@ -137,7 +137,7 @@ class TestData(unittest.TestCase):
         def output_list_json(data,  *args, **kwargs):
             data.extend(expected_list.get("data"))
 
-        self.assertEqual(output_list_json(), json.dumps(expected_list))
+        self.assertEqual(json.loads(output_list_json()), expected_list)
 
         # test rpc renderer to json with data type dict
 
@@ -145,7 +145,7 @@ class TestData(unittest.TestCase):
         def output_dict_json(data,  *args, **kwargs):
             data.update(expected_dict.get("data"))
 
-        self.assertEqual(output_dict_json(), json.dumps(expected_dict))
+        self.assertEqual(json.loads(output_dict_json()), expected_dict)
 
         # test rpc renderer with error catching
 
@@ -153,14 +153,14 @@ class TestData(unittest.TestCase):
         def output_error(data, *args, **kwargs):
             raise Exception("an error occured")
 
-        self.assertEqual(output_error(), json.dumps(
+        self.assertEqual(json.loads(output_error()),
             {
                 "data" : [],
                 "meta" : {
                     "error" : "an error occured"
                 }
             }
-        ))
+        )
 
         # test rpc renderer on class method
         class Test(object):
