@@ -6,7 +6,7 @@
 ### Added
 - Python 3 support
 - config attribute deprecation indication
-- wsgi plugin: added 'bind' config attribute that will replace 'host' and 'port' in a future version. Right now 'bind', 'host' and 'port' are all set 'bind' will be given priority.
+- wsgi plugin: added **bind** config attribute that will replace **host** and **port** in a future version. If **bind**, **host** and **port** are all set **bind** will be given priority.
 
 ### Fixed
 - Configuration validation for plugins that used config attributes in their initialization
@@ -20,7 +20,7 @@
 
 ### Added
 - wsgi: support for route decorators in config
-- wsgi: added 'host' variable to template env 
+- wsgi: added **host** variable to template env 
 - flask: crossdomain route decorator
 
 ## 2.0.4
@@ -43,7 +43,7 @@
 ## 2.0.3
 
 ### Added
-- bartender command: 'newapp', generates a blank vodka application stucture
+- bartender command: **newapp**, generates a blank vodka application stucture
 - util.SearchPathImporter for vodka application loading
 
 ### Changed
@@ -59,8 +59,8 @@
 ## 2.0.2 
 
 ### Added
-- plugins/django, allows you to use django's orm 
-- bartender command: 'config', interactive config creation
+- plugins/django, allows you to use django**s orm 
+- bartender command: **config**, interactive config creation
 - impl plugin.setup() method that is called right before a plugin is started
 - impl base class for class registry decorator
 - additional unittests 
