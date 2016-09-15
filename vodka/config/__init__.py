@@ -18,6 +18,19 @@ raw = {}
 instance = {
 }
 
+def is_config_container(v):
+    """
+    checks whether v is of type list,dict or Config
+    """
+
+    cls = type(v)
+
+    return (
+        issubclass(cls, list) or
+        issubclass(cls, dict) or
+        issubclass(cls, Config)
+    )
+
 class Attribute(object):
 
     """
@@ -130,15 +143,15 @@ class Handler(object):
 
         num_crit = 0
         num_warn = 0
-        if value in [dict, list] and attr.handler:
-            if type(value) == dict:
+        if is_config_container(value) and attr.handler:
+            if type(value) == dict or issubclass(type(value), Config):
                 keys = list(value.keys())
             elif type(value) == list:
                 keys = list(range(0, len(value)))
             else:
                 return
             for k in keys:
-                if value[k] not in [dict, list]:
+                if not is_config_container(value[k]):
                     continue
                 handler = attr.handler(k, value[k])
                 if issubclass(handler, Handler):
