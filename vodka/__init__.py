@@ -43,7 +43,7 @@ def init(config, rawConfig):
 
     # import applications
     load_all(cfg)
-    
+
     # validating configuration
     vodka.log.debug("making sure configuration is sane ...")
     num_crit, num_warn = vodka.config.InstanceHandler.validate(cfg)
@@ -59,7 +59,7 @@ def init(config, rawConfig):
     # instantiate plugins
     vodka.log.debug("instantiating plugins")
     plugin.instantiate(cfg["plugins"])
-    
+
     # instantiate vodka applications
     vodka.log.debug("instantiating applications")
     instantiate(cfg)
@@ -73,7 +73,7 @@ def init(config, rawConfig):
     for pcfg in cfg["plugins"]:
         p_name = pcfg.get("name", pcfg.get("type"))
         p = plugin.get_instance(p_name)
-        
+
         p.setup()
 
         if pcfg.get("start_manual", False):
@@ -124,7 +124,7 @@ def start(gevent_workers=None, thread_workers=None):
                     _workers.append(gevent.Greenlet(worker))
 
         gevent.joinall(_workers)
- 
+
 
 def run(config, rawConfig=None):
     if not rawConfig:
