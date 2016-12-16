@@ -69,6 +69,7 @@ def init(config, rawConfig):
 
     gevent_workers = []
     thread_workers = []
+    asyncio_workers = []
 
     for pcfg in cfg["plugins"]:
         p_name = pcfg.get("name", pcfg.get("type"))
@@ -90,17 +91,20 @@ def init(config, rawConfig):
             gevent_workers.append(worker)
         elif async == "thread":
             thread_workers.append(worker)
+        elif async == "asyncio":
+            asyncio_workers.append(worker)
 
     ready()
 
     return {
         "gevent_workers": gevent_workers,
-        "thread_workers": thread_workers
+        "thread_workers": thread_workers,
+        "asyncio_workers": asyncio_workers
     }
 
 
-def start(gevent_workers=None, thread_workers=None):
-   if thread_workers:
+def start(gevent_workers=None, thread_workers=None, asyncio_workers=None):
+    if thread_workers:
         import threading
         for w in thread_workers:
             if hasattr(w, "start"):
@@ -111,7 +115,7 @@ def start(gevent_workers=None, thread_workers=None):
             t.daemon = True
             t.start()
 
-   if gevent_workers:
+    if gevent_workers:
         import gevent
         _workers = []
         for worker in gevent_workers:
@@ -124,6 +128,18 @@ def start(gevent_workers=None, thread_workers=None):
                     _workers.append(gevent.Greenlet(worker))
 
         gevent.joinall(_workers)
+
+    if asyncio_workers:
+        import asyncio
+        import threading
+        def run_asyncio():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            for worker in asyncio_workers:
+                asyncio.get_event_loop().run_until_complete(worker)
+            asyncio.get_event_loop().run_forever()
+        t = threading.Thread(target=run_asyncio)
+        t.start()
 
 
 def run(config, rawConfig=None):
