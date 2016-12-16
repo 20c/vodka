@@ -4,6 +4,24 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 2.1.1
+
+### Added
+- support for asyncio as async handler (py >= 3.4)
+- setuptools entry point 'vodka.extend' to allow loading of plugin extensions
+
+### Fixed
+- trailing whitespace removed
+
+## 2.1.0
+
+### Added
 - Python 3 support
 - config attribute deprecation indication
 - wsgi plugin: added **bind** config attribute that will replace **host** and **port** in a future version. If **bind**, **host** and **port** are all set **bind** will be given priority.
@@ -14,9 +32,6 @@
 ### Changed
 - WebApplication: **tmpl_engine** config attribute renamed to **template_engine**
 
-### Deprecated
-### Removed
-### Security
 
 ## 2.0.5
 
