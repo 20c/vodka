@@ -7,6 +7,7 @@ import vodka
 import vodka.app
 import vodka.config
 import vodka.config.configurator
+import vodka.load_entrypoints
 
 import munge.codec.all
 from munge import config as munge_config
