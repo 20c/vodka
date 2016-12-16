@@ -7,13 +7,13 @@ import vodka
 @vodka.plugin.register('wsgi_test')
 class WSGIPlugin(vodka.plugins.wsgi.WSGIPlugin):
     routes = {}
-    
+
     def set_route(self, path, target, methods=None):
         self.routes[path] = {"target":target, "methods":methods or []}
 
 @vodka.app.register('wsgi_test_app')
 class WSGIApp(vodka.app.Application):
-    
+
     def a(self):
         return "a"
 
@@ -21,7 +21,7 @@ class WSGIApp(vodka.app.Application):
         return "b"
 
 class TestWSGI(unittest.TestCase):
-    
+
     @classmethod
     def setUp(cls):
         cls.plugin = vodka.plugin.get_instance({
@@ -48,7 +48,7 @@ class TestWSGI(unittest.TestCase):
         })
         cls.app = vodka.instance.get_instance("wsgi_test_app")
 
-    
+
     def test_default_config(self):
         self.assertEqual(self.plugin.get_config('debug'), False)
         self.assertEqual(self.plugin.get_config('host'), "localhost")
@@ -79,5 +79,5 @@ class TestWSGI(unittest.TestCase):
             "/a" : { "target" : self.app.a, "methods" : ["GET"] },
             "/b" : { "target" : self.app.b, "methods" : ["GET","POST"] }
         })
-        
+
 

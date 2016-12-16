@@ -66,7 +66,7 @@ gunicorn -b 0.0.0.0:7026 vodka.runners.wsgi:application
 ### Install requirements
 
 ```sh
-pip install uwsgi 
+pip install uwsgi
 ```
 
 ### Run

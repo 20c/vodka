@@ -1,6 +1,6 @@
 """
 vodka data renderers, takes a dict and returns munge formatted
-string 
+string
 """
 from builtins import str
 from builtins import object
@@ -24,7 +24,7 @@ class DataRenderer(object):
 
 
 class RPC(DataRenderer):
-    
+
     """
     RPC renderer, renders an rpc response containing meta and data objects
 

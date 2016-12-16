@@ -34,7 +34,7 @@ vodka.data.data_types.instantiate_from_config(
         ]
     }]
 )
- 
+
 class TestData(unittest.TestCase):
 
     def test_handler_register(self):
@@ -50,14 +50,14 @@ class TestData(unittest.TestCase):
                 pass
 
     def test_handlers_instantiate(self):
-       
+
         # instantiate single handler
         handler = vodka.data.handlers.instantiate({
             "type" : "a"
         }, "test_a")
 
         self.assertEqual(handler.__class__, HandlerA)
-        
+
         # instantiate multiple handlers from data type test
         handlers = vodka.data.handlers.instantiate_for_data_type("test")
 
@@ -86,7 +86,7 @@ class TestData(unittest.TestCase):
             "type": "index",
             "index": "name"
         }, "test_b")
-        
+
         objs = [{"name":"obj %s" % i} for i in range(0,10)]
 
         data = {"data": objs}
@@ -125,14 +125,14 @@ class TestData(unittest.TestCase):
 
 
 
-   
+
     def test_RPC(self):
 
         expected_list = {"data":[1,2,3], "meta": {}}
         expected_dict = {"data":{"a":1, "b":2}, "meta": {}}
 
         # test rpc renderer to json with data type list
-        
+
         @vodka.data.renderers.RPC(type="json", data_type=list)
         def output_list_json(data,  *args, **kwargs):
             data.extend(expected_list.get("data"))
@@ -164,7 +164,7 @@ class TestData(unittest.TestCase):
 
         # test rpc renderer on class method
         class Test(object):
-            
+
             @vodka.data.renderers.RPC(type="json", data_type=list)
             def output(self, data, *args, **kwargs):
                  data.extend(expected_list.get("data"))
@@ -172,4 +172,4 @@ class TestData(unittest.TestCase):
         t = Test()
         self.assertEqual(json.loads(t.output()), expected_list)
 
- 
+

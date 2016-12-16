@@ -9,7 +9,7 @@ from flask import Flask, request
 
 @vodka.app.register('flask_test')
 class App(vodka.app.Application):
-    
+
     def index(self):
         return "nothing"
 
@@ -76,9 +76,9 @@ FLASK_PLUGIN = vodka.plugin.get_instance({
 FLASK_PLUGIN.setup()
 FLASK_APP = FLASK_PLUGIN.wsgi_application
 FLASK_APP.config["TESTING"] = True
- 
+
 class TestFlask(unittest.TestCase):
-    
+
     @classmethod
     def setUp(cls):
         cls.flask_app = FLASK_APP
@@ -87,7 +87,7 @@ class TestFlask(unittest.TestCase):
 
     def test_init(self):
         self.assertEqual(isinstance(vodka.plugins.wsgi.application(), Flask), True)
-    
+
     def test_request_env(self):
         with self.flask_app.test_request_context('/'):
             env = self.plugin.request_env(something="else")
@@ -105,7 +105,7 @@ class TestFlask(unittest.TestCase):
         self.assertEqual(rv.data, b"crossdomain_test: nothing")
         self.assertEqual(rv.headers.get("Access-Control-Allow-Origin"), "*")
         self.assertEqual(
-            sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")), 
+            sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")),
             ["GET", "HEAD", "OPTIONS"]
         )
 
@@ -113,7 +113,7 @@ class TestFlask(unittest.TestCase):
         self.assertEqual(rv.data, b"crossdomain_test: nothing")
         self.assertEqual(rv.headers.get("Access-Control-Allow-Origin"), "a.com, b.com")
         self.assertEqual(
-            sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")), 
+            sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")),
             ["GET", "OPTIONS"]
         )
 
@@ -123,7 +123,7 @@ class TestFlask(unittest.TestCase):
         self.assertEqual(rv.headers.get("Access-Control-Allow-Origin"), "a.com, b.com")
         self.assertEqual(rv.headers.get("Access-Control-Allow-Headers"), "ANOTHER-HEADER, TEST-HEADER")
         self.assertEqual(
-            sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")), 
+            sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")),
             ["GET"]
         )
 

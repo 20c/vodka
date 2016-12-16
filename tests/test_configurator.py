@@ -44,10 +44,10 @@ class TestConfigurator(unittest.TestCase):
         })
         configurator.configure(cfg, Handler)
         self.assertEqual(cfg, {
-            "a" : "what", 
-            "b" : "something", 
+            "a" : "what",
+            "b" : "something",
             "e" : {
-                "test" : { 
+                "test" : {
                     "a" : "who",
                     "b" : "else"
                 }
@@ -57,8 +57,8 @@ class TestConfigurator(unittest.TestCase):
         self.assertEqual(configurator.action_required, [
             "f: manually"
         ])
-       
- 
+
+
     def test_configurator_skip_defaults(self):
         configurator = Configurator(None, skip_defaults=True)
 
@@ -73,10 +73,10 @@ class TestConfigurator(unittest.TestCase):
         })
         configurator.configure(cfg, Handler)
         self.assertEqual(cfg, {
-            "a" : "what", 
-            "b" : "something", 
+            "a" : "what",
+            "b" : "something",
             "e" : {
-                "test" : { 
+                "test" : {
                     "a" : "who",
                     "b" : "else"
                 }
@@ -98,10 +98,10 @@ class TestConfigurator(unittest.TestCase):
         })
         configurator.configure(cfg, Handler)
         self.assertEqual(cfg, {
-            "a" : "what", 
-            "b" : "other", 
+            "a" : "what",
+            "b" : "other",
             "e" : {
-                "test" : { 
+                "test" : {
                     "a" : "who",
                     "b" : "where"
                 }
@@ -122,10 +122,10 @@ class TestConfigurator(unittest.TestCase):
         })
         configurator.configure(cfg, Handler)
         self.assertEqual(cfg, {
-            "a" : "why", 
-            "b" : "other", 
+            "a" : "why",
+            "b" : "other",
             "e" : {
-                "test" : { 
+                "test" : {
                     "a" : "who",
                     "b" : "where"
                 }

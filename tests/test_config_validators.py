@@ -2,11 +2,11 @@ import unittest
 import vodka.config.validators
 
 class TestConfigValidators(unittest.TestCase):
-    
+
     def test_path_validator(self):
         b,d = vodka.config.validators.path(__file__)
         self.assertEqual(b, True)
-    
+
     def test_host_validator(self):
         b,d = vodka.config.validators.host("host:1")
         self.assertEqual(b, True)

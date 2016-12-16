@@ -25,7 +25,7 @@ class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
     the bartender config test. values will be sent to prompts
     in order
     """
-    
+
     values = [
         # add application,
         "test_bartender_app",
@@ -40,15 +40,15 @@ class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
         # dont add another plugin
         "skip"
     ]
-    
+
     def prompt(self, msg, default=None, *args, **kwargs):
         if not hasattr(self, "counter"):
             self.counter = 0
-        
+
         # default value is provided, use that
         if default != "skip" and default!="." and default != "":
             return default
-        
+
         r = self.values[self.counter]
         self.counter += 1
         return r
@@ -74,7 +74,7 @@ class TestBartender(unittest.TestCase):
         Tests the newapp command which should generate a blank app
         structure at the provided directory
         """
-        
+
         p = str(self.appdir)
         r = self.cli.invoke(vodka.bartender.newapp, ["--path=%s" % p])
 
@@ -92,7 +92,7 @@ class TestBartender(unittest.TestCase):
         self.config_file.write(json.dumps({
             "logging" : vodka.log.default_config()
         }))
-        
+
         # run check_config
         r = self.cli.invoke(vodka.bartender.check_config, ["--config=%s" % str(self.tmpdir)])
 
@@ -101,10 +101,10 @@ class TestBartender(unittest.TestCase):
 
         # assert output
         self.assertEqual(str(r.output), "Checking config at %s for errors ...\n0 config ERRORS, 0 config WARNINGS\n" % str(self.tmpdir))
-        
-    
+
+
     def test_config(self):
-        
+
         """
         Test the config command
 
@@ -130,13 +130,13 @@ class TestBartender(unittest.TestCase):
                     'home': HOME,
                     'module': ''
                 }
-            }, 
+            },
             'plugins': [
                 {
-                    'async': 'thread', 
-                    'enabled': True, 
+                    'async': 'thread',
+                    'enabled': True,
                     'start_manual': False,
-                    'name': 'test_bartender_a', 
+                    'name': 'test_bartender_a',
                     'type': 'test_bartender_a'
                 }
             ]

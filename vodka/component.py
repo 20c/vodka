@@ -3,18 +3,18 @@ import vodka.log
 import vodka.config
 
 class Component(vodka.log.LoggerMixin):
-    
+
     """
     Basic vodka component, all applications and plugins extend
     this class
 
     Attributes:
         handle (str): unique component handle, override this when extending
-    
+
     Classes:
         Configuration (vodka.config.ComponentHandler): Configuration Handler
     """
-    
+
     handle = "base"
 
     class Configuration(vodka.config.ComponentHandler):
@@ -30,7 +30,7 @@ class Component(vodka.log.LoggerMixin):
 
     def get_config(self, key_name):
         """
-        Return configuration value 
+        Return configuration value
 
         Args:
             key_name (str): configuration key

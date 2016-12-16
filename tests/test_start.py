@@ -49,7 +49,7 @@ CONFIG = {
 }
 
 class TestStart(unittest.TestCase):
-    
+
     def test_init_and_start(self):
         r = vodka.init(CONFIG, CONFIG)
 
@@ -59,7 +59,7 @@ class TestStart(unittest.TestCase):
             "gevent_workers" : [],
             "thread_workers" : [vodka.plugin.get_instance("test_start_plugin_a")]
         })
-        
+
         # make sure app was instantiated
         app = vodka.instance.get_instance("test_start_app")
         self.assertEqual(app.setup_done, True)
@@ -75,12 +75,12 @@ class TestStart(unittest.TestCase):
         # make sure plugin was setup
         plugin = vodka.plugin.get_instance("test_start_plugin_a")
         self.assertEqual(plugin.setup_done, True)
-  
+
         vodka.start(**r)
 
         # give some time for startup to complete
         time.sleep(0.25)
-        
+
         # make sure plugin is running
         self.assertEqual(plugin.run_level, 1)
 

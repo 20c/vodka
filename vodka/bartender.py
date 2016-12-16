@@ -70,12 +70,12 @@ def config(config, skip_defaults):
     """
 
     configurator = ClickConfigurator(
-        vodka.plugin, 
+        vodka.plugin,
         skip_defaults=skip_defaults
     )
 
     configurator.configure(vodka.config.instance, vodka.config.InstanceHandler)
-    
+
     try:
         dst = munge_config.parse_url(config)
     except ValueError:

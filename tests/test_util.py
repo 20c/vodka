@@ -2,7 +2,7 @@ import unittest
 import vodka.util
 
 class TestUtil(unittest.TestCase):
-    
+
     def test_dict_get_path(self):
         a = {"1":{"2":{"3":"end"}}}
         b = {"1":[{"x":"end","name":"a"},{"c":{"x":"end"},"name":"b"}]}

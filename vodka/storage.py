@@ -11,7 +11,7 @@ def get_or_create(name,  value):
     if space does not exist yet it will first be created with the
     specified value
     """
-    
+
     if name not in storage:
         storage[name] = value
     return storage[name]

@@ -24,7 +24,7 @@ def default_config(level="DEBUG", name="vodka"):
             }
         }
     }
-    
+
 def log():
     """Return the default logger set up for vodka"""
     return logging.getLogger("vodka")
@@ -77,7 +77,7 @@ def set_loggers(config):
 
 
 class LoggerMixin(object):
-    
+
     """
     Mixin class that sets a 'log' property that will either return
     the default vodka logger, or a logger specified in the object's

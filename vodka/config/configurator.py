@@ -8,7 +8,7 @@ class Configurator(object):
     """
     Handles interactive configuration process guided
     by specs defined via config Handler classes
-    
+
     Attributes:
         plugin_manager (PluginManager): plugin manager instance to use
             during plugin configuration
@@ -24,16 +24,16 @@ class Configurator(object):
         self.skip_defaults = skip_defaults
 
     def configure(self, cfg, handler, path=""):
-        
+
         """
         Start configuration process for the provided handler
 
         Args:
             cfg (dict): config container
-            handler (config.Handler class): config handler to use 
+            handler (config.Handler class): config handler to use
             path (str): current path in the configuration progress
         """
-        
+
         # configure simple value attributes (str, int etc.)
         for name, attr in handler.attributes():
             if cfg.get(name) is not None:
@@ -42,7 +42,7 @@ class Configurator(object):
                 cfg[name] = self.set(handler, attr, name, path, cfg)
             elif attr.default is None and not hasattr(handler, "configure_%s" % name):
                 self.action_required.append(("%s.%s: %s" % (path, name, attr.help_text)).strip("."))
-        
+
         # configure attributes that have complex handlers defined
         # on the config Handler class (class methods prefixed by
         # configure_ prefix
@@ -60,7 +60,7 @@ class Configurator(object):
 
 
     def set(self, handler, attr, name, path, cfg):
-        
+
         """
         Obtain value for config variable, by prompting the user
         for input and substituting a default value if needed.
@@ -69,7 +69,7 @@ class Configurator(object):
         """
 
         full_name = ("%s.%s" % (path, name)).strip(".")
-        
+
         # obtain default value
         if attr.default is None:
             default = None
@@ -88,8 +88,8 @@ class Configurator(object):
         self.echo(attr.help_text)
         if attr.choices:
             self.echo("choices: %s" % ", ".join([str(c) for c in attr.choices]))
-       
-        
+
+
         # obtain user input and validate until input is valid
         b = False
         while not b:
@@ -109,7 +109,7 @@ class Configurator(object):
                 else:
                     raise
         return r
-    
+
     def echo(self, message):
         """ override this function with something that echos a message to the user """
         pass
@@ -117,4 +117,4 @@ class Configurator(object):
     def prompt(self, *args, **kwargs):
         """ override this function to prompt for user input """
         return None
- 
+

@@ -34,7 +34,7 @@ class DataType(vodka.component.Component):
 
     """
     Base class for all data types
-    
+
     Classes:
         Configuration: configuration handler
     """

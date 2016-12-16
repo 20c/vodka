@@ -32,11 +32,11 @@ class ConfigHandler(vodka.config.Handler):
     k = vodka.config.Attribute(dict, default={}, handler=lambda x,y: DictHandler)
     l = vodka.config.Attribute(dict, default={}, handler=lambda x,y: DictHandlerProxy)
     depr = vodka.config.Attribute(int, default=1, help_text="ht:depr", deprecated="2.2.0")
-    
+
     @classmethod
     def validate_e(self, value):
         return value < 5, "needs to be smaller than 5"
-    
+
     @classmethod
     def prepare_i(self, value, config=None):
         return value + 1
@@ -56,13 +56,13 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(cfg["i"], 2)
 
     def test_nested_validation(self):
-        
+
         # should pass validation
         cfg = {"b":1, "j":[{"a":1, "b":1}]}
         c,w = ConfigHandler.validate(cfg)
         self.assertEqual(c, 0)
         self.assertEqual(w, 0)
-        
+
         # should detect b missing from list element
         cfg = {"b":1, "j":[{"a":1}]}
         c,w = ConfigHandler.validate(cfg)
@@ -75,7 +75,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(c, 1)
         self.assertEqual(w, 0)
 
-        # should detect b value mismatch in list element 
+        # should detect b value mismatch in list element
         cfg = {"b":1, "j":[{"a":1,"b":"z"}]}
         c,w = ConfigHandler.validate(cfg)
         self.assertEqual(c, 1)
@@ -91,7 +91,7 @@ class TestConfig(unittest.TestCase):
 
 
     def test_validation(self):
-        
+
         # this should validate without errors
         cfg = {"a" : 1, "b" : 1}
         c,w = ConfigHandler.validate(cfg)
@@ -106,7 +106,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(w, 1)
 
     def test_check(self):
-        
+
         # this should raise ConfigErrorType
         cfg = {"a" : "invalid type"}
         with self.assertRaises(exc.ConfigErrorType) as inst:
@@ -134,7 +134,7 @@ class TestConfig(unittest.TestCase):
 
 
     def test_default(self):
-        
+
         # default hardset value
         self.assertEqual(ConfigHandler.default("a"), 1)
 

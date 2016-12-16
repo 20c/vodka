@@ -41,4 +41,4 @@ class TestInstance(unittest.TestCase):
         vodka.instance.ready()
 
         self.assertEqual(inst_a.initialized, True)
- 
+

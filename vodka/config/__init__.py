@@ -34,7 +34,7 @@ def is_config_container(v):
 class Attribute(object):
 
     """
-    A configuration attribute 
+    A configuration attribute
     """
 
     def __init__(self, expected_type, **kwargs):
@@ -43,14 +43,14 @@ class Attribute(object):
             expected_type (class or function): type expected for this attribute, if specified
                 as a function the result of the function will determine whether or not the value
                 passed type validation.
-        
+
         Kwargs:
             default: if specified this value will be used as a default value, if not specified then
                 configuration of this attribute is treated as mandatory
             help_text (str): explains the attribute
-            choices (list): list of valid value choices for this attribute, if set any value not 
+            choices (list): list of valid value choices for this attribute, if set any value not
                 matching any of the choices will raise a configuration error
-            handler (function): when the value for this attribute is a collection of configuration 
+            handler (function): when the value for this attribute is a collection of configuration
                 attributes (e.g. nested config) use this function to return the aproporiate config
                 handler class to use to validate them
             prepare (function): allows you to prepare value for this attribute
@@ -71,7 +71,7 @@ class Handler(object):
 
     """
     Can be attached to any vodka application class or vodka
-    plugin and allows to setup default values and config 
+    plugin and allows to setup default values and config
     sanity checking
     """
 
@@ -258,9 +258,9 @@ class Handler(object):
 
     @classmethod
     def attributes(cls):
-        """ 
+        """
         yields tuples for all attributes defined on this handler
-        
+
         tuple yielded:
             name (str), attribute (Attribute)
         """
@@ -318,7 +318,7 @@ class InstanceHandler(Handler):
         plugin_type = configurator.prompt("Add plugin", default="skip")
         if "plugins" not in cfg:
             cfg["plugins"] = []
- 
+
         while plugin_type != "skip":
             plugin_name = configurator.prompt("Name", default=plugin_type)
             try:
@@ -336,7 +336,7 @@ class InstanceHandler(Handler):
         configurator.echo("")
         configurator.echo("Configure applications")
         configurator.echo("")
- 
+
         if "apps" not in cfg:
             cfg["apps"] = {}
 

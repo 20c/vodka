@@ -20,13 +20,13 @@ class TimedPlugin(vodka.plugins.TimedPlugin):
 
 @vodka.plugin.register('data_test')
 class DataPlugin(vodka.plugins.DataPlugin):
-    
+
     def work(self):
         data = {"data":[], "ts" : time.time()}
         return super(DataPlugin, self).work(data)
 
 class TestPlugin(unittest.TestCase):
-   
+
     def test_get_plugin_by_name(self):
         expected = vodka.plugin.get_instance({"type":"test", "name":"a"})
         plugin = vodka.plugins.get_plugin_by_name("a")
@@ -34,10 +34,10 @@ class TestPlugin(unittest.TestCase):
 
     def test_get_plugin_class(self):
         self.assertEqual(PluginA, vodka.plugins.get_plugin_class("test"))
-        
+
 
 class TestTimedPlugin(unittest.TestCase):
-    
+
     def test_run(self):
         plugin = vodka.plugin.get_instance({
             "type" : "timed_test",
@@ -52,7 +52,7 @@ class TestTimedPlugin(unittest.TestCase):
 
 
 class TestDataPlugin(unittest.TestCase):
-    
+
     def test_run(self):
         vodka.data.data_types.instantiate_from_config(
         [{
@@ -66,7 +66,7 @@ class TestDataPlugin(unittest.TestCase):
              ]
         }]
 )
- 
+
         plugin = vodka.plugin.get_instance({
             "type" : "data_test",
             "interval" : 0.01,

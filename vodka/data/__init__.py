@@ -13,7 +13,7 @@ def handle(data_type, data, data_id=None, caller=None):
         data_id (str): can be used to differentiate between different data
             sets of the same data type. If not specified will default to
             the data type
-        caller (object): if specified, holds the object or function that 
+        caller (object): if specified, holds the object or function that
             is trying to handle data
 
     Returns:

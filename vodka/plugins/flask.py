@@ -13,10 +13,10 @@ from functools import update_wrapper
 
 try:
     from flask import (
-        Flask, 
-        request, 
+        Flask,
+        request,
         send_from_directory,
-        make_response, 
+        make_response,
         current_app
     )
 except ImportError:
@@ -27,7 +27,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
 
     @classmethod
     def decorate_route_crossdomain(cls, origin=None, methods=None, headers=None):
-        
+
         """
         route decorator that allows for configuration of access control allow
         headers
@@ -46,7 +46,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
                 crossdomain:
                   origin: '*'
         """
-      
+
         if methods is not None and not isinstance(methods, basestring):
             methods = ', '.join(sorted(x.upper() for x in methods))
         if headers is not None and not isinstance(headers, basestring):
@@ -73,14 +73,14 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
                 if headers is not None:
                     h['Access-Control-Allow-Headers'] = headers
                 return resp
-            
+
             return update_wrapper(wrapped_function, f)
         return decorator
 
     def init(self):
-        
+
         super(VodkaFlask, self).init()
-        
+
         if not Flask:
             raise Exception("Flask could not be imported, make sure flask module is installed")
 
@@ -96,7 +96,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
     def request_env(self, req=None, **kwargs):
         url=urllib.parse.urlparse(request.url)
         return super(VodkaFlask, self).request_env(
-            req=request, 
+            req=request,
             url=url,
             **kwargs
         )
@@ -114,7 +114,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
             '%s/' % path, view_func=target, methods=methods)
 
     def run(self):
-        
+
         ssl_config = self.get_config("ssl")
         if ssl_config.get("enabled"):
             ssl_context = (ssl_config.get("cert"), ssl_config.get("key"))

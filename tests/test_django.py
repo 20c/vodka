@@ -20,7 +20,7 @@ CONFIG = {
 }
 
 class TestDjango(unittest.TestCase):
-    
+
     @pytest.fixture(autouse=True)
     def setup(self, tmpdir):
         self.tmpdir = tmpdir

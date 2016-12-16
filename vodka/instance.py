@@ -1,4 +1,4 @@
-from vodka.app import get_application 
+from vodka.app import get_application
 
 instances = {}
 
@@ -28,7 +28,7 @@ def instantiate(config):
     Args:
         config (dict or MungeConfig): configuration object
     """
-    
+
     for handle, cfg in list(config["apps"].items()):
         if not cfg.get("enabled", True):
             continue
@@ -36,10 +36,10 @@ def instantiate(config):
         instances[app.handle] = app(cfg)
 
 def ready():
-    
+
     """
     Runs setup() method on all instantiated vodka apps
     """
-  
+
     for handle, instance in list(instances.items()):
         instance.setup()

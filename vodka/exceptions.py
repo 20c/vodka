@@ -3,7 +3,7 @@ from builtins import object
 class ConfigErrorMixin(object):
 
     handle = "config error"
-   
+
     def __init__(self, value=None, attr=None, level="warn", reason=None):
         self.attr = attr
         self.value = value
@@ -30,7 +30,7 @@ class ConfigErrorMixin(object):
 
 
 class ConfigErrorValue(ConfigErrorMixin, ValueError):
-    
+
     """
     This configuration error is raised when a config variable
     has an invalid value. Note that this is separate from a type
@@ -40,7 +40,7 @@ class ConfigErrorValue(ConfigErrorMixin, ValueError):
     handle = "config value invalid"
 
     def __init__(self, var_name, attr, value, reason=None, level="critical"):
-        
+
         ValueError.__init__(
             self,
             "%s contains an invalid value" % var_name
@@ -48,7 +48,7 @@ class ConfigErrorValue(ConfigErrorMixin, ValueError):
         ConfigErrorMixin.__init__(self, attr=attr, value=value, level=level, reason=reason)
 
 class ConfigErrorMissing(ConfigErrorMixin, KeyError):
-    
+
     """
     This configuration error is raised when a required config variable
     is missing
@@ -64,9 +64,9 @@ class ConfigErrorMissing(ConfigErrorMixin, KeyError):
         ConfigErrorMixin.__init__(self, attr=attr, level=level)
 
 class ConfigErrorType(ConfigErrorMixin, TypeError):
-    
+
     """
-    This configuration error is raised when a config variable is 
+    This configuration error is raised when a config variable is
     missconfigured with an invalid type for its value
     """
 
@@ -81,7 +81,7 @@ class ConfigErrorType(ConfigErrorMixin, TypeError):
 
 
 class ConfigErrorUnknown(ConfigErrorMixin, KeyError):
-    
+
     """
     This configuration error is raised when a config variable is
     specified but unknown to vodka

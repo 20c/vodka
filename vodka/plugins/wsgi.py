@@ -1,4 +1,4 @@
-import os 
+import os
 from vodka import get_instance
 import vodka.plugins
 import vodka.config
@@ -9,12 +9,12 @@ def application():
     return WSGIPlugin.wsgi_application
 
 class SSLConfiguration(vodka.config.Handler):
-    
+
     """
     Allows you to configure the ssl context of a wsgi
     plugin
     """
-    
+
     enabled = vodka.config.Attribute(
         bool,
         default=False,
@@ -107,10 +107,10 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         else:
             self.host = self.get_config("host")
             self.port = self.get_config("port")
- 
+
 
     def setup(self):
-       
+
         self.static_url_prefixes = {}
         for name in list(vodka.instances.keys()):
             self.static_url_prefixes[name] = self.static_url_prefix(name)
@@ -193,12 +193,12 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         if "url" in kwargs:
             renv["host"] = "%s://%s" % (kwargs["url"].scheme, kwargs["url"].netloc)
         return renv
-    
+
     def set_static_routes(self):
         pass
 
     def set_routes(self):
-        
+
         self.set_static_routes()
 
         for path, target in list(self.get_config("routes").items()):
@@ -220,14 +220,14 @@ class WSGIPlugin(vodka.plugins.PluginBase):
                 inst.wsgi_plugin = self
 
                 meth = getattr(inst, fnc_name)
-                
+
                 # apply route decorators (specified by config keys other than
                 # "target" and "methods"
                 for k,v in list(target.items()):
                     decorator = getattr(self, "decorate_route_%s" % k, None)
                     if decorator:
                         meth = decorator(**v).__call__(meth)
-                
+
                 self.set_route(path, meth,
                                methods=target.get("methods", []))
             else:
