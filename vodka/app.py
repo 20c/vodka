@@ -11,7 +11,7 @@ import inspect
 
 import pluginmgr
 
-import vodka.config 
+import vodka.config
 import vodka.log
 import vodka.component
 import vodka.util
@@ -51,7 +51,7 @@ def load(name, cfg):
 
     if not cfg.get("module") and not cfg.get("home"):
         cfg["module"] = "%s.application" % name
-    
+
     if cfg.get("module") and not cfg.get("home"):
         mod = importlib.import_module(cfg.get("module"))
         cfg["home"] = os.path.dirname(inspect.getfile(mod))
@@ -72,13 +72,13 @@ def load_all(cfg):
 
     # load all apps
     for name, app_cfg in list(cfg.get("apps", {}).items()):
-        
+
         # make sure required apps are loaded first
         for req in app_cfg.get("requires", []):
             if req not in imported:
                 load(req, cfg["apps"].get(req))
                 imported.append(req)
-        
+
         # load the app
         if name not in imported:
             load(name, app_cfg)
@@ -117,7 +117,7 @@ class Application(vodka.component.Component):
         )
 
     def __init__(self, config=None, config_dir=None):
-        
+
         """
         Kwargs:
             config (dict or MungeConfig): configuration object, note that
@@ -135,7 +135,7 @@ class Application(vodka.component.Component):
 
     def setup(self):
         """
-        Soft initialization method with no arguments that can easily be 
+        Soft initialization method with no arguments that can easily be
         overwritten by extended classes
         """
         pass
@@ -152,18 +152,18 @@ class WebApplication(Application):
     class Configuration(Application.Configuration):
 
         templates = vodka.config.Attribute(
-            vodka.config.validators.path, 
-            default=lambda k,i: i.resource(k), 
+            vodka.config.validators.path,
+            default=lambda k,i: i.resource(k),
             help_text="location of your template files"
         )
 
         template_engine = vodka.config.Attribute(
-            str, 
-            default="jinja2", 
-            choices=["jinja2"], 
+            str,
+            default="jinja2",
+            choices=["jinja2"],
             help_text="template engine to use to render your templates"
         )
-    
+
     # class methods and properties
 
     @property
@@ -178,10 +178,10 @@ class WebApplication(Application):
         Args:
             tmpl_name (str): file name of the template
             request_env (dict): request environment
-        
+
 
         Returns:
-            str - the rendered template 
+            str - the rendered template
         """
         return self.tmpl._render(tmpl_name, request_env)
 
