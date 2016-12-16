@@ -76,7 +76,7 @@ class Handler(vodka.component.Component):
 
 @register("index")
 class IndexHandler(Handler):
-    
+
     """
     Will re-index data in a dictorary, indexed to the
     key specified in the config
@@ -96,7 +96,7 @@ class IndexHandler(Handler):
 
 @register("store")
 class StorageHandler(Handler):
-    
+
     """
     Will store the data in the vodka storage.
     Data will be stored using data type and data id as keys
