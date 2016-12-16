@@ -55,6 +55,7 @@ class TestStart(unittest.TestCase):
 
         # make sure plugin workers were assigned accordingly
         self.assertEqual(r, {
+            "asyncio_workers" : [],
             "gevent_workers" : [],
             "thread_workers" : [vodka.plugin.get_instance("test_start_plugin_a")]
         })
