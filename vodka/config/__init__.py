@@ -66,6 +66,9 @@ class Attribute(object):
         self.prepare = kwargs.get("prepare", [])
         self.deprecated = kwargs.get("deprecated", False)
 
+    def finalize(self, cfg, key_name, value, **kwargs):
+        pass
+
 
 class Handler(object):
 
@@ -153,6 +156,8 @@ class Handler(object):
 
         num_crit = 0
         num_warn = 0
+
+
         if is_config_container(value) and attr.handler:
             if type(value) == dict or issubclass(type(value), Config):
                 keys = list(value.keys())
@@ -177,15 +182,27 @@ class Handler(object):
                     else:
                         _path = "%s.%s" % (attr_full_name, k)
                     _num_crit, _num_warn = h.validate(value[k], path=_path)
+                    h.finalize(value, k, value[k])
                     num_crit += _num_crit
                     num_warn += _num_warn
+
+        attr.finalize(cfg, key_name, value, num_crit=num_crit)
 
         return (num_crit, num_warn)
 
     @classmethod
+    def finalize(cls, cfg, key_name, value, **kwargs):
+        """
+        Will be called after validation for a config variable
+        is completed
+        """
+        pass
+
+
+    @classmethod
     def validate(cls, cfg, path=""):
         """
-        Validates a second of a config dict. Will automatically
+        Validates a section of a config dict. Will automatically
         validate child sections as well if their attribute pointers
         are instantiated with a handler property
         """
