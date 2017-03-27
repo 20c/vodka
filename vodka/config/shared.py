@@ -73,7 +73,8 @@ class Router(object):
     @property
     def empty(self):
         if self.container_type:
-            return self.container_type()
+            ct = self.container_type
+            return ct()
         return None
 
     def share(self, name, value):
@@ -142,10 +143,11 @@ class RoutersHandler(Handler):
     """
     mode = "merge"
     sharing_id = None
-    router_cls = None
+    router_cls = DictRouter
     @classmethod
     def finalize(cls, cfg, key_name, value, **kwargs):
-        share = cls.router_cls(cls.sharing_id, mode=cls.mode)
+        router_cls = cls.router_cls
+        share = router_cls(cls.sharing_id, mode=cls.mode)
         cfg[key_name] = share.share(key_name, value)
 
 def Routers(typ, share, handler=RoutersHandler):
