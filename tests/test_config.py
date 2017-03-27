@@ -1,6 +1,11 @@
 import unittest
+import uuid
+import vodka.log
 import vodka.config
+import vodka.config.shared as shared
 import vodka.exceptions as exc
+
+vodka.log.set_loggers(vodka.log.default_config())
 
 
 def validator(value):
@@ -40,6 +45,33 @@ class ConfigHandler(vodka.config.Handler):
     @classmethod
     def prepare_i(self, value, config=None):
         return value + 1
+
+class SharedConfigSubHandler(shared.RoutersHandler):
+    first = vodka.config.Attribute(str, default="")
+    second = vodka.config.Attribute(str, default="")
+    third = vodka.config.Attribute(str, default="")
+    sub = vodka.config.Attribute(int)
+
+class SharedConfigHandler(vodka.config.Handler):
+    a = shared.Attribute(
+        dict,
+        share="a:merge"
+    )
+    b = shared.Attribute(
+        list,
+        share="b:merge"
+    )
+    c = shared.Attribute(
+        list,
+        share="c:append"
+    )
+
+    d = vodka.config.Attribute(
+        dict,
+        handler=lambda x,u: shared.Routers(dict, "d:merge", handler=SharedConfigSubHandler)
+    )
+
+
 
 class TestConfig(unittest.TestCase):
 
@@ -140,6 +172,61 @@ class TestConfig(unittest.TestCase):
 
         # default lambda value with self passed as instance
         self.assertEqual(ConfigHandler.default("g", inst=self), 2)
+
+
+    def test_shared_config(self):
+
+        def uniq():
+            return str(uuid.uuid4())
+
+        cfg_a = {}
+        cfg_b = {}
+
+        i = uniq()
+        i2 = uniq()
+        i3 = uniq()
+
+        for k in ["a"]:
+            cfg_a[k] = {"first": i, "second": i2}
+            cfg_b[k] = {"third": i2, "second": i}
+        for k in ["b", "c"]:
+            cfg_a[k] = [i, i2]
+            cfg_b[k] = [i, i2]
+
+        cfg_a["d"] = {
+            "sub_1" : {"first": i, "second":i2, "sub":1},
+            "sub_2" : {"first": i, "second":i2, "sub":2}
+        }
+        cfg_b["d"] = {
+            "sub_1" : {"third": i, "second":i2, "sub":1},
+            "sub_2" : {"first": i2, "second":i, "sub":2}
+        }
+
+        SharedConfigHandler.validate(cfg_a)
+        SharedConfigHandler.validate(cfg_b)
+
+        # test shared dict (merge)
+        self.assertEqual(cfg_a["a"], cfg_b["a"])
+        self.assertEqual(cfg_a["a"]["third"], i2)
+        self.assertEqual(cfg_a["a"]["second"], i)
+        self.assertEqual(cfg_a["a"]["first"], i)
+
+        # test shared list (merge)
+        self.assertEqual(cfg_a["b"], cfg_b["b"])
+        self.assertEqual(cfg_a["b"], [i, i2])
+
+        # test shared list (append)
+        self.assertEqual(cfg_a["c"], cfg_b["c"])
+        self.assertEqual(cfg_a["c"], [i, i2, i, i2])
+
+        # test shared dicts in handler (merge)
+        self.assertEqual(cfg_a["d"], cfg_b["d"])
+        self.assertEqual(cfg_a["d"], {
+            "sub_1" : {"first":i, "second": i2, "third": i, "sub": 1},
+            "sub_2" : {"first":i2, "second": i, "sub": 2}
+        })
+
+
 
 
 
