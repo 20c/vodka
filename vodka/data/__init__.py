@@ -1,5 +1,7 @@
 _handlers = {}
 
+from . import handlers
+
 
 def handle(data_type, data, data_id=None, caller=None):
     """
