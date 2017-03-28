@@ -12,6 +12,7 @@ import inspect
 import pluginmgr
 
 import vodka.config
+import vodka.config.shared
 import vodka.log
 import vodka.component
 import vodka.util
@@ -141,6 +142,11 @@ class Application(vodka.component.Component):
         pass
 
 
+class SharedIncludesConfigHandler(vodka.config.shared.RoutersHandler):
+    path = vodka.config.Attribute(
+        str,
+        help_text="relative path (to the app's static directory) of the file to be included"
+    )
 
 class WebApplication(Application):
     """
@@ -164,12 +170,24 @@ class WebApplication(Application):
             help_text="template engine to use to render your templates"
         )
 
+        includes = vodka.config.Attribute(
+            dict,
+            default={},
+            handler=lambda x,y: vodka.config.shared.Routers(dict, "includes:merge", handler=SharedIncludesConfigHandler),
+            help_text="allows you to specify extra media includes for js,css etc."
+        )
+
     # class methods and properties
 
     @property
     def template_path(self):
         """ absolute path to template directory """
         return self.get_config("templates")
+
+    @property
+    def includes(self):
+        """ return includes from config """
+        return self.get_config("includes")
 
     def render(self, tmpl_name, request_env):
         """
@@ -191,3 +209,4 @@ class WebApplication(Application):
         # set up the template engine
         eng = twentyc.tmpl.get_engine(self.config.get("template_engine", "jinja2"))
         self.tmpl = eng(tmpl_dir=self.template_path)
+
