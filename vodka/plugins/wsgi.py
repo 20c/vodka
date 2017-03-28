@@ -184,10 +184,14 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
     def request_env(self, req=None, **kwargs):
         renv = {
+            "static_url" : self.get_config("static_url_path"),
             "request": req
         }
-        for name in list(vodka.instances.keys()):
-            appenv = {"static_url" : self.static_url_prefixes.get(name, "")}
+        for name, instance in vodka.instances.items():
+            appenv = {
+                "static_url" : self.static_url_prefixes.get(name, ""),
+                "instance": instance
+            }
             renv[name] = appenv
         renv.update(**kwargs)
         if "url" in kwargs:
