@@ -118,6 +118,7 @@ def newapp(path):
     shutil.copy(os.path.join(app_path, "application.py"), os.path.join(path, "application.py"))
     shutil.copy(os.path.join(app_path, "__init__.py"), os.path.join(path, "__init__.py"))
     shutil.copy(os.path.join(app_path, "plugins", "example.py"), os.path.join(path, "plugins", "example.py"))
+    shutil.copy(os.path.join(app_path, "plugins", "__init__.py"), os.path.join(path, "plugins", "__init__.py"))
 
 
 
