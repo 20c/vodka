@@ -67,7 +67,8 @@ class TestWSGI(unittest.TestCase):
         self.plugin.setup()
         env = self.plugin.request_env(req=req, something="other")
         self.assertEqual(env["wsgi_test_app"], {
-            "static_url" : "/static/wsgi_test_app/"
+            "static_url" : "/static/wsgi_test_app/",
+            "instance" : self.app
         })
         self.assertEqual(env["request"], req)
         self.assertEqual(env["something"], "other")

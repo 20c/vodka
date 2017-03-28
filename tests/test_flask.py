@@ -94,7 +94,10 @@ class TestFlask(unittest.TestCase):
             self.assertEqual(env.get("something"), "else")
             self.assertEqual(env.get("request"), request)
             self.assertEqual(env.get("host"), "http://localhost")
-            self.assertEqual(env.get("flask_test"), {"static_url":"/static/flask_test/"})
+            self.assertEqual(env.get("flask_test"), {
+                "static_url":"/static/flask_test/",
+                "instance" : vodka.instance.get_instance("flask_test")
+            })
 
 
     def _test_routing(self):
