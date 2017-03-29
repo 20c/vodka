@@ -1,8 +1,8 @@
 <head>
-  {% for k,f in test_app.instance.includes.js.items() %}
+  {% for f in graphsrv.instance.includes.js %}
   <script src="{{ static_url }}/{{ f.path }}" type="text/javascript"></script>
   {% endfor %}
-  {% for k,f in test_app.instance.includes.css.items() %}
+  {% for f in graphsrv.instance.includes.css %}
   <link rel="stylesheet" href="{{ static_url }}/{{ f.path }}" type="text/css" />
   {% endfor %}
 </head>
