@@ -16,6 +16,7 @@ import vodka.config.shared
 import vodka.log
 import vodka.component
 import vodka.util
+import vodka.instance
 
 applications = {}
 loaded_paths = []
@@ -148,19 +149,23 @@ class SharedIncludesConfigHandler(vodka.config.shared.RoutersHandler):
         help_text="relative path (to the app's static directory) of the file to be included"
     )
 
-class WebApplication(Application):
+class TemplatedApplication(Application):
     """
-    Application wrapper for serving content via a web server.
+    Application wrapper for an application that is using templates
+    to build it's output
     """
-
-    # Configuration handler
 
     class Configuration(Application.Configuration):
-
         templates = vodka.config.Attribute(
             vodka.config.validators.path,
             default=lambda k,i: i.resource(k),
             help_text="location of your template files"
+        )
+
+        template_locations = vodka.config.Attribute(
+            list,
+            default=[],
+            help_text="allows you to specify additional paths to load templates from"
         )
 
         template_engine = vodka.config.Attribute(
@@ -170,6 +175,68 @@ class WebApplication(Application):
             help_text="template engine to use to render your templates"
         )
 
+    @property
+    def template_path(self):
+        """ absolute path to template directory """
+        return self.get_config("templates")
+
+
+    def render(self, tmpl_name, context_env):
+        """
+        Render the specified template and return the output.
+
+        Args:
+            tmpl_name (str): file name of the template
+            context_env (dict): context environment
+
+
+        Returns:
+            str - the rendered template
+        """
+        return self.tmpl._render(tmpl_name, context_env)
+
+    def setup(self):
+        import twentyc.tmpl
+
+        # set up the template engine
+        eng = twentyc.tmpl.get_engine(self.config.get("template_engine", "jinja2"))
+
+        template_locations = []
+
+        # we want tp searcj additional template location specified 
+        # in this app's config
+        for path in self.get_config("template_locations"):
+            if os.path.exists(path):
+                self.log.debug("Template location added for application '%s': %s" % (self.handle, path))
+                template_locations.append(path)
+
+        # we want to search for template overrides in other app instances
+        # that provide templates, by checking if they have a subdir in
+        # their template directory that matches this app's handle
+        for name, inst in vodka.instance.instances.items():
+            if inst == self:
+                continue
+            if hasattr(inst, "template_path"):
+                path = os.path.join(inst.template_path, self.handle)
+                if os.path.exists(path):
+                    self.log.debug("Template location added for application '%s' via application '%s': %s" % (self.handle, inst.handle, path))
+                    template_locations.append(path)
+
+        # finally we add this apps template path to the template locations
+        template_locations.append(self.template_path)
+
+        self.tmpl = eng(search_path=template_locations)
+
+
+class WebApplication(TemplatedApplication):
+    """
+    Application wrapper for serving content via a web server.
+    """
+
+    # Configuration handler
+
+    class Configuration(TemplatedApplication.Configuration):
+
         includes = vodka.config.Attribute(
             dict,
             default={},
@@ -178,11 +245,6 @@ class WebApplication(Application):
         )
 
     # class methods and properties
-
-    @property
-    def template_path(self):
-        """ absolute path to template directory """
-        return self.get_config("templates")
 
     @property
     def includes(self):
@@ -201,12 +263,5 @@ class WebApplication(Application):
         Returns:
             str - the rendered template
         """
-        return self.tmpl._render(tmpl_name, request_env)
-
-    def setup(self):
-        import twentyc.tmpl
-
-        # set up the template engine
-        eng = twentyc.tmpl.get_engine(self.config.get("template_engine", "jinja2"))
-        self.tmpl = eng(tmpl_dir=self.template_path)
+        return super(WebApplication, self).render(tmpl_name, request_env)
 
