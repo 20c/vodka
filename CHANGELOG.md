@@ -4,8 +4,16 @@
 ## [Unreleased]
 
 ### Added
+
+- shared config attributes in vodka.config.shared
+- can now specify additional template locations for TemplatedApplication instances via the 'template_locations' configuration attribute. (#3)
+- can now override another applications templates by creating an aproporiately named subdirectory in the overriding applications template directory (#3)
+
 ### Fixed
 ### Changed
+
+- templating logic was split out of WebApplication into TemplatedApplication
+
 ### Deprecated
 ### Removed
 ### Security
