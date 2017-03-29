@@ -4,6 +4,15 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 2.2.0 
+
+### Added
 
 - shared config attributes in vodka.config.shared (#6)
 - can now specify additional template locations for TemplatedApplication instances via the 'template_locations' configuration attribute. (#3)
@@ -11,6 +20,9 @@
 - WebApplication: added 'includes' config attribute for controlled static media library loading (js, css)
 
 ### Fixed
+
+- bartender newapp command now creates an empty __init__.py in the plugin directory
+
 ### Changed
 
 - templating logic was split out of WebApplication into TemplatedApplication
