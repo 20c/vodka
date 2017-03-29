@@ -149,6 +149,12 @@ class SharedIncludesConfigHandler(vodka.config.shared.RoutersHandler):
         help_text="relative path (to the app's static directory) of the file to be included"
     )
 
+    order = vodka.config.Attribute(
+        int,
+        default=0,
+        help_text="loading order, higher numbers will be loaded after lower numbers"
+    )
+
 class TemplatedApplication(Application):
     """
     Application wrapper for an application that is using templates
@@ -249,7 +255,7 @@ class WebApplication(TemplatedApplication):
     @property
     def includes(self):
         """ return includes from config """
-        return self.get_config("includes")
+        return dict([(k, sorted(v.values(), key=lambda x:x.get("order",0))) for k,v in self.get_config("includes").items()])
 
     def render(self, tmpl_name, request_env):
         """
