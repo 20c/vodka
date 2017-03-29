@@ -1,3 +1,4 @@
+import os.path
 import unittest
 import vodka.instance
 import vodka.app
@@ -10,6 +11,11 @@ class TemplatedAppA(vodka.app.TemplatedApplication):
 class TemplatedAppB(vodka.app.TemplatedApplication):
     pass
 
+resources_dir = os.path.join(os.path.dirname(__file__), "resources", "test_templated_app")
+
+def rsrc(name):
+    return os.path.join(resources_dir, name)
+
 class TestTemplatedApp(unittest.TestCase):
 
     def test_render(self):
@@ -17,14 +23,14 @@ class TestTemplatedApp(unittest.TestCase):
             "apps" : {
                 TemplatedAppA.handle : {
                     "enabled" : True,
-                    "templates" : "resources/test_templated_app/a",
+                    "templates" : rsrc("a"),
                     "template_locations": [
-                        "resources/test_templated_app/a2"
+                        rsrc("a2")
                     ]
                 },
                 TemplatedAppB.handle : {
                     "enabled" : True,
-                    "templates" : "resources/test_templated_app/b"
+                    "templates" : rsrc("b")
                 }
             }
         })
