@@ -5,9 +5,10 @@
 
 ### Added
 
-- shared config attributes in vodka.config.shared
+- shared config attributes in vodka.config.shared (#6)
 - can now specify additional template locations for TemplatedApplication instances via the 'template_locations' configuration attribute. (#3)
 - can now override another applications templates by creating an aproporiately named subdirectory in the overriding applications template directory (#3)
+- WebApplication: added 'includes' config attribute for controlled static media library loading (js, css)
 
 ### Fixed
 ### Changed
