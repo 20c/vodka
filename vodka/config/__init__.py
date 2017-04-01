@@ -65,8 +65,12 @@ class Attribute(object):
         self.choices = kwargs.get("choices")
         self.prepare = kwargs.get("prepare", [])
         self.deprecated = kwargs.get("deprecated", False)
+        self.nested = kwargs.get("nested", 0)
 
     def finalize(self, cfg, key_name, value, **kwargs):
+        pass
+
+    def preload(self, cfg, key_name, **kwargs):
         pass
 
 
@@ -79,7 +83,7 @@ class Handler(object):
     """
 
     @classmethod
-    def check(cls, cfg, key_name, path):
+    def check(cls, cfg, key_name, path, parent_cfg=None):
         """
         Checks that the config values specified in key name is
         sane according to config attributes defined as properties
@@ -181,8 +185,15 @@ class Handler(object):
                             attr_full_name, value[k].get("name"))
                     else:
                         _path = "%s.%s" % (attr_full_name, k)
-                    _num_crit, _num_warn = h.validate(value[k], path=_path)
-                    h.finalize(value, k, value[k])
+                    _num_crit, _num_warn = h.validate(value[k], path=_path, nested=attr.nested, parent_cfg=cfg)
+                    h.finalize(
+                        value,
+                        k,
+                        value[k],
+                        attr=attr,
+                        attr_name=key_name,
+                        parent_cfg=cfg
+                    )
                     num_crit += _num_crit
                     num_warn += _num_warn
 
@@ -200,7 +211,7 @@ class Handler(object):
 
 
     @classmethod
-    def validate(cls, cfg, path=""):
+    def validate(cls, cfg, path="", nested=0, parent_cfg=None):
         """
         Validates a section of a config dict. Will automatically
         validate child sections as well if their attribute pointers
@@ -213,15 +224,11 @@ class Handler(object):
         # number of non-critical errors found
         num_warn = 0
 
-        if type(cfg) in [dict, Config]:
-            keys = list(cfg.keys())
-        elif type(cfg) == list:
-            keys = list(range(0, len(cfg)))
-        else:
-            raise ValueError("Cannot validate non-iterable config value")
 
         # check for missing keys in the config
         for name in dir(cls):
+            if nested > 0:
+                break
             try:
                 attr = getattr(cls, name)
                 if isinstance(attr, Attribute):
@@ -234,6 +241,8 @@ class Handler(object):
                             attr_full_name = name
                         raise vodka.exceptions.ConfigErrorMissing(
                             attr_full_name, attr)
+                    attr.preload(cfg, name)
+
             except vodka.exceptions.ConfigErrorMissing as inst:
                 if inst.level == "warn":
                     vodka.log.warn(inst.explanation)
@@ -241,6 +250,27 @@ class Handler(object):
                 elif inst.level == "critical":
                     vodka.log.error(inst.explanation)
                     num_crit += 1
+
+
+        if type(cfg) in [dict, Config]:
+            keys = list(cfg.keys())
+            if nested > 0:
+                for _k, _v in cfg.items():
+                    _num_crit, _num_warn = cls.validate(
+                        _v,
+                        path=("%s.%s" % (path, _k)),
+                        nested=nested-1,
+                        parent_cfg=cfg
+                    )
+                    num_crit += _num_crit
+                    num_warn += _num_warn
+                return num_crit, num_warn
+        elif type(cfg) == list:
+            keys = list(range(0, len(cfg)))
+        else:
+            raise ValueError("Cannot validate non-iterable config value")
+
+
 
         # validate existing keys in the config
         for key in keys:
