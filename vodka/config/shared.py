@@ -38,12 +38,31 @@ class Attribute(BaseAttribute):
 
         super(Attribute, self).__init__(expected_type, **kwargs)
         share = kwargs.get("share","")
+        self.share = None
         if share:
             sharing_id, sharing_mode = tuple(share.split(":"))
             self.share = ROUTERS[expected_type](sharing_id, mode=sharing_mode)
 
     def finalize(self, cfg, key_name, value, **kwargs):
-        cfg[key_name] = self.share.share(key_name, value)
+        if self.share:
+            cfg[key_name] = self.share.share(key_name, value)
+
+
+class Container(Attribute):
+
+    def finalize(self, cfg, key_name, value, **kwargs):
+        return
+
+    def preload(self, cfg, key_name, **kwargs):
+        if self.share:
+            if cfg.get(key_name) is not None:
+                for _k, _v in cfg.get(key_name,{}).items():
+                    self.share.share(_k, _v)
+            if self.default is not None:
+                for _k, _v in self.default.items():
+                    self.share.share(_k, _v)
+                cfg[key_name] = self.share.container
+
 
 
 class Router(object):
@@ -144,11 +163,15 @@ class RoutersHandler(Handler):
     mode = "merge"
     sharing_id = None
     router_cls = DictRouter
+
     @classmethod
     def finalize(cls, cfg, key_name, value, **kwargs):
         router_cls = cls.router_cls
         share = router_cls(cls.sharing_id, mode=cls.mode)
-        cfg[key_name] = share.share(key_name, value)
+        attr_name = kwargs.get("attr_name")
+        parent_cfg = kwargs.get("parent_cfg")
+        share.share(key_name, value)
+        parent_cfg[attr_name] = shared[cls.sharing_id]
 
 def Routers(typ, share, handler=RoutersHandler):
     """
