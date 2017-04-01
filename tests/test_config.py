@@ -1,5 +1,6 @@
 import unittest
 import uuid
+import json
 import vodka.log
 import vodka.config
 import vodka.config.shared as shared
@@ -66,10 +67,35 @@ class SharedConfigHandler(vodka.config.Handler):
         share="c:append"
     )
 
-    d = vodka.config.Attribute(
+    d = shared.Container(
         dict,
+        share="d:merge",
         handler=lambda x,u: shared.Routers(dict, "d:merge", handler=SharedConfigSubHandler)
     )
+
+    e = shared.Container(
+        dict,
+        nested=1,
+        share="e:merge",
+        default={
+            "group_1": {"sub_1": {"sub":1, "first":"hello"}}
+        },
+        handler=lambda x,u: shared.Routers(dict, "e:merge", handler=SharedConfigSubHandler)
+    )
+
+    f = shared.Container(
+        dict,
+        nested=1,
+        share="e:merge",
+        default={
+            "group_1": {"sub_2": {"sub":2, "first":"world"}}
+        },
+        handler=lambda x,u: shared.Routers(dict, "e:merge", handler=SharedConfigSubHandler)
+    )
+
+
+
+
 
 
 
@@ -179,8 +205,8 @@ class TestConfig(unittest.TestCase):
         def uniq():
             return str(uuid.uuid4())
 
-        cfg_a = {}
-        cfg_b = {}
+        cfg_a = {"__cfg_a":"a"}
+        cfg_b = {"__cfg_b":"b"}
 
         i = uniq()
         i2 = uniq()
@@ -201,6 +227,10 @@ class TestConfig(unittest.TestCase):
             "sub_1" : {"third": i, "second":i2, "sub":1},
             "sub_2" : {"first": i2, "second":i, "sub":2}
         }
+        cfg_b["e"] = {
+            "group_1" : { "sub_3": {"first":"sup", "sub":3}},
+            "group_2" : { "sub_1": {"first":"well", "sub":1}}
+        }
 
         SharedConfigHandler.validate(cfg_a)
         SharedConfigHandler.validate(cfg_b)
@@ -219,11 +249,27 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(cfg_a["c"], cfg_b["c"])
         self.assertEqual(cfg_a["c"], [i, i2, i, i2])
 
+        print(cfg_b["e"].keys())
+        print(json.dumps(cfg_a["e"], indent=2))
+
+
         # test shared dicts in handler (merge)
         self.assertEqual(cfg_a["d"], cfg_b["d"])
         self.assertEqual(cfg_a["d"], {
             "sub_1" : {"first":i, "second": i2, "third": i, "sub": 1},
             "sub_2" : {"first":i2, "second": i, "sub": 2}
+        })
+
+        # make sure that default configs got shared as well
+        self.assertEqual(cfg_a["e"], {
+            "group_1" : {
+                "sub_1" : {"first": "hello", "sub":1},
+                "sub_2" : {"first": "world", "sub":2},
+                "sub_3" : {"first": "sup", "sub":3}
+            },
+            "group_2" : {
+                "sub_1" : {"first":"well", "sub":1}
+            }
         })
 
 
