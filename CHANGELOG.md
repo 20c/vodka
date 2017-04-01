@@ -5,6 +5,10 @@
 
 ### Added
 ### Fixed
+
+- nested configuration handlers
+- nested configuration sharing
+
 ### Changed
 ### Deprecated
 ### Removed
