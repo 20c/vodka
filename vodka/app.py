@@ -243,9 +243,11 @@ class WebApplication(TemplatedApplication):
 
     class Configuration(TemplatedApplication.Configuration):
 
-        includes = vodka.config.Attribute(
+        includes = vodka.config.shared.Container(
             dict,
             default={},
+            nested=1,
+            share="includes:merge",
             handler=lambda x,y: vodka.config.shared.Routers(dict, "includes:merge", handler=SharedIncludesConfigHandler),
             help_text="allows you to specify extra media includes for js,css etc."
         )
