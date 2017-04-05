@@ -5,16 +5,19 @@
 
 ### Added
 ### Fixed
-
-- nested configuration handlers
-- nested configuration sharing
-
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
 
-## 2.2.0 
+## 2.2.1
+
+### Fixed
+
+- nested configuration handlers
+- nested configuration sharing
+
+## 2.2.0
 
 ### Added
 
