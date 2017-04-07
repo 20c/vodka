@@ -4,6 +4,9 @@
 ## [Unreleased]
 
 ### Added
+
+wsgi plugin: static_routes config attribute
+
 ### Fixed
 ### Changed
 ### Deprecated
