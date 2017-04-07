@@ -101,11 +101,18 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
             **kwargs
         )
 
+
     def set_static_routes(self):
         def static_file(app, path):
             app = vodka.get_instance(app)
             return send_from_directory(app.get_config('home'), os.path.join("static",path))
         self.set_route(os.path.join(self.get_config('static_url_path'),"<app>","<path:path>"), static_file)
+
+        for _url, _path in self.get_config("static_routes").items():
+            self.set_route(
+                os.path.join(self.get_config("static_url_path"), _url, "<path:path>"),
+                lambda path: send_from_directory(_path, path)
+            )
 
     def set_route(self, path, target, methods=None):
         if not methods:

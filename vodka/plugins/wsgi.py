@@ -86,6 +86,12 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             default={}
         )
 
+        static_routes = vodka.config.Attribute(
+            dict,
+            help_text="routing of request endpoints to static file locations",
+            default={}
+        )
+
         ssl = vodka.config.Attribute(
             dict,
             help_text="ssl encryption",
