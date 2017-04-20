@@ -5,12 +5,12 @@
 
 ### Added
 
-wsgi plugin: static_routes config attribute
+- wsgi plugin: static_routes config attribute
 
 ### Fixed
 
-fix #8: re-index data handler graceful error handling when passed empty rows in data
-fix #8: errors in data handlers will now log errors instead of raising
+- fix #8: re-index data handler graceful error handling when passed empty rows in data
+- fix #8: errors in data handlers will now log errors instead of raising
 
 ### Changed
 ### Deprecated
