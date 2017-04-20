@@ -76,6 +76,7 @@ class TestData(unittest.TestCase):
 
         self.assertEqual(data, expected)
 
+
     def test_handle(self):
         data = {"data" : {"this":"is a test"}}
         expected = {"data" : {"this":"is a test", "a":True, "b":True}}
@@ -92,6 +93,26 @@ class TestData(unittest.TestCase):
         data = {"data": objs}
         expected = {"data": dict([(o["name"], o) for o in objs])}
         self.assertEqual(handler(data), expected)
+
+        # test with incomplete data
+
+        objs = [{"name":"obj %s" % i} for i in range(0,10)]
+        objs[2] = None
+        data = {"data": objs}
+
+        i = 0
+        expected = {"data":{}}
+        while i < 10:
+            if i == 2:
+                i+=1
+                continue
+            o = objs[i]
+            expected["data"][o["name"]] = o
+            i+=1
+
+        self.assertEqual(handler(data), expected)
+
+
 
     def test_handler_store(self):
 
