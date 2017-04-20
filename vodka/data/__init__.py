@@ -1,5 +1,6 @@
 _handlers = {}
-
+import traceback
+import vodka.log
 from . import handlers
 
 
@@ -31,6 +32,10 @@ def handle(data_type, data, data_id=None, caller=None):
             [(h.handle, h) for h in handlers.instantiate_for_data_type(data_type, data_id=data_id)])
 
     for handler in list(_handlers[data_id].values()):
-        data = handler(data, caller=caller)
+        try:
+            data = handler(data, caller=caller)
+        except Exception as inst:
+            vodka.log.error("Data handler '%s' failed with error" % handler)
+            vodka.log.error(traceback.format_exc())
 
     return data

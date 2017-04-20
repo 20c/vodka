@@ -78,7 +78,7 @@ class Handler(vodka.component.Component):
 class IndexHandler(Handler):
 
     """
-    Will re-index data in a dictorary, indexed to the
+    Will re-index data in a dictionary, indexed to the
     key specified in the config
     """
 
@@ -89,8 +89,18 @@ class IndexHandler(Handler):
         )
 
     def __call__(self, data, caller=None):
-        data["data"] = dict([(d[self.get_config("index")], d)
-                             for d in data["data"]])
+        if "data" in data:
+            r = {}
+            for d in data["data"]:
+                if isinstance(d, dict):
+                    r[d[self.get_config("index")]] = d
+                elif d:
+                    self.log.debug("Only dictionary type data rows may be re-indexed, row ignored")
+                else:
+                    self.log.debug("Empty data row ignored.")
+            data["data"] = r
+        else:
+            self.log.debug("Empty data object ignored")
         return data
 
 
