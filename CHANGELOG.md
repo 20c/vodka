@@ -4,6 +4,15 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 2.2.2
+
+### Added
 
 - wsgi plugin: static_routes config attribute
 
