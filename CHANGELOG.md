@@ -4,6 +4,9 @@
 ## [Unreleased]
 
 ### Added
+
+- app versioning (#10)
+
 ### Fixed
 ### Changed
 ### Deprecated
