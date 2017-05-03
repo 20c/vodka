@@ -6,6 +6,8 @@ from builtins import object
 
 import os
 import sys
+import re
+import copy
 import importlib
 import inspect
 
@@ -22,11 +24,6 @@ applications = {}
 loaded_paths = []
 
 # FUNCTIONS
-
-class register(vodka.util.register):
-    class Meta(object):
-        name = "application"
-        objects = applications
 
 def get_application(handle):
     """
@@ -86,6 +83,13 @@ def load_all(cfg):
             load(name, app_cfg)
             imported.append(name)
 
+# DECORATORS
+
+class register(vodka.util.register):
+    class Meta(object):
+        name = "application"
+        objects = applications
+
 
 # CLASSES
 
@@ -99,6 +103,7 @@ class Application(vodka.component.Component):
     """
 
     handle = "base"
+    version = None
 
     class Configuration(vodka.component.Component.Configuration):
         home = vodka.config.Attribute(
@@ -117,6 +122,14 @@ class Application(vodka.component.Component):
             default=[],
             help_text="list of vodka apps required by this app"
         )
+
+
+    @classmethod
+    def versioned_handle(cls):
+        if cls.version is None:
+            return cls.handle
+        return "%s/%s" %  (cls.handle, cls.version)
+
 
     def __init__(self, config=None, config_dir=None):
 
@@ -185,6 +198,21 @@ class TemplatedApplication(Application):
     def template_path(self):
         """ absolute path to template directory """
         return self.get_config("templates")
+
+
+    def versioned_url(self, path):
+        #FIXME: needs a more bulletproof solution so it works with paths
+        #that already have query parameters attached etc.
+        if self.version is None:
+            return path
+        if not re.match("^%s/.*" % self.handle, path):
+            return path
+        return "%s?v=%s" % (path, self.version)
+
+
+    def versioned_path(self, path):
+        return re.sub("^%s/" % self.handle, "%s/"%self.versioned_handle(), path)
+
 
 
     def render(self, tmpl_name, context_env):
@@ -257,7 +285,13 @@ class WebApplication(TemplatedApplication):
     @property
     def includes(self):
         """ return includes from config """
-        return dict([(k, sorted(v.values(), key=lambda x:x.get("order",0))) for k,v in self.get_config("includes").items()])
+        r = dict([(k, sorted(copy.deepcopy(v).values(), key=lambda x:x.get("order",0))) for k,v in self.get_config("includes").items()])
+        if self.version is not None:
+            for k,v in r.items():
+                for j in v:
+                    j["path"] = self.versioned_url(j["path"])
+        return r
+
 
     def render(self, tmpl_name, request_env):
         """
@@ -272,4 +306,5 @@ class WebApplication(TemplatedApplication):
             str - the rendered template
         """
         return super(WebApplication, self).render(tmpl_name, request_env)
+
 
