@@ -14,10 +14,15 @@ class AppA(vodka.app.Application):
 class AppB(vodka.app.Application):
     pass
 
+@vodka.app.register("app_versioned")
+class AppV(vodka.app.WebApplication):
+    version = "1.0.0"
+
 APP_CONFIG = {
     "apps" : {
         AppA.handle : { "enabled" : True },
-        AppB.handle : { "enabled" : False }
+        AppB.handle : { "enabled" : False },
+        AppV.handle : { "enabled" : True },
     }
 }
 
@@ -42,3 +47,15 @@ class TestInstance(unittest.TestCase):
 
         self.assertEqual(inst_a.initialized, True)
 
+    def test_app_versioning(self):
+        vodka.instance.instantiate(APP_CONFIG)
+
+        inst_a = vodka.instance.get_instance(AppA.handle)
+        inst_v = vodka.instance.get_instance(AppV.handle)
+
+        self.assertEqual(inst_v.versioned_handle(), "app_versioned/1.0.0")
+        self.assertEqual(inst_v.versioned_path("app_versioned/b/c"), "app_versioned/1.0.0/b/c")
+        self.assertEqual(inst_v.versioned_url("app_versioned/b/c"), "app_versioned/b/c?v=1.0.0")
+
+
+        self.assertEqual(inst_a.versioned_handle(), "app_a2")
