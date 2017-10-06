@@ -13,6 +13,12 @@
 ### Removed
 ### Security
 
+## 2.2.3
+
+### Fixed
+
+- pinned pluginmgr version to <0.5.0 for the time being
+
 ## 2.2.2
 
 ### Added
