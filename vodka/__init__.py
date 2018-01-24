@@ -1,5 +1,5 @@
 import sys
-from pluginmgr import PluginManager
+from pluginmgr.config import ConfigPluginManager
 
 from vodka.instance import (
     instances,
@@ -19,7 +19,7 @@ import vodka.data.data_types
 import vodka.config
 import vodka.log
 
-plugin = PluginManager("vodka.plugins")
+plugin = ConfigPluginManager("vodka.plugins")
 
 
 def init(config, rawConfig):

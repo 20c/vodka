@@ -10,7 +10,7 @@ class Configurator(object):
     by specs defined via config Handler classes
 
     Attributes:
-        plugin_manager (PluginManager): plugin manager instance to use
+        plugin_manager (ConfigPluginManager): plugin manager instance to use
             during plugin configuration
         skip_defaults (bool): if True dont prompt for config variables
             that have a default value assigned

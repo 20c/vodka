@@ -104,7 +104,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         WSGIPlugin.wsgi_application = app
 
     def init(self):
-        if "bind" in self.config:
+        if "bind" in self.pluginmgr_config:
             (host, port) = self.get_config("bind").split(":")
             self.host = host
             self.port = int(port)
@@ -152,10 +152,10 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             fnc_serve = http_server.serve_forever
 
         elif self.get_config("server") == "uwsgi":
-            self.config["start_manual"] = True
+            self.pluginmgr_config["start_manual"] = True
 
         elif self.get_config("server") == "gunicorn":
-            self.config["start_manual"] = True
+            self.pluginmgr_config["start_manual"] = True
 
         elif self.get_config("server") == "self":
             fnc_serve = self.run

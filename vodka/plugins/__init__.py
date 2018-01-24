@@ -1,6 +1,7 @@
 from future import standard_library
 standard_library.install_aliases()
 import pluginmgr
+import pluginmgr.config
 import time
 import urllib.parse
 
@@ -9,6 +10,7 @@ import vodka.log
 import vodka.config
 import vodka.component
 import vodka.data.handlers
+
 
 
 def get_plugin_by_name(name):
@@ -23,7 +25,7 @@ def get_plugin_class(typ):
     return vodka.plugin.get_plugin_class(typ)
 
 
-class PluginBase(vodka.component.Component, pluginmgr.PluginBase):
+class PluginBase(vodka.component.Component, pluginmgr.config.PluginBase):
 
     class Configuration(vodka.component.Component.Configuration):
         async = vodka.config.Attribute(
@@ -47,8 +49,16 @@ class PluginBase(vodka.component.Component, pluginmgr.PluginBase):
             help_text="disable automatic start of this plugin"
         )
 
+    @property
+    def config(self):
+        return self.pluginmgr_config
+
+    @property
+    def name(self):
+        return self.config.get("name")
+
     def __init__(self, config, *args, **kwargs):
-        pluginmgr.PluginBase.__init__(self, config, *args, **kwargs)
+        pluginmgr.config.PluginBase.__init__(self, config)
 
     def init(self):
         """ executed during plugin initialization, app instances not available yet """
