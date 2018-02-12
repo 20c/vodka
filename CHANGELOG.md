@@ -4,22 +4,24 @@
 ## [Unreleased]
 
 ### Added
-
-- app versioning (#10)
-
 ### Fixed
-
-- travis tests and coverage reports
-
 ### Changed
-
-- pluginmgr to 0.5.0
-
 ### Deprecated
 ### Removed
 ### Security
 
+## 2.2.4
+
+### Fixed
+
+- travis tests and coverage reports
+- pluginmgr 0.5.0 support
+
 ## 2.2.3
+
+### Added
+
+- app versioning (#10)
 
 ### Fixed
 
