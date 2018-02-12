@@ -8,7 +8,13 @@
 - app versioning (#10)
 
 ### Fixed
+
+- travis tests and coverage reports
+
 ### Changed
+
+- pluginmgr to 0.5.0
+
 ### Deprecated
 ### Removed
 ### Security
