@@ -10,6 +10,12 @@
 ### Removed
 ### Security
 
+## 2.2.5
+
+### Fixed
+
+- zeromq plugin py3 support
+
 ## 2.2.4
 
 ### Fixed
