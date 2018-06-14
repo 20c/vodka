@@ -32,7 +32,10 @@ class ZeroMQ(vodka.plugins.DataPlugin):
     def connect(self):
         self.ctx = zmq.Context()
         self.sock = self.ctx.socket(zmq.SUB)
-        self.sock.setsockopt(zmq.SUBSCRIBE, '')
+        try:
+            self.sock.setsockopt_string(zmq.SUBSCRIBE, '')
+        except TypeError:
+            self.sock.setsockopt(zmq.SUBSCRIBE, '')
         self.sock.connect(self.pluginmgr_config.get("bind"))
         return self.ctx, self.sock
 
