@@ -20,6 +20,11 @@ class ZeroMQ(vodka.plugins.DataPlugin):
             help_text="arbitrary descriptor of data retrieved by this zmq probe"
         )
 
+        data_id = vodka.config.Attribute(
+            str,
+            default=""
+        )
+
         bind = vodka.config.Attribute(
             str,
             help_text="bind to this address. In the format of a URL (protocol://host:port)"

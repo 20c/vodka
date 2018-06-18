@@ -126,13 +126,23 @@ class DataPlugin(TimedPlugin):
             help_text="specify the data type of data fetched by this plugin. Will also apply the vodka data handler with matching name if it exists"
         )
 
+        data_id = vodka.config.Attribute(
+            str,
+            help_text="data id for data handled by this plugin, will default to the plugin name",
+            default=""
+        )
+
     @property
     def data_type(self):
         return self.get_config("data")
+
+    @property
+    def data_id(self):
+        return (self.get_config("data_id") or self.name)
 
     def init(self):
         return
 
     def work(self, data):
-        return vodka.data.handle(self.data_type, data, data_id=self.name, caller=self)
+        return vodka.data.handle(self.data_type, data, data_id=self.data_id, caller=self)
 
