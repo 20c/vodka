@@ -4,11 +4,21 @@
 ## [Unreleased]
 
 ### Added
+
+- data_id attribute for data plugin
+
 ### Fixed
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
+
+## 2.2.6
+
+### Fixed
+
+- data_id config attribute for data plugins
+- tox py2.7 tests
 
 ## 2.2.5
 
