@@ -80,18 +80,18 @@ def init(config, rawConfig):
         if pcfg.get("start_manual", False):
             continue
         vodka.log.debug("starting %s .." % p_name)
-        async = pcfg.get("async", "thread")
+        async_handler = pcfg.get("async", "thread")
 
         if hasattr(p, "worker"):
             worker = p.worker
         else:
             worker = p
 
-        if async == "gevent":
+        if async_handler == "gevent":
             gevent_workers.append(worker)
-        elif async == "thread":
+        elif async_handler == "thread":
             thread_workers.append(worker)
-        elif async == "asyncio":
+        elif async_handler == "asyncio":
             asyncio_workers.append(worker)
 
     ready()

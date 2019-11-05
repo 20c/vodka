@@ -66,6 +66,7 @@ class Attribute(object):
         self.prepare = kwargs.get("prepare", [])
         self.deprecated = kwargs.get("deprecated", False)
         self.nested = kwargs.get("nested", 0)
+        self.field = kwargs.get("field")
 
     def finalize(self, cfg, key_name, value, **kwargs):
         pass
@@ -90,7 +91,7 @@ class Handler(object):
         on this class
         """
 
-        attr = getattr(cls, key_name, None)
+        attr = cls.get_attr_by_name(key_name)
 
         if path != "":
             attr_full_name = "%s.%s" % (path, key_name)
@@ -230,7 +231,7 @@ class Handler(object):
             if nested > 0:
                 break
             try:
-                attr = getattr(cls, name)
+                attr = cls.get_attr_by_name(name)
                 if isinstance(attr, Attribute):
                     if attr.default is None and name not in cfg:
                         # no default value defined, which means its required
@@ -293,8 +294,19 @@ class Handler(object):
         return num_crit, num_warn
 
     @classmethod
+    def get_attr_by_name(cls, name):
+        """
+        Return attribute by name - will consider value in
+        attribute's `field` property
+        """
+        for attr_name, attr in cls.attributes():
+            if attr_name == name:
+                return attr
+        return None
+
+    @classmethod
     def default(cls, key_name, inst=None):
-        attr = getattr(cls, key_name, None)
+        attr = cls.get_attr_by_name(key_name)
         if not attr:
             raise KeyError(
                 "No config attribute defined with the name '%s'" % key_name)
@@ -315,7 +327,8 @@ class Handler(object):
         for k in dir(cls):
             v = getattr(cls, k)
             if isinstance(v, Attribute):
-                yield k,v
+                name = v.field or k
+                yield name,v
 
 
 class ComponentHandler(Handler):

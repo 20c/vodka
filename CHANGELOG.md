@@ -5,6 +5,8 @@
 
 ### Added
 
+- python3.7 support
+- `field` property for configuration attributes
 - data_id attribute for data plugin
 
 ### Fixed

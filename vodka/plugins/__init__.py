@@ -28,10 +28,11 @@ def get_plugin_class(typ):
 class PluginBase(vodka.component.Component, pluginmgr.config.PluginBase):
 
     class Configuration(vodka.component.Component.Configuration):
-        async = vodka.config.Attribute(
+        async_handler = vodka.config.Attribute(
             str,
             default="thread",
             choices=["thread", "gevent"],
+            field="async",
             help_text="specifies how to run this plugin async"
         )
         type = vodka.config.Attribute(
