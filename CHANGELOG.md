@@ -4,19 +4,23 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 2.3.0
+
+### Added
 
 - python3.7 support
 - `field` property for configuration attributes
 - data_id attribute for data plugin
 
-### Fixed
 ### Changed
 
 - move to Ctl for release/package management
-
-### Deprecated
-### Removed
-### Security
 
 ## 2.2.6
 
