@@ -31,7 +31,7 @@ class ZeroMQ(vodka.plugins.DataPlugin):
         )
 
     def init(self):
-        super(ZeroMQ, self).init()
+        super().init()
         self.connect()
 
     def connect(self):
@@ -46,7 +46,7 @@ class ZeroMQ(vodka.plugins.DataPlugin):
 
     def work(self):
         try:
-            return super(ZeroMQ, self).work(self.sock.recv_json())
+            return super().work(self.sock.recv_json())
         except zmq.error.ZMQError:
             self.connect()
             self.log.error(traceback.format_exc())

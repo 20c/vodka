@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from builtins import range
-from builtins import object
 import munge
 import types
 import os
@@ -31,7 +28,7 @@ def is_config_container(v):
         issubclass(cls, Config)
     )
 
-class Attribute(object):
+class Attribute:
 
     """
     A configuration attribute
@@ -75,7 +72,7 @@ class Attribute(object):
         pass
 
 
-class Handler(object):
+class Handler:
 
     """
     Can be attached to any vodka application class or vodka
@@ -94,7 +91,7 @@ class Handler(object):
         attr = cls.get_attr_by_name(key_name)
 
         if path != "":
-            attr_full_name = "%s.%s" % (path, key_name)
+            attr_full_name = f"{path}.{key_name}"
         else:
             attr_full_name = key_name
 
@@ -103,7 +100,7 @@ class Handler(object):
             raise vodka.exceptions.ConfigErrorUnknown(attr_full_name)
 
         if attr.deprecated:
-            vodka.log.warn("[config deprecated] %s is being deprecated in version %s" % (
+            vodka.log.warn("[config deprecated] {} is being deprecated in version {}".format(
                 attr_full_name,
                 attr.deprecated
             ))
@@ -182,10 +179,10 @@ class Handler(object):
                 #h = getattr(attr.handler(k, value[k]), "Configuration", None)
                 if h:
                     if type(k) == int and type(value[k]) == dict and value[k].get("name"):
-                        _path = "%s.%s" % (
+                        _path = "{}.{}".format(
                             attr_full_name, value[k].get("name"))
                     else:
-                        _path = "%s.%s" % (attr_full_name, k)
+                        _path = f"{attr_full_name}.{k}"
                     _num_crit, _num_warn = h.validate(value[k], path=_path, nested=attr.nested, parent_cfg=cfg)
                     h.finalize(
                         value,
@@ -237,7 +234,7 @@ class Handler(object):
                         # no default value defined, which means its required
                         # to be set in the config file
                         if path:
-                            attr_full_name = "%s.%s" % (path, name)
+                            attr_full_name = f"{path}.{name}"
                         else:
                             attr_full_name = name
                         raise vodka.exceptions.ConfigErrorMissing(
@@ -256,10 +253,10 @@ class Handler(object):
         if type(cfg) in [dict, Config]:
             keys = list(cfg.keys())
             if nested > 0:
-                for _k, _v in cfg.items():
+                for _k, _v in list(cfg.items()):
                     _num_crit, _num_warn = cls.validate(
                         _v,
-                        path=("%s.%s" % (path, _k)),
+                        path=(f"{path}.{_k}"),
                         nested=nested-1,
                         parent_cfg=cfg
                     )
@@ -403,10 +400,10 @@ class InstanceHandler(Handler):
         name = configurator.prompt("Add application (name)", default="skip")
         while name != "skip":
             app_cfg = {}
-            configurator.configure(app_cfg, vodka.app.Application.Configuration, path="%s.%s" % (path,name))
+            configurator.configure(app_cfg, vodka.app.Application.Configuration, path=f"{path}.{name}")
             vodka.app.load(name, app_cfg)
             app = vodka.app.get_application(name)
-            configurator.configure(app_cfg, app.Configuration, path="%s.%s" % (path,name))
+            configurator.configure(app_cfg, app.Configuration, path=f"{path}.{name}")
             cfg["apps"][name] = app_cfg
             name = configurator.prompt("Add application (name)", default="skip")
 
@@ -435,10 +432,10 @@ class Config(munge.Config):
             config = munge.load_datafile(data_file, data_path, default=None)
 
             if not config:
-                raise IOError("Config file not found: %s" % config_file)
+                raise OSError("Config file not found: %s" % config_file)
 
             munge.util.recursive_update(self.data, config)
             self._meta_config_dir = data_path
             return
         else:
-            return super(Config, self).read(config_dir=config_dir, clear=clear)
+            return super().read(config_dir=config_dir, clear=clear)

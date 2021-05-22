@@ -1,9 +1,7 @@
-from builtins import str
-from builtins import object
 import vodka
 import vodka.exceptions
 
-class Configurator(object):
+class Configurator:
 
     """
     Handles interactive configuration process guided
@@ -41,7 +39,7 @@ class Configurator(object):
             if attr.expected_type not in [list, dict]:
                 cfg[name] = self.set(handler, attr, name, path, cfg)
             elif attr.default is None and not hasattr(handler, "configure_%s" % name):
-                self.action_required.append(("%s.%s: %s" % (path, name, attr.help_text)).strip("."))
+                self.action_required.append((f"{path}.{name}: {attr.help_text}").strip("."))
 
         # configure attributes that have complex handlers defined
         # on the config Handler class (class methods prefixed by
@@ -68,7 +66,7 @@ class Configurator(object):
         Also does validation on user input
         """
 
-        full_name = ("%s.%s" % (path, name)).strip(".")
+        full_name = (f"{path}.{name}").strip(".")
 
         # obtain default value
         if attr.default is None:
@@ -78,7 +76,7 @@ class Configurator(object):
                 comp = vodka.component.Component(cfg)
                 default = handler.default(name, inst=comp)
                 if self.skip_defaults:
-                    self.echo("%s: %s [default]" % (full_name, default))
+                    self.echo(f"{full_name}: {default} [default]")
                     return default
             except Exception:
                 raise

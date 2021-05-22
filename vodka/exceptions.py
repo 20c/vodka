@@ -1,6 +1,4 @@
-from builtins import str
-from builtins import object
-class ConfigErrorMixin(object):
+class ConfigErrorMixin:
 
     handle = "config error"
 
@@ -18,13 +16,13 @@ class ConfigErrorMixin(object):
 
     @property
     def explanation(self):
-        r = "[%s] %s" % (self.handle, str(self))
+        r = f"[{self.handle}] {str(self)}"
         if self.reason:
-            r = "%s, reason: %s" % (r, self.reason)
+            r = f"{r}, reason: {self.reason}"
         if self.attr:
-            r = "%s -> %s" % (r, self.help_text)
+            r = f"{r} -> {self.help_text}"
             if self.attr.choices:
-                r = "%s (choices=%s)" % (r, ",".join(self.attr.choices))
+                r = "{} (choices={})".format(r, ",".join(self.attr.choices))
 
         return r
 
@@ -75,7 +73,7 @@ class ConfigErrorType(ConfigErrorMixin, TypeError):
     def __init__(self, var_name, attr, level="critical"):
         TypeError.__init__(
             self,
-            "%s should be of type '%s'" % (var_name, attr.expected_type.__name__)
+            f"{var_name} should be of type '{attr.expected_type.__name__}'"
         )
         ConfigErrorMixin.__init__(self, attr=attr, level=level)
 

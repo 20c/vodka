@@ -23,7 +23,7 @@ class DataPlugin(vodka.plugins.DataPlugin):
 
     def work(self):
         data = {"data":[], "ts" : time.time()}
-        return super(DataPlugin, self).work(data)
+        return super().work(data)
 
 class TestPlugin(unittest.TestCase):
 

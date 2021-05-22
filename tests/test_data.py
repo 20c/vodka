@@ -91,7 +91,7 @@ class TestData(unittest.TestCase):
         objs = [{"name":"obj %s" % i} for i in range(0,10)]
 
         data = {"data": objs}
-        expected = {"data": dict([(o["name"], o) for o in objs])}
+        expected = {"data": {o["name"]: o for o in objs}}
         self.assertEqual(handler(data), expected)
 
         # test with incomplete data
@@ -184,7 +184,7 @@ class TestData(unittest.TestCase):
         )
 
         # test rpc renderer on class method
-        class Test(object):
+        class Test:
 
             @vodka.data.renderers.RPC(type="json", data_type=list)
             def output(self, data, *args, **kwargs):

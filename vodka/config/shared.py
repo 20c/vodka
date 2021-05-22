@@ -17,7 +17,7 @@ MODES = {
 ROUTERS = {}
 
 class register(vodka.util.register):
-    class Meta(object):
+    class Meta:
         name = "shared config router"
         objects = ROUTERS
 
@@ -36,7 +36,7 @@ class Attribute(BaseAttribute):
                 example: "test:merge"
         """
 
-        super(Attribute, self).__init__(expected_type, **kwargs)
+        super().__init__(expected_type, **kwargs)
         share = kwargs.get("share","")
         self.share = None
         if share:
@@ -56,16 +56,16 @@ class Container(Attribute):
     def preload(self, cfg, key_name, **kwargs):
         if self.share:
             if cfg.get(key_name) is not None:
-                for _k, _v in cfg.get(key_name,{}).items():
+                for _k, _v in list(cfg.get(key_name,{}).items()):
                     self.share.share(_k, _v)
             if self.default is not None:
-                for _k, _v in self.default.items():
+                for _k, _v in list(self.default.items()):
                     self.share.share(_k, _v)
                 cfg[key_name] = self.share.container
 
 
 
-class Router(object):
+class Router:
     """
     Config sharing router, will redirect shared config attributes
     to a common container
@@ -79,7 +79,7 @@ class Router(object):
             raise ValueError("Invalid mode specified for config sharing router: %s" % mode)
 
     def __repr__(self):
-        return "%s <%s>" % (self.__class__.__name__, self.id)
+        return f"{self.__class__.__name__} <{self.id}>"
 
     @property
     def container(self):
@@ -119,7 +119,7 @@ class ListRouter(Router):
         return list
 
     def share(self, name, value):
-        container = super(ListRouter,self).share(name,value)
+        container = super().share(name,value)
 
         if self.mode == MODE_MERGE:
             for v in value:
@@ -146,7 +146,7 @@ class DictRouter(Router):
         return self.container.get(key, default)
 
     def share(self, name, value):
-        container = super(DictRouter,self).share(name,value)
+        container = super().share(name,value)
 
         if self.mode == MODE_MERGE:
             container.update(**value)

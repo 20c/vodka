@@ -1,7 +1,3 @@
-from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
-from past.builtins import basestring
 import os
 import vodka.plugins.wsgi
 import vodka
@@ -47,11 +43,11 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
                   origin: '*'
         """
 
-        if methods is not None and not isinstance(methods, basestring):
+        if methods is not None and not isinstance(methods, str):
             methods = ', '.join(sorted(x.upper() for x in methods))
-        if headers is not None and not isinstance(headers, basestring):
+        if headers is not None and not isinstance(headers, str):
             headers = ', '.join(x.upper() for x in headers)
-        if not isinstance(origin, basestring):
+        if not isinstance(origin, str):
             origin = ', '.join(origin)
 
 
@@ -79,7 +75,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
 
     def init(self):
 
-        super(VodkaFlask, self).init()
+        super().init()
 
         if not Flask:
             raise Exception("Flask could not be imported, make sure flask module is installed")
@@ -95,7 +91,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
 
     def request_env(self, req=None, **kwargs):
         url=urllib.parse.urlparse(request.url)
-        return super(VodkaFlask, self).request_env(
+        return super().request_env(
             req=request,
             url=url,
             **kwargs
@@ -108,7 +104,7 @@ class VodkaFlask(vodka.plugins.wsgi.WSGIPlugin):
             return send_from_directory(app.get_config('home'), os.path.join("static",path))
         self.set_route(os.path.join(self.get_config('static_url_path'),"<app>","<path:path>"), static_file)
 
-        for _url, _path in self.get_config("static_routes").items():
+        for _url, _path in list(self.get_config("static_routes").items()):
             self.set_route(
                 os.path.join(self.get_config("static_url_path"), _url, "<path:path>"),
                 lambda path: send_from_directory(_path, path)

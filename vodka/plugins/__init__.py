@@ -1,5 +1,3 @@
-from future import standard_library
-standard_library.install_aliases()
 import pluginmgr
 import pluginmgr.config
 import time

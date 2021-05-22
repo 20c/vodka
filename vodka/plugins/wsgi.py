@@ -193,7 +193,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             "static_url" : self.get_config("static_url_path"),
             "request": req
         }
-        for name, instance in vodka.instances.items():
+        for name, instance in list(vodka.instances.items()):
             appenv = {
                 "static_url" : self.static_url_prefixes.get(name, ""),
                 "instance": instance
@@ -201,7 +201,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             renv[name] = appenv
         renv.update(**kwargs)
         if "url" in kwargs:
-            renv["host"] = "%s://%s" % (kwargs["url"].scheme, kwargs["url"].netloc)
+            renv["host"] = "{}://{}".format(kwargs["url"].scheme, kwargs["url"].netloc)
         return renv
 
     def set_static_routes(self):

@@ -2,7 +2,6 @@
 Vodka application foundation classes. Each vodka app should extend one
 of these.
 """
-from builtins import object
 
 import os
 import sys
@@ -86,7 +85,7 @@ def load_all(cfg):
 # DECORATORS
 
 class register(vodka.util.register):
-    class Meta(object):
+    class Meta:
         name = "application"
         objects = applications
 
@@ -207,7 +206,7 @@ class TemplatedApplication(Application):
             return path
         if not re.match("^%s/.*" % self.handle, path):
             return path
-        return "%s?v=%s" % (path, self.version)
+        return f"{path}?v={self.version}"
 
 
     def versioned_path(self, path):
@@ -230,10 +229,10 @@ class TemplatedApplication(Application):
         return self.tmpl._render(tmpl_name, context_env)
 
     def setup(self):
-        import twentyc.tmpl
+        import tmpl
 
         # set up the template engine
-        eng = twentyc.tmpl.get_engine(self.config.get("template_engine", "jinja2"))
+        eng = tmpl.get_engine(self.config.get("template_engine", "jinja2"))
 
         template_locations = []
 
@@ -241,19 +240,19 @@ class TemplatedApplication(Application):
         # in this app's config
         for path in self.get_config("template_locations"):
             if os.path.exists(path):
-                self.log.debug("Template location added for application '%s': %s" % (self.handle, path))
+                self.log.debug(f"Template location added for application '{self.handle}': {path}")
                 template_locations.append(path)
 
         # we want to search for template overrides in other app instances
         # that provide templates, by checking if they have a subdir in
         # their template directory that matches this app's handle
-        for name, inst in vodka.instance.instances.items():
+        for name, inst in list(vodka.instance.instances.items()):
             if inst == self:
                 continue
             if hasattr(inst, "template_path"):
                 path = os.path.join(inst.template_path, self.handle)
                 if os.path.exists(path):
-                    self.log.debug("Template location added for application '%s' via application '%s': %s" % (self.handle, inst.handle, path))
+                    self.log.debug(f"Template location added for application '{self.handle}' via application '{inst.handle}': {path}")
                     template_locations.append(path)
 
         # finally we add this apps template path to the template locations
@@ -285,9 +284,9 @@ class WebApplication(TemplatedApplication):
     @property
     def includes(self):
         """ return includes from config """
-        r = dict([(k, sorted(copy.deepcopy(v).values(), key=lambda x:x.get("order",0))) for k,v in self.get_config("includes").items()])
+        r = {k: sorted(list(copy.deepcopy(v).values()), key=lambda x:x.get("order",0)) for k,v in list(self.get_config("includes").items())}
         if self.version is not None:
-            for k,v in r.items():
+            for k,v in list(r.items()):
                 for j in v:
                     j["path"] = self.versioned_url(j["path"])
         return r
@@ -305,6 +304,6 @@ class WebApplication(TemplatedApplication):
         Returns:
             str - the rendered template
         """
-        return super(WebApplication, self).render(tmpl_name, request_env)
+        return super().render(tmpl_name, request_env)
 
 

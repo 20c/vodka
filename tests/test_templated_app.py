@@ -39,10 +39,10 @@ class TestTemplatedApp(unittest.TestCase):
         vodka.instance.ready()
 
         r = inst.render("base.html", {})
-        self.assertEqual(r,u"Hello World!")
+        self.assertEqual(r,"Hello World!")
 
         r = inst.render("template_a.html", {})
-        self.assertEqual(r,u"Hello Universe!")
+        self.assertEqual(r,"Hello Universe!")
 
         r = inst.render("template_b.html", {})
-        self.assertEqual(r,u"Hello Infinity!")
+        self.assertEqual(r,"Hello Infinity!")

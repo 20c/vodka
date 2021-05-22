@@ -119,7 +119,8 @@ class TestFlask(unittest.TestCase):
             sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")),
             ["GET", "OPTIONS"]
         )
-
+        # methods = sorted(rv.headers.get("Access-Control-Allow-Methods").split(", "))
+        # assert ["GET", "OPTIONS"] == methods
 
         rv = self.client.get("/crossdomain_test_3", follow_redirects=True)
         self.assertEqual(rv.data, b"crossdomain_test: nothing")
@@ -129,5 +130,3 @@ class TestFlask(unittest.TestCase):
             sorted(rv.headers.get("Access-Control-Allow-Methods").split(", ")),
             ["GET"]
         )
-
-

@@ -249,7 +249,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(cfg_a["c"], cfg_b["c"])
         self.assertEqual(cfg_a["c"], [i, i2, i, i2])
 
-        print(cfg_b["e"].keys())
+        print(list(cfg_b["e"].keys()))
         print(json.dumps(cfg_a["e"], indent=2))
 
 

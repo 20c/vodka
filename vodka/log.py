@@ -1,4 +1,3 @@
-from builtins import object
 import logging.config
 
 def default_config(level="DEBUG", name="vodka"):
@@ -76,7 +75,7 @@ def set_loggers(config):
     logging.config.dictConfig(config)
 
 
-class LoggerMixin(object):
+class LoggerMixin:
 
     """
     Mixin class that sets a 'log' property that will either return
