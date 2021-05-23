@@ -62,7 +62,7 @@ class Handler(vodka.component.Component):
             config (dict or MungeConfig): configuration collection
             data_id (str): data id for this handler, needs to be unique
         """
-        self.config = config
+        super().__init__(config)
         self.data_id = data_id
         self.init()
 

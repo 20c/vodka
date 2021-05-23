@@ -50,6 +50,7 @@ class PluginBase(vodka.component.Component, pluginmgr.config.PluginBase):
         return self.config.get("name")
 
     def __init__(self, config, *args, **kwargs):
+        # cannot init component because pluginmgr turns config into an attr
         pluginmgr.config.PluginBase.__init__(self, config)
 
     def init(self):
