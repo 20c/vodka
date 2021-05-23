@@ -4,8 +4,6 @@ on: [push, pull_request]
 
 jobs:
 
-  poetry-venv:
-
   linting:
     runs-on: ubuntu-latest
     steps:
