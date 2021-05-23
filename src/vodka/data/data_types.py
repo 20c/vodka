@@ -50,4 +50,4 @@ class DataType(vodka.component.Component):
         return self.get_config("handlers")
 
     def __init__(self, config):
-        self.config = config
+        super().__init__(config)

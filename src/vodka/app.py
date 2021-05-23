@@ -141,11 +141,14 @@ class Application(vodka.component.Component):
         """
 
         if config:
-            self.config = config
+            if config_dir:
+                raise ValueError("config and config_sir are mutually exclusive")
         elif config_dir:
-            self.config = config.Config(read=config_dir)
+            config = config.Config(read=config_dir)
         else:
             raise ValueError("No configuration specified")
+
+        super().__init__(config)
 
     def setup(self):
         """

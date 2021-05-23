@@ -61,7 +61,7 @@ def warn(msg):
     Args:
         msg (str): message
     """
-    return log().warn(msg)
+    return log().warning(msg)
 
 
 def set_loggers(config):
