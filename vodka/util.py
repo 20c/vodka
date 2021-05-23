@@ -1,4 +1,3 @@
-from builtins import object
 def dict_get_path(data, path, default=None):
     """
     Returns the value inside nested structure of data located
@@ -38,7 +37,7 @@ def dict_get_path(data, path, default=None):
     return data
 
 
-class register(object):
+class register:
 
     """
     allows you index a class in a register
@@ -46,7 +45,7 @@ class register(object):
     can be used as a decorator
     """
 
-    class Meta(object):
+    class Meta:
         name = "object"
         objects = {}
 
@@ -61,12 +60,12 @@ class register(object):
         """
 
         if handle in self.Meta.objects:
-            raise KeyError("%s with handle '%s' already registered" % (self.Meta.name, handle))
+            raise KeyError(
+                f"{self.Meta.name} with handle '{handle}' already registered"
+            )
         self.handle = handle
-
 
     def __call__(self, cls):
         cls.handle = self.handle
         self.Meta.objects[cls.handle] = cls
         return cls
-

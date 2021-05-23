@@ -8,6 +8,7 @@ import vodka.config.validators
 def application():
     return WSGIPlugin.wsgi_application
 
+
 class SSLConfiguration(vodka.config.Handler):
 
     """
@@ -16,21 +17,19 @@ class SSLConfiguration(vodka.config.Handler):
     """
 
     enabled = vodka.config.Attribute(
-        bool,
-        default=False,
-        help_text="enable ssl encryption"
+        bool, default=False, help_text="enable ssl encryption"
     )
 
     key = vodka.config.Attribute(
         vodka.config.validators.path,
         default="",
-        help_text="location of your ssl private key file"
+        help_text="location of your ssl private key file",
     )
 
     cert = vodka.config.Attribute(
         vodka.config.validators.path,
         default="",
-        help_text="location of your ssl certificate file"
+        help_text="location of your ssl certificate file",
     )
 
 
@@ -44,7 +43,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             str,
             default="localhost",
             help_text="host address",
-            deprecated="Well be removed in 3.0, it's being replaced by the 'bind' config attribute"
+            deprecated="Well be removed in 3.0, it's being replaced by the 'bind' config attribute",
         )
 
         # DEPRECATE: 3.0
@@ -52,51 +51,48 @@ class WSGIPlugin(vodka.plugins.PluginBase):
             int,
             default=80,
             help_text="host port",
-            deprecated="Will be removed in 3.0, it's being replaced by the 'bind' config attribute"
+            deprecated="Will be removed in 3.0, it's being replaced by the 'bind' config attribute",
         )
 
         bind = vodka.config.Attribute(
             vodka.config.validators.host,
             default="localhost:80",
-            help_text="bind server to this address. e.g localhost:80"
+            help_text="bind server to this address. e.g localhost:80",
         )
 
         debug = vodka.config.Attribute(
             bool,
             help_text="run wsgi server in debug mode (if applicable)",
-            default=False
+            default=False,
         )
 
         server = vodka.config.Attribute(
             str,
             help_text="specify which wsgi server should be used",
             default="self",
-            choices=["uwsgi", "gunicorn", "self", "gevent"]
+            choices=["uwsgi", "gunicorn", "self", "gevent"],
         )
 
         static_url_path = vodka.config.Attribute(
             str,
             default="/static",
-            help_text="url path where static files can be requested from"
+            help_text="url path where static files can be requested from",
         )
 
         routes = vodka.config.Attribute(
             dict,
             help_text="routing of request endpoints to vodka application end points",
-            default={}
+            default={},
         )
 
         static_routes = vodka.config.Attribute(
             dict,
             help_text="routing of request endpoints to static file locations",
-            default={}
+            default={},
         )
 
         ssl = vodka.config.Attribute(
-            dict,
-            help_text="ssl encryption",
-            default={},
-            handler=SSLConfiguration
+            dict, help_text="ssl encryption", default={}, handler=SSLConfiguration
         )
 
     @classmethod
@@ -113,7 +109,6 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         else:
             self.host = self.get_config("host")
             self.port = self.get_config("port")
-
 
     def setup(self):
 
@@ -141,11 +136,7 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
             from gevent.pywsgi import WSGIServer
 
-            http_server = WSGIServer(
-                (self.host, self.port),
-                wsgi_app,
-                **ssl_context
-            )
+            http_server = WSGIServer((self.host, self.port), wsgi_app, **ssl_context)
 
             self.log.debug("Serving WSGI via gevent.pywsgi.WSGIServer")
 
@@ -189,19 +180,16 @@ class WSGIPlugin(vodka.plugins.PluginBase):
         return os.path.join(self.get_config("static_url_path"), app_name, "")
 
     def request_env(self, req=None, **kwargs):
-        renv = {
-            "static_url" : self.get_config("static_url_path"),
-            "request": req
-        }
-        for name, instance in vodka.instances.items():
+        renv = {"static_url": self.get_config("static_url_path"), "request": req}
+        for name, instance in list(vodka.instances.items()):
             appenv = {
-                "static_url" : self.static_url_prefixes.get(name, ""),
-                "instance": instance
+                "static_url": self.static_url_prefixes.get(name, ""),
+                "instance": instance,
             }
             renv[name] = appenv
         renv.update(**kwargs)
         if "url" in kwargs:
-            renv["host"] = "%s://%s" % (kwargs["url"].scheme, kwargs["url"].netloc)
+            renv["host"] = "{}://{}".format(kwargs["url"].scheme, kwargs["url"].netloc)
         return renv
 
     def set_static_routes(self):
@@ -233,13 +221,12 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
                 # apply route decorators (specified by config keys other than
                 # "target" and "methods"
-                for k,v in list(target.items()):
+                for k, v in list(target.items()):
                     decorator = getattr(self, "decorate_route_%s" % k, None)
                     if decorator:
                         meth = decorator(**v).__call__(meth)
 
-                self.set_route(path, meth,
-                               methods=target.get("methods", []))
+                self.set_route(path, meth, methods=target.get("methods", []))
             else:
                 # target is a static path
                 # FIXME: handled via static directory routing, probably

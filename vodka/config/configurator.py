@@ -1,9 +1,8 @@
-from builtins import str
-from builtins import object
 import vodka
 import vodka.exceptions
 
-class Configurator(object):
+
+class Configurator:
 
     """
     Handles interactive configuration process guided
@@ -41,7 +40,9 @@ class Configurator(object):
             if attr.expected_type not in [list, dict]:
                 cfg[name] = self.set(handler, attr, name, path, cfg)
             elif attr.default is None and not hasattr(handler, "configure_%s" % name):
-                self.action_required.append(("%s.%s: %s" % (path, name, attr.help_text)).strip("."))
+                self.action_required.append(
+                    (f"{path}.{name}: {attr.help_text}").strip(".")
+                )
 
         # configure attributes that have complex handlers defined
         # on the config Handler class (class methods prefixed by
@@ -51,13 +52,12 @@ class Configurator(object):
                 continue
             if hasattr(handler, "configure_%s" % name):
                 fn = getattr(handler, "configure_%s" % name)
-                fn(self, cfg, "%s.%s"% (path, name))
+                fn(self, cfg, "%s.%s" % (path, name))
                 if attr.expected_type in [list, dict] and not cfg.get(name):
                     try:
                         del cfg[name]
                     except KeyError:
                         pass
-
 
     def set(self, handler, attr, name, path, cfg):
 
@@ -68,7 +68,7 @@ class Configurator(object):
         Also does validation on user input
         """
 
-        full_name = ("%s.%s" % (path, name)).strip(".")
+        full_name = (f"{path}.{name}").strip(".")
 
         # obtain default value
         if attr.default is None:
@@ -78,7 +78,7 @@ class Configurator(object):
                 comp = vodka.component.Component(cfg)
                 default = handler.default(name, inst=comp)
                 if self.skip_defaults:
-                    self.echo("%s: %s [default]" % (full_name, default))
+                    self.echo(f"{full_name}: {default} [default]")
                     return default
             except Exception:
                 raise
@@ -88,7 +88,6 @@ class Configurator(object):
         self.echo(attr.help_text)
         if attr.choices:
             self.echo("choices: %s" % ", ".join([str(c) for c in attr.choices]))
-
 
         # obtain user input and validate until input is valid
         b = False
@@ -100,9 +99,9 @@ class Configurator(object):
                 else:
                     r = self.prompt(full_name, default=default, type=str)
             except ValueError:
-                self.echo("Value expected to be of type %s"% attr.expected_type)
+                self.echo("Value expected to be of type %s" % attr.expected_type)
             try:
-                b = handler.check({name:r}, name, path)
+                b = handler.check({name: r}, name, path)
             except Exception as inst:
                 if hasattr(inst, "explanation"):
                     self.echo(inst.explanation)
@@ -117,4 +116,3 @@ class Configurator(object):
     def prompt(self, *args, **kwargs):
         """ override this function to prompt for user input """
         return None
-

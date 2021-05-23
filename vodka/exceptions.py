@@ -1,6 +1,4 @@
-from builtins import str
-from builtins import object
-class ConfigErrorMixin(object):
+class ConfigErrorMixin:
 
     handle = "config error"
 
@@ -18,13 +16,13 @@ class ConfigErrorMixin(object):
 
     @property
     def explanation(self):
-        r = "[%s] %s" % (self.handle, str(self))
+        r = f"[{self.handle}] {str(self)}"
         if self.reason:
-            r = "%s, reason: %s" % (r, self.reason)
+            r = f"{r}, reason: {self.reason}"
         if self.attr:
-            r = "%s -> %s" % (r, self.help_text)
+            r = f"{r} -> {self.help_text}"
             if self.attr.choices:
-                r = "%s (choices=%s)" % (r, ",".join(self.attr.choices))
+                r = "{} (choices={})".format(r, ",".join(self.attr.choices))
 
         return r
 
@@ -41,11 +39,11 @@ class ConfigErrorValue(ConfigErrorMixin, ValueError):
 
     def __init__(self, var_name, attr, value, reason=None, level="critical"):
 
-        ValueError.__init__(
-            self,
-            "%s contains an invalid value" % var_name
+        ValueError.__init__(self, "%s contains an invalid value" % var_name)
+        ConfigErrorMixin.__init__(
+            self, attr=attr, value=value, level=level, reason=reason
         )
-        ConfigErrorMixin.__init__(self, attr=attr, value=value, level=level, reason=reason)
+
 
 class ConfigErrorMissing(ConfigErrorMixin, KeyError):
 
@@ -57,11 +55,9 @@ class ConfigErrorMissing(ConfigErrorMixin, KeyError):
     handle = "config missing"
 
     def __init__(self, var_name, attr, level="critical"):
-        KeyError.__init__(
-            self,
-            "%s is missing from config file" % var_name
-        )
+        KeyError.__init__(self, "%s is missing from config file" % var_name)
         ConfigErrorMixin.__init__(self, attr=attr, level=level)
+
 
 class ConfigErrorType(ConfigErrorMixin, TypeError):
 
@@ -74,8 +70,7 @@ class ConfigErrorType(ConfigErrorMixin, TypeError):
 
     def __init__(self, var_name, attr, level="critical"):
         TypeError.__init__(
-            self,
-            "%s should be of type '%s'" % (var_name, attr.expected_type.__name__)
+            self, f"{var_name} should be of type '{attr.expected_type.__name__}'"
         )
         ConfigErrorMixin.__init__(self, attr=attr, level=level)
 
@@ -92,6 +87,6 @@ class ConfigErrorUnknown(ConfigErrorMixin, KeyError):
     def __init__(self, var_name, level="warn", attr=None):
         KeyError.__init__(
             self,
-            "%s is not a known configuration variable and has been ignored" % var_name
+            "%s is not a known configuration variable and has been ignored" % var_name,
         )
         ConfigErrorMixin.__init__(self, attr=None, level=level)

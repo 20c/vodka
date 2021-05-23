@@ -1,9 +1,8 @@
 # vodka
 
 [![PyPI](https://img.shields.io/pypi/v/vodka.svg?maxAge=600)](https://pypi.python.org/pypi/vodka)
-[![Travis CI](https://img.shields.io/travis/20c/vodka.svg?maxAge=600)](https://travis-ci.org/20c/vodka)
+[![Tests](https://github.com/20c/vodka/workflows/tests/badge.svg)](https://github.com/20c/vodka)
 [![Codecov](https://img.shields.io/codecov/c/github/20c/vodka/master.svg?maxAge=600)](https://codecov.io/github/20c/vodka)
-[![Requires.io](https://img.shields.io/requires/github/20c/vodka.svg?maxAge=600)](https://requires.io/github/20c/vodka/requirements)
 
 vodka is a plugin based real-time web service daemon.
 

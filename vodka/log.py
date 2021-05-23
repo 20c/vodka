@@ -1,33 +1,28 @@
-from builtins import object
 import logging.config
+
 
 def default_config(level="DEBUG", name="vodka"):
     return {
-        "version" : 1,
-        "formatters" : {
-            "simple" : {
-                "format" : "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
-             }
+        "version": 1,
+        "formatters": {
+            "simple": {"format": "%(asctime)s - %(name)s - %(levelname)s: %(message)s"}
         },
-        "handlers" : {
-            "console" : {
-                "class" : "logging.StreamHandler",
-                "level" : level.upper(),
-                "formatter" : "simple",
-                "stream" : "ext://sys.stdout"
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "level": level.upper(),
+                "formatter": "simple",
+                "stream": "ext://sys.stdout",
             }
         },
-        "loggers" : {
-            name : {
-                "level" : level.upper(),
-                "handlers" : ["console"]
-            }
-        }
+        "loggers": {name: {"level": level.upper(), "handlers": ["console"]}},
     }
+
 
 def log():
     """Return the default logger set up for vodka"""
     return logging.getLogger("vodka")
+
 
 def debug(msg):
     """
@@ -38,6 +33,7 @@ def debug(msg):
     """
     return log().debug(msg)
 
+
 def error(msg):
     """
     Log error message using the default logger
@@ -46,6 +42,7 @@ def error(msg):
         msg (str): message
     """
     return log().error(msg)
+
 
 def info(msg):
     """
@@ -56,6 +53,7 @@ def info(msg):
     """
     return log().info(msg)
 
+
 def warn(msg):
     """
     Log warning message using the default logger
@@ -64,6 +62,7 @@ def warn(msg):
         msg (str): message
     """
     return log().warn(msg)
+
 
 def set_loggers(config):
     """
@@ -76,7 +75,7 @@ def set_loggers(config):
     logging.config.dictConfig(config)
 
 
-class LoggerMixin(object):
+class LoggerMixin:
 
     """
     Mixin class that sets a 'log' property that will either return

@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from builtins import range
-from builtins import object
 import munge
 import types
 import os
@@ -15,8 +12,8 @@ from . import validators
 
 raw = {}
 
-instance = {
-}
+instance = {}
+
 
 def is_config_container(v):
     """
@@ -25,13 +22,10 @@ def is_config_container(v):
 
     cls = type(v)
 
-    return (
-        issubclass(cls, list) or
-        issubclass(cls, dict) or
-        issubclass(cls, Config)
-    )
+    return issubclass(cls, list) or issubclass(cls, dict) or issubclass(cls, Config)
 
-class Attribute(object):
+
+class Attribute:
 
     """
     A configuration attribute
@@ -75,7 +69,7 @@ class Attribute(object):
         pass
 
 
-class Handler(object):
+class Handler:
 
     """
     Can be attached to any vodka application class or vodka
@@ -94,7 +88,7 @@ class Handler(object):
         attr = cls.get_attr_by_name(key_name)
 
         if path != "":
-            attr_full_name = "%s.%s" % (path, key_name)
+            attr_full_name = f"{path}.{key_name}"
         else:
             attr_full_name = key_name
 
@@ -103,10 +97,11 @@ class Handler(object):
             raise vodka.exceptions.ConfigErrorUnknown(attr_full_name)
 
         if attr.deprecated:
-            vodka.log.warn("[config deprecated] %s is being deprecated in version %s" % (
-                attr_full_name,
-                attr.deprecated
-            ))
+            vodka.log.warn(
+                "[config deprecated] {} is being deprecated in version {}".format(
+                    attr_full_name, attr.deprecated
+                )
+            )
 
         # prepare data
         for prepare in attr.prepare:
@@ -124,27 +119,17 @@ class Handler(object):
             if not p:
                 # validator did not pass
                 raise vodka.exceptions.ConfigErrorValue(
-                    attr_full_name,
-                    attr,
-                    value,
-                    reason=reason
+                    attr_full_name, attr, value, reason=reason
                 )
 
         elif attr.expected_type != type(value):
             # attribute type mismatch
-            raise vodka.exceptions.ConfigErrorType(
-                attr_full_name,
-                attr
-            )
+            raise vodka.exceptions.ConfigErrorType(attr_full_name, attr)
 
         if attr.choices and value not in attr.choices:
             # attribute value not valid according to
             # available choices
-            raise vodka.exceptions.ConfigErrorValue(
-                attr_full_name,
-                attr,
-                value
-            )
+            raise vodka.exceptions.ConfigErrorValue(attr_full_name, attr, value)
 
         if hasattr(cls, "validate_%s" % key_name):
             # custom validator for this attribute was found
@@ -153,15 +138,11 @@ class Handler(object):
             if not valid:
                 # custom validator failed
                 raise vodka.exceptions.ConfigErrorValue(
-                    attr_full_name,
-                    attr,
-                    value,
-                    reason=reason
+                    attr_full_name, attr, value, reason=reason
                 )
 
         num_crit = 0
         num_warn = 0
-
 
         if is_config_container(value) and attr.handler:
             if type(value) == dict or issubclass(type(value), Config):
@@ -179,21 +160,26 @@ class Handler(object):
                 else:
                     h = getattr(handler, "Configuration", None)
 
-                #h = getattr(attr.handler(k, value[k]), "Configuration", None)
+                # h = getattr(attr.handler(k, value[k]), "Configuration", None)
                 if h:
-                    if type(k) == int and type(value[k]) == dict and value[k].get("name"):
-                        _path = "%s.%s" % (
-                            attr_full_name, value[k].get("name"))
+                    if (
+                        type(k) == int
+                        and type(value[k]) == dict
+                        and value[k].get("name")
+                    ):
+                        _path = "{}.{}".format(attr_full_name, value[k].get("name"))
                     else:
-                        _path = "%s.%s" % (attr_full_name, k)
-                    _num_crit, _num_warn = h.validate(value[k], path=_path, nested=attr.nested, parent_cfg=cfg)
+                        _path = f"{attr_full_name}.{k}"
+                    _num_crit, _num_warn = h.validate(
+                        value[k], path=_path, nested=attr.nested, parent_cfg=cfg
+                    )
                     h.finalize(
                         value,
                         k,
                         value[k],
                         attr=attr,
                         attr_name=key_name,
-                        parent_cfg=cfg
+                        parent_cfg=cfg,
                     )
                     num_crit += _num_crit
                     num_warn += _num_warn
@@ -210,7 +196,6 @@ class Handler(object):
         """
         pass
 
-
     @classmethod
     def validate(cls, cfg, path="", nested=0, parent_cfg=None):
         """
@@ -225,7 +210,6 @@ class Handler(object):
         # number of non-critical errors found
         num_warn = 0
 
-
         # check for missing keys in the config
         for name in dir(cls):
             if nested > 0:
@@ -237,11 +221,10 @@ class Handler(object):
                         # no default value defined, which means its required
                         # to be set in the config file
                         if path:
-                            attr_full_name = "%s.%s" % (path, name)
+                            attr_full_name = f"{path}.{name}"
                         else:
                             attr_full_name = name
-                        raise vodka.exceptions.ConfigErrorMissing(
-                            attr_full_name, attr)
+                        raise vodka.exceptions.ConfigErrorMissing(attr_full_name, attr)
                     attr.preload(cfg, name)
 
             except vodka.exceptions.ConfigErrorMissing as inst:
@@ -252,16 +235,12 @@ class Handler(object):
                     vodka.log.error(inst.explanation)
                     num_crit += 1
 
-
         if type(cfg) in [dict, Config]:
             keys = list(cfg.keys())
             if nested > 0:
-                for _k, _v in cfg.items():
+                for _k, _v in list(cfg.items()):
                     _num_crit, _num_warn = cls.validate(
-                        _v,
-                        path=("%s.%s" % (path, _k)),
-                        nested=nested-1,
-                        parent_cfg=cfg
+                        _v, path=(f"{path}.{_k}"), nested=nested - 1, parent_cfg=cfg
                     )
                     num_crit += _num_crit
                     num_warn += _num_warn
@@ -270,8 +249,6 @@ class Handler(object):
             keys = list(range(0, len(cfg)))
         else:
             raise ValueError("Cannot validate non-iterable config value")
-
-
 
         # validate existing keys in the config
         for key in keys:
@@ -282,7 +259,7 @@ class Handler(object):
             except (
                 vodka.exceptions.ConfigErrorUnknown,
                 vodka.exceptions.ConfigErrorValue,
-                vodka.exceptions.ConfigErrorType
+                vodka.exceptions.ConfigErrorType,
             ) as inst:
                 if inst.level == "warn":
                     vodka.log.warn(inst.explanation)
@@ -308,8 +285,7 @@ class Handler(object):
     def default(cls, key_name, inst=None):
         attr = cls.get_attr_by_name(key_name)
         if not attr:
-            raise KeyError(
-                "No config attribute defined with the name '%s'" % key_name)
+            raise KeyError("No config attribute defined with the name '%s'" % key_name)
 
         if attr.default and callable(attr.default):
             return attr.default(key_name, inst)
@@ -328,7 +304,7 @@ class Handler(object):
             v = getattr(cls, k)
             if isinstance(v, Attribute):
                 name = v.field or k
-                yield name,v
+                yield name, v
 
 
 class ComponentHandler(Handler):
@@ -340,7 +316,10 @@ class ComponentHandler(Handler):
 
     # config attribute: enabled
     enabled = Attribute(
-        bool, default=True, help_text="specifies whether or not this component should be initialized and started")
+        bool,
+        default=True,
+        help_text="specifies whether or not this component should be initialized and started",
+    )
 
 
 class InstanceHandler(Handler):
@@ -353,22 +332,18 @@ class InstanceHandler(Handler):
         dict,
         help_text="Holds the registered applications",
         default={},
-        handler=lambda k, v: vodka.app.get_application(k)
+        handler=lambda k, v: vodka.app.get_application(k),
     )
     plugins = Attribute(
         list,
         help_text="Holds the registered plugins",
         default=[],
-        handler=lambda k, v: vodka.plugin.get_plugin_class(v.get("type"))
+        handler=lambda k, v: vodka.plugin.get_plugin_class(v.get("type")),
     )
-    data = Attribute(
-        list,
-        help_text="Data type configuration",
-        default=[]
-    )
+    data = Attribute(list, help_text="Data type configuration", default=[])
     logging = Attribute(
-        dict, help_text="Python logger configuration", default={"version": 1})
-
+        dict, help_text="Python logger configuration", default={"version": 1}
+    )
 
     @classmethod
     def configure_plugins(cls, configurator, cfg, path):
@@ -383,13 +358,16 @@ class InstanceHandler(Handler):
             plugin_name = configurator.prompt("Name", default=plugin_type)
             try:
                 plugin_class = configurator.plugin_manager.get_plugin_class(plugin_type)
-                plugin_cfg = {"type":plugin_type, "name":plugin_name}
-                configurator.configure(plugin_cfg, plugin_class.Configuration, path="%s.%s"%(path, plugin_name))
+                plugin_cfg = {"type": plugin_type, "name": plugin_name}
+                configurator.configure(
+                    plugin_cfg,
+                    plugin_class.Configuration,
+                    path="%s.%s" % (path, plugin_name),
+                )
                 cfg["plugins"].append(plugin_cfg)
             except Exception as inst:
                 configurator.echo(inst)
             plugin_type = configurator.prompt("Add plugin", default="skip")
-
 
     @classmethod
     def configure_apps(cls, configurator, cfg, path):
@@ -403,20 +381,18 @@ class InstanceHandler(Handler):
         name = configurator.prompt("Add application (name)", default="skip")
         while name != "skip":
             app_cfg = {}
-            configurator.configure(app_cfg, vodka.app.Application.Configuration, path="%s.%s" % (path,name))
+            configurator.configure(
+                app_cfg, vodka.app.Application.Configuration, path=f"{path}.{name}"
+            )
             vodka.app.load(name, app_cfg)
             app = vodka.app.get_application(name)
-            configurator.configure(app_cfg, app.Configuration, path="%s.%s" % (path,name))
+            configurator.configure(app_cfg, app.Configuration, path=f"{path}.{name}")
             cfg["apps"][name] = app_cfg
             name = configurator.prompt("Add application (name)", default="skip")
 
 
 class Config(munge.Config):
-    defaults = {
-        'config': {},
-        'config_dir': '~/.vodka',
-        'codec': 'yaml'
-    }
+    defaults = {"config": {}, "config_dir": "~/.vodka", "codec": "yaml"}
 
     def read(self, config_dir=None, clear=False, config_file=None):
         """
@@ -435,10 +411,10 @@ class Config(munge.Config):
             config = munge.load_datafile(data_file, data_path, default=None)
 
             if not config:
-                raise IOError("Config file not found: %s" % config_file)
+                raise OSError("Config file not found: %s" % config_file)
 
             munge.util.recursive_update(self.data, config)
             self._meta_config_dir = data_path
             return
         else:
-            return super(Config, self).read(config_dir=config_dir, clear=clear)
+            return super().read(config_dir=config_dir, clear=clear)

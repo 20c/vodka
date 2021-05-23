@@ -6,11 +6,13 @@ import vodka.data
 import vodka.storage
 import vodka
 
-@vodka.plugin.register('test')
+
+@vodka.plugin.register("test")
 class PluginA(vodka.plugins.PluginBase):
     pass
 
-@vodka.plugin.register('timed_test')
+
+@vodka.plugin.register("timed_test")
 class TimedPlugin(vodka.plugins.TimedPlugin):
     def init(self):
         self.counter = 0
@@ -18,17 +20,17 @@ class TimedPlugin(vodka.plugins.TimedPlugin):
     def work(self):
         self.counter += 1
 
-@vodka.plugin.register('data_test')
-class DataPlugin(vodka.plugins.DataPlugin):
 
+@vodka.plugin.register("data_test")
+class DataPlugin(vodka.plugins.DataPlugin):
     def work(self):
-        data = {"data":[], "ts" : time.time()}
-        return super(DataPlugin, self).work(data)
+        data = {"data": [], "ts": time.time()}
+        return super().work(data)
+
 
 class TestPlugin(unittest.TestCase):
-
     def test_get_plugin_by_name(self):
-        expected = vodka.plugin.get_instance({"type":"test", "name":"a"})
+        expected = vodka.plugin.get_instance({"type": "test", "name": "a"})
         plugin = vodka.plugins.get_plugin_by_name("a")
         self.assertEqual(plugin, expected)
 
@@ -37,12 +39,8 @@ class TestPlugin(unittest.TestCase):
 
 
 class TestTimedPlugin(unittest.TestCase):
-
     def test_run(self):
-        plugin = vodka.plugin.get_instance({
-            "type" : "timed_test",
-            "interval" : 0.01
-        })
+        plugin = vodka.plugin.get_instance({"type": "timed_test", "interval": 0.01})
         vodka.start(thread_workers=[plugin])
         time.sleep(0.05)
         plugin.stop()
@@ -52,26 +50,19 @@ class TestTimedPlugin(unittest.TestCase):
 
 
 class TestDataPlugin(unittest.TestCase):
-
     def test_run(self):
         vodka.data.data_types.instantiate_from_config(
-        [{
-            "type" : "data_test",
-            "handlers" : [
+            [
                 {
-                    "type" : "store",
-                    "container" : "list",
-                    "limit" : 10
+                    "type": "data_test",
+                    "handlers": [{"type": "store", "container": "list", "limit": 10}],
                 }
-             ]
-        }]
-)
+            ]
+        )
 
-        plugin = vodka.plugin.get_instance({
-            "type" : "data_test",
-            "interval" : 0.01,
-            "data" : "data_test"
-        })
+        plugin = vodka.plugin.get_instance(
+            {"type": "data_test", "interval": 0.01, "data": "data_test"}
+        )
 
         vodka.start(thread_workers=[plugin])
 
@@ -81,5 +72,3 @@ class TestDataPlugin(unittest.TestCase):
         for item in vodka.storage.get("data_test"):
             self.assertEqual("data" in item, True)
             self.assertEqual("ts" in item, True)
-
-

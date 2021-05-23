@@ -2,8 +2,6 @@
 vodka data renderers, takes a dict and returns munge formatted
 string
 """
-from builtins import str
-from builtins import object
 
 import munge
 import munge.codec.all
@@ -12,8 +10,7 @@ import inspect
 # DATA RENDERERS
 
 
-class DataRenderer(object):
-
+class DataRenderer:
     def __init__(self, type="json"):
         self.type = type
 
@@ -34,7 +31,7 @@ class RPC(DataRenderer):
     """
 
     def __init__(self, type="json", data_type=list, errors=False):
-        super(RPC, self).__init__(type=type)
+        super().__init__(type=type)
         self.errors = errors
         self.data_type = data_type
 
@@ -44,8 +41,7 @@ class RPC(DataRenderer):
             try:
                 i_args = inspect.getargspec(fn)
                 if i_args.args and i_args.args[0] == "self":
-                    fn(args[0], resp["data"], meta=resp[
-                       "meta"], *args, **kwargs)
+                    fn(args[0], resp["data"], meta=resp["meta"], *args, **kwargs)
                 else:
                     fn(resp["data"], meta=resp["meta"], *args, **kwargs)
             except Exception as inst:
@@ -54,5 +50,6 @@ class RPC(DataRenderer):
                 else:
                     raise
             return self.render(resp)
+
         wrapped.__name__ = fn.__name__
         return wrapped
