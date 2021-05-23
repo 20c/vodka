@@ -79,8 +79,9 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          pytest -vv --cov-report=term-missing --cov=${{ github.event.repository.name }} --cov-report=xml tests/
+          tox
           coverage report
+# XXX          pytest -vv --cov-report=term-missing --cov=${{ github.event.repository.name }} --cov-report=xml tests/
       # upload coverage stats
       - name: Upload coverage
         uses: codecov/codecov-action@v1
