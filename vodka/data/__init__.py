@@ -1,6 +1,8 @@
 _handlers = {}
 import traceback
+
 import vodka.log
+
 from . import handlers
 
 
@@ -29,7 +31,9 @@ def handle(data_type, data, data_id=None, caller=None):
     # instantiate handlers for data type if they havent been yet
     if data_id not in _handlers:
         _handlers[data_id] = {
-            h.handle: h for h in handlers.instantiate_for_data_type(data_type, data_id=data_id)}
+            h.handle: h
+            for h in handlers.instantiate_for_data_type(data_type, data_id=data_id)
+        }
 
     for handler in list(_handlers[data_id].values()):
         try:

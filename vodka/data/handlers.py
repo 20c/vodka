@@ -3,10 +3,10 @@ vodka data handlers, allows to modify data retrieved by
 vodka data plugins
 """
 
-import vodka.config
 import vodka.component
-import vodka.storage
+import vodka.config
 import vodka.data.data_types
+import vodka.storage
 import vodka.util
 
 handlers = {}
@@ -82,10 +82,7 @@ class IndexHandler(Handler):
     """
 
     class Configuration(Handler.Configuration):
-        index = vodka.config.Attribute(
-            str,
-            help_text="the field to use for indexing"
-        )
+        index = vodka.config.Attribute(str, help_text="the field to use for indexing")
 
     def __call__(self, data, caller=None):
         if "data" in data:
@@ -94,7 +91,9 @@ class IndexHandler(Handler):
                 if isinstance(d, dict):
                     r[d[self.get_config("index")]] = d
                 elif d:
-                    self.log.debug("Only dictionary type data rows may be re-indexed, row ignored")
+                    self.log.debug(
+                        "Only dictionary type data rows may be re-indexed, row ignored"
+                    )
                 else:
                     self.log.debug("Empty data row ignored.")
             data["data"] = r
@@ -116,13 +115,13 @@ class StorageHandler(Handler):
             str,
             help_text="specify how to store data",
             choices=["list", "dict"],
-            default="list"
+            default="list",
         )
 
         limit = vodka.config.Attribute(
             int,
             default=500,
-            help_text="Limit the maximum amount of items to keep; only applies to list storage"
+            help_text="Limit the maximum amount of items to keep; only applies to list storage",
         )
 
         def validate_limit(self, value):
@@ -152,5 +151,6 @@ class StorageHandler(Handler):
         elif self.get_config("container") == "dict":
             self.storage = vodka.storage.get_or_create(self.data_id, {})
         else:
-            raise ValueError("Unknown storage container type: %s" %
-                             self.get_config("container"))
+            raise ValueError(
+                "Unknown storage container type: %s" % self.get_config("container")
+            )

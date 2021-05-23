@@ -2,6 +2,7 @@ from vodka.app import get_application
 
 instances = {}
 
+
 def get_instance(name):
     """
     wrapper function to retrieve instance
@@ -20,6 +21,7 @@ def get_instance(name):
         return instances.get(name)
     raise KeyError("No instance spawned for application handle '%s'" % name)
 
+
 def instantiate(config):
 
     """
@@ -34,6 +36,7 @@ def instantiate(config):
             continue
         app = get_application(handle)
         instances[app.handle] = app(cfg)
+
 
 def ready():
 
