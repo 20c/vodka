@@ -1,26 +1,23 @@
-import inspect
 import os
 import os.path
+import inspect
 import shutil
-
 import click
-import munge.codec.all
-from munge import config as munge_config
-
 import vodka
 import vodka.app
 import vodka.config
 import vodka.config.configurator
 import vodka.load_entrypoints
 
-VODKA_INSTALL_DIR = os.path.dirname(inspect.getfile(vodka))
+import munge.codec.all
+from munge import config as munge_config
 
+VODKA_INSTALL_DIR = os.path.dirname(inspect.getfile(vodka))
 
 class ClickConfigurator(vodka.config.configurator.Configurator):
     """
     Configurator class with prompt and echo wired to click
     """
-
     def echo(self, msg):
         click.echo(msg)
 
@@ -33,14 +30,8 @@ def options(f):
     Shared options, used by all bartender commands
     """
 
-    f = click.option(
-        "--config",
-        envvar="VODKA_HOME",
-        default=click.get_app_dir("vodka"),
-        help="location of config file",
-    )(f)
+    f = click.option('--config', envvar='VODKA_HOME', default=click.get_app_dir('vodka'), help="location of config file")(f)
     return f
-
 
 @click.group()
 @click.version_option()
@@ -57,6 +48,7 @@ def check_config(config):
     values in general
     """
 
+
     cfg = vodka.config.Config(read=config)
 
     vodka.log.set_loggers(cfg.get("logging"))
@@ -71,17 +63,16 @@ def check_config(config):
 
 @bartender.command()
 @options
-@click.option(
-    "--skip-defaults/--no-skip-defaults",
-    default=False,
-    help="skip config variables that have a default value",
-)
+@click.option('--skip-defaults/--no-skip-defaults', default=False, help="skip config variables that have a default value")
 def config(config, skip_defaults):
     """
     Generates configuration file from config specifications
     """
 
-    configurator = ClickConfigurator(vodka.plugin, skip_defaults=skip_defaults)
+    configurator = ClickConfigurator(
+        vodka.plugin,
+        skip_defaults=skip_defaults
+    )
 
     configurator.configure(vodka.config.instance, vodka.config.InstanceHandler)
 
@@ -99,9 +90,7 @@ def config(config, skip_defaults):
 
     if configurator.action_required:
         click.echo("")
-        click.echo(
-            "not all required values could be set by this script, please manually edit the config and set the following values"
-        )
+        click.echo("not all required values could be set by this script, please manually edit the config and set the following values")
         click.echo("")
         for item in configurator.action_required:
             click.echo("- %s" % item)
@@ -110,10 +99,9 @@ def config(config, skip_defaults):
     click.echo("Config written to %s" % dst.url.path)
 
 
+
 @bartender.command()
-@click.option(
-    "--path", type=click.Path(), default=".", help="generate app files to this location"
-)
+@click.option('--path', type=click.Path(), default=".", help="generate app files to this location")
 def newapp(path):
     """
     Generates all files for a new vodka app at the specified location.
@@ -125,25 +113,14 @@ def newapp(path):
     if not os.path.exists(path):
         os.makedirs(path)
     elif os.path.exists(os.path.join(path, "application.py")):
-        click.error(
-            "There already exists a vodka app at %s, please specify a different path"
-            % path
-        )
+        click.error("There already exists a vodka app at %s, please specify a different path" % path)
     os.makedirs(os.path.join(path, "plugins"))
-    shutil.copy(
-        os.path.join(app_path, "application.py"), os.path.join(path, "application.py")
-    )
-    shutil.copy(
-        os.path.join(app_path, "__init__.py"), os.path.join(path, "__init__.py")
-    )
-    shutil.copy(
-        os.path.join(app_path, "plugins", "example.py"),
-        os.path.join(path, "plugins", "example.py"),
-    )
-    shutil.copy(
-        os.path.join(app_path, "plugins", "__init__.py"),
-        os.path.join(path, "plugins", "__init__.py"),
-    )
+    shutil.copy(os.path.join(app_path, "application.py"), os.path.join(path, "application.py"))
+    shutil.copy(os.path.join(app_path, "__init__.py"), os.path.join(path, "__init__.py"))
+    shutil.copy(os.path.join(app_path, "plugins", "example.py"), os.path.join(path, "plugins", "example.py"))
+    shutil.copy(os.path.join(app_path, "plugins", "__init__.py"), os.path.join(path, "plugins", "__init__.py"))
+
+
 
 
 @bartender.command()
@@ -155,7 +132,6 @@ def serve(config):
 
     cfg = vodka.config.Config(read=config)
     vodka.run(cfg, cfg)
-
 
 if __name__ == "__main__":
     bartender()

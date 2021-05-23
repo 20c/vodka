@@ -16,13 +16,12 @@ def path(value):
         return (True, "")
     return (os.path.exists(value), "path does not exist: %s" % value)
 
-
 def host(value):
     """ Validates that the value is a valid network location """
     if not value:
         return (True, "")
     try:
-        host, port = value.split(":")
+        host,port = value.split(":")
     except ValueError as _:
         return (False, "value needs to be <host>:<port>")
 
@@ -32,3 +31,4 @@ def host(value):
         return (False, "port component of the host address needs to be a number")
 
     return (True, "")
+

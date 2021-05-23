@@ -1,8 +1,6 @@
 import os
-
-import vodka.config
 import vodka.log
-
+import vodka.config
 
 class Component(vodka.log.LoggerMixin):
 
@@ -28,7 +26,7 @@ class Component(vodka.log.LoggerMixin):
     @property
     def home(self):
         """ absolute path to the project home directory """
-        return self.get_config("home")
+        return self.get_config('home')
 
     def get_config(self, key_name):
         """
@@ -58,3 +56,4 @@ class Component(vodka.log.LoggerMixin):
             str - absolute path to project resource
         """
         return os.path.join(self.home, path)
+

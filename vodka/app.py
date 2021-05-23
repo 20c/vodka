@@ -3,27 +3,26 @@ Vodka application foundation classes. Each vodka app should extend one
 of these.
 """
 
+import os
+import sys
+import re
 import copy
 import importlib
 import inspect
-import os
-import re
-import sys
 
 import pluginmgr
 
-import vodka.component
 import vodka.config
 import vodka.config.shared
-import vodka.instance
 import vodka.log
+import vodka.component
 import vodka.util
+import vodka.instance
 
 applications = {}
 loaded_paths = []
 
 # FUNCTIONS
-
 
 def get_application(handle):
     """
@@ -83,9 +82,7 @@ def load_all(cfg):
             load(name, app_cfg)
             imported.append(name)
 
-
 # DECORATORS
-
 
 class register(vodka.util.register):
     class Meta:
@@ -94,7 +91,6 @@ class register(vodka.util.register):
 
 
 # CLASSES
-
 
 class Application(vodka.component.Component):
     """
@@ -112,23 +108,27 @@ class Application(vodka.component.Component):
         home = vodka.config.Attribute(
             vodka.config.validators.path,
             default="",
-            help_text="absolute path to application directory. you can ignore this if application is to be loaded from an installed python package.",
+            help_text="absolute path to application directory. you can ignore this if application is to be loaded from an installed python package."
         )
         module = vodka.config.Attribute(
             str,
             default="",
-            help_text="name of the python module containing this application (usually <namespace>.application)",
+            help_text="name of the python module containing this application (usually <namespace>.application)"
         )
 
         requires = vodka.config.Attribute(
-            list, default=[], help_text="list of vodka apps required by this app"
+            list,
+            default=[],
+            help_text="list of vodka apps required by this app"
         )
+
 
     @classmethod
     def versioned_handle(cls):
         if cls.version is None:
             return cls.handle
-        return "%s/%s" % (cls.handle, cls.version)
+        return "%s/%s" %  (cls.handle, cls.version)
+
 
     def __init__(self, config=None, config_dir=None):
 
@@ -158,15 +158,14 @@ class Application(vodka.component.Component):
 class SharedIncludesConfigHandler(vodka.config.shared.RoutersHandler):
     path = vodka.config.Attribute(
         str,
-        help_text="relative path (to the app's static directory) of the file to be included",
+        help_text="relative path (to the app's static directory) of the file to be included"
     )
 
     order = vodka.config.Attribute(
         int,
         default=0,
-        help_text="loading order, higher numbers will be loaded after lower numbers",
+        help_text="loading order, higher numbers will be loaded after lower numbers"
     )
-
 
 class TemplatedApplication(Application):
     """
@@ -177,21 +176,21 @@ class TemplatedApplication(Application):
     class Configuration(Application.Configuration):
         templates = vodka.config.Attribute(
             vodka.config.validators.path,
-            default=lambda k, i: i.resource(k),
-            help_text="location of your template files",
+            default=lambda k,i: i.resource(k),
+            help_text="location of your template files"
         )
 
         template_locations = vodka.config.Attribute(
             list,
             default=[],
-            help_text="allows you to specify additional paths to load templates from",
+            help_text="allows you to specify additional paths to load templates from"
         )
 
         template_engine = vodka.config.Attribute(
             str,
             default="jinja2",
             choices=["jinja2"],
-            help_text="template engine to use to render your templates",
+            help_text="template engine to use to render your templates"
         )
 
     @property
@@ -199,17 +198,21 @@ class TemplatedApplication(Application):
         """ absolute path to template directory """
         return self.get_config("templates")
 
+
     def versioned_url(self, path):
-        # FIXME: needs a more bulletproof solution so it works with paths
-        # that already have query parameters attached etc.
+        #FIXME: needs a more bulletproof solution so it works with paths
+        #that already have query parameters attached etc.
         if self.version is None:
             return path
         if not re.match("^%s/.*" % self.handle, path):
             return path
         return f"{path}?v={self.version}"
 
+
     def versioned_path(self, path):
-        return re.sub("^%s/" % self.handle, "%s/" % self.versioned_handle(), path)
+        return re.sub("^%s/" % self.handle, "%s/"%self.versioned_handle(), path)
+
+
 
     def render(self, tmpl_name, context_env):
         """
@@ -233,13 +236,11 @@ class TemplatedApplication(Application):
 
         template_locations = []
 
-        # we want tp searcj additional template location specified
+        # we want tp searcj additional template location specified 
         # in this app's config
         for path in self.get_config("template_locations"):
             if os.path.exists(path):
-                self.log.debug(
-                    f"Template location added for application '{self.handle}': {path}"
-                )
+                self.log.debug(f"Template location added for application '{self.handle}': {path}")
                 template_locations.append(path)
 
         # we want to search for template overrides in other app instances
@@ -251,9 +252,7 @@ class TemplatedApplication(Application):
             if hasattr(inst, "template_path"):
                 path = os.path.join(inst.template_path, self.handle)
                 if os.path.exists(path):
-                    self.log.debug(
-                        f"Template location added for application '{self.handle}' via application '{inst.handle}': {path}"
-                    )
+                    self.log.debug(f"Template location added for application '{self.handle}' via application '{inst.handle}': {path}")
                     template_locations.append(path)
 
         # finally we add this apps template path to the template locations
@@ -276,10 +275,8 @@ class WebApplication(TemplatedApplication):
             default={},
             nested=1,
             share="includes:merge",
-            handler=lambda x, y: vodka.config.shared.Routers(
-                dict, "includes:merge", handler=SharedIncludesConfigHandler
-            ),
-            help_text="allows you to specify extra media includes for js,css etc.",
+            handler=lambda x,y: vodka.config.shared.Routers(dict, "includes:merge", handler=SharedIncludesConfigHandler),
+            help_text="allows you to specify extra media includes for js,css etc."
         )
 
     # class methods and properties
@@ -287,15 +284,13 @@ class WebApplication(TemplatedApplication):
     @property
     def includes(self):
         """ return includes from config """
-        r = {
-            k: sorted(list(copy.deepcopy(v).values()), key=lambda x: x.get("order", 0))
-            for k, v in list(self.get_config("includes").items())
-        }
+        r = {k: sorted(list(copy.deepcopy(v).values()), key=lambda x:x.get("order",0)) for k,v in list(self.get_config("includes").items())}
         if self.version is not None:
-            for k, v in list(r.items()):
+            for k,v in list(r.items()):
                 for j in v:
                     j["path"] = self.versioned_url(j["path"])
         return r
+
 
     def render(self, tmpl_name, request_env):
         """
@@ -310,3 +305,5 @@ class WebApplication(TemplatedApplication):
             str - the rendered template
         """
         return super().render(tmpl_name, request_env)
+
+

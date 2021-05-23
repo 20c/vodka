@@ -1,9 +1,9 @@
 import vodka.app
 import vodka.config
 
-
-@vodka.app.register("my_app")
+@vodka.app.register('my_app')
 class MyApp(vodka.app.WebApplication):
+
     def index(self):
         return self.render("index.html", self.wsgi_plugin.request_env())
 

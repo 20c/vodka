@@ -39,11 +39,11 @@ class ConfigErrorValue(ConfigErrorMixin, ValueError):
 
     def __init__(self, var_name, attr, value, reason=None, level="critical"):
 
-        ValueError.__init__(self, "%s contains an invalid value" % var_name)
-        ConfigErrorMixin.__init__(
-            self, attr=attr, value=value, level=level, reason=reason
+        ValueError.__init__(
+            self,
+            "%s contains an invalid value" % var_name
         )
-
+        ConfigErrorMixin.__init__(self, attr=attr, value=value, level=level, reason=reason)
 
 class ConfigErrorMissing(ConfigErrorMixin, KeyError):
 
@@ -55,9 +55,11 @@ class ConfigErrorMissing(ConfigErrorMixin, KeyError):
     handle = "config missing"
 
     def __init__(self, var_name, attr, level="critical"):
-        KeyError.__init__(self, "%s is missing from config file" % var_name)
+        KeyError.__init__(
+            self,
+            "%s is missing from config file" % var_name
+        )
         ConfigErrorMixin.__init__(self, attr=attr, level=level)
-
 
 class ConfigErrorType(ConfigErrorMixin, TypeError):
 
@@ -70,7 +72,8 @@ class ConfigErrorType(ConfigErrorMixin, TypeError):
 
     def __init__(self, var_name, attr, level="critical"):
         TypeError.__init__(
-            self, f"{var_name} should be of type '{attr.expected_type.__name__}'"
+            self,
+            f"{var_name} should be of type '{attr.expected_type.__name__}'"
         )
         ConfigErrorMixin.__init__(self, attr=attr, level=level)
 
@@ -87,6 +90,6 @@ class ConfigErrorUnknown(ConfigErrorMixin, KeyError):
     def __init__(self, var_name, level="warn", attr=None):
         KeyError.__init__(
             self,
-            "%s is not a known configuration variable and has been ignored" % var_name,
+            "%s is not a known configuration variable and has been ignored" % var_name
         )
         ConfigErrorMixin.__init__(self, attr=None, level=level)

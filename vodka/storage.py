@@ -1,11 +1,9 @@
 storage = {}
 
-
 def get(name, default=None):
     return storage.get(name, default)
 
-
-def get_or_create(name, value):
+def get_or_create(name,  value):
 
     """
     returns the storage space defined by name
