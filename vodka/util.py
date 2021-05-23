@@ -60,12 +60,12 @@ class register:
         """
 
         if handle in self.Meta.objects:
-            raise KeyError(f"{self.Meta.name} with handle '{handle}' already registered")
+            raise KeyError(
+                f"{self.Meta.name} with handle '{handle}' already registered"
+            )
         self.handle = handle
-
 
     def __call__(self, cls):
         cls.handle = self.handle
         self.Meta.objects[cls.handle] = cls
         return cls
-

@@ -10,7 +10,6 @@ import vodka.component
 import vodka.data.handlers
 
 
-
 def get_plugin_by_name(name):
     return vodka.plugin.get_instance(name)
 
@@ -24,28 +23,22 @@ def get_plugin_class(typ):
 
 
 class PluginBase(vodka.component.Component, pluginmgr.config.PluginBase):
-
     class Configuration(vodka.component.Component.Configuration):
         async_handler = vodka.config.Attribute(
             str,
             default="thread",
             choices=["thread", "gevent"],
             field="async",
-            help_text="specifies how to run this plugin async"
+            help_text="specifies how to run this plugin async",
         )
-        type = vodka.config.Attribute(
-            str,
-            help_text="plugin registration type string"
-        )
+        type = vodka.config.Attribute(str, help_text="plugin registration type string")
         name = vodka.config.Attribute(
             str,
             default=lambda x, i: i.type,
-            help_text="plugin instance name, needs to be unique"
+            help_text="plugin instance name, needs to be unique",
         )
         start_manual = vodka.config.Attribute(
-            bool,
-            default=False,
-            help_text="disable automatic start of this plugin"
+            bool, default=False, help_text="disable automatic start of this plugin"
         )
 
     @property
@@ -72,16 +65,16 @@ class PluginBase(vodka.component.Component, pluginmgr.config.PluginBase):
 
 
 class TimedPlugin(PluginBase):
-
     class Configuration(PluginBase.Configuration):
         interval = vodka.config.Attribute(
             float,
-            help_text="minimum interval between calls to work method (in seconds)"
+            help_text="minimum interval between calls to work method (in seconds)",
         )
 
     def sleep(self, n):
         if self.get_config("async") == "gevent":
             import gevent
+
             gevent.sleep(n)
         else:
             time.sleep(n)
@@ -122,13 +115,13 @@ class DataPlugin(TimedPlugin):
 
         data = vodka.config.Attribute(
             str,
-            help_text="specify the data type of data fetched by this plugin. Will also apply the vodka data handler with matching name if it exists"
+            help_text="specify the data type of data fetched by this plugin. Will also apply the vodka data handler with matching name if it exists",
         )
 
         data_id = vodka.config.Attribute(
             str,
             help_text="data id for data handled by this plugin, will default to the plugin name",
-            default=""
+            default="",
         )
 
     @property
@@ -137,11 +130,12 @@ class DataPlugin(TimedPlugin):
 
     @property
     def data_id(self):
-        return (self.get_config("data_id") or self.name)
+        return self.get_config("data_id") or self.name
 
     def init(self):
         return
 
     def work(self, data):
-        return vodka.data.handle(self.data_type, data, data_id=self.data_id, caller=self)
-
+        return vodka.data.handle(
+            self.data_type, data, data_id=self.data_id, caller=self
+        )

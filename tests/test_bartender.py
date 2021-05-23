@@ -12,11 +12,13 @@ import vodka
 
 from click.testing import CliRunner
 
-HOME =  os.path.join(os.path.dirname(__file__), "resources", "test_bartender_app")
+HOME = os.path.join(os.path.dirname(__file__), "resources", "test_bartender_app")
 
-@vodka.plugin.register('test_bartender_a')
+
+@vodka.plugin.register("test_bartender_a")
 class Plugin(vodka.plugins.PluginBase):
     pass
+
 
 class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
 
@@ -38,7 +40,7 @@ class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
         # add plugin type
         "test_bartender_a",
         # dont add another plugin
-        "skip"
+        "skip",
     ]
 
     def prompt(self, msg, default=None, *args, **kwargs):
@@ -46,12 +48,14 @@ class SimPromptConfigurator(vodka.bartender.ClickConfigurator):
             self.counter = 0
 
         # default value is provided, use that
-        if default != "skip" and default!="." and default != "":
+        if default != "skip" and default != "." and default != "":
             return default
 
         r = self.values[self.counter]
         self.counter += 1
         return r
+
+
 # override so config cli will use our new sim prompt configurator
 vodka.bartender.ClickConfigurator = SimPromptConfigurator
 
@@ -89,19 +93,22 @@ class TestBartender(unittest.TestCase):
         """
 
         # create config to check, this should always validate
-        self.config_file.write(json.dumps({
-            "logging" : vodka.log.default_config()
-        }))
+        self.config_file.write(json.dumps({"logging": vodka.log.default_config()}))
 
         # run check_config
-        r = self.cli.invoke(vodka.bartender.check_config, ["--config=%s" % str(self.tmpdir)])
+        r = self.cli.invoke(
+            vodka.bartender.check_config, ["--config=%s" % str(self.tmpdir)]
+        )
 
         # assert no errors
         self.assertEqual(r.exit_code, 0)
 
         # assert output
-        self.assertEqual(str(r.output), "Checking config at %s for errors ...\n0 config ERRORS, 0 config WARNINGS\n" % str(self.tmpdir))
-
+        self.assertEqual(
+            str(r.output),
+            "Checking config at %s for errors ...\n0 config ERRORS, 0 config WARNINGS\n"
+            % str(self.tmpdir),
+        )
 
     def test_config(self):
 
@@ -112,7 +119,9 @@ class TestBartender(unittest.TestCase):
         """
 
         # run config (this will use SimPrompt
-        r = self.cli.invoke(vodka.bartender.config, ["--config=%s/config.json" % str(self.tmpdir)])
+        r = self.cli.invoke(
+            vodka.bartender.config, ["--config=%s/config.json" % str(self.tmpdir)]
+        )
 
         vodka.log.set_loggers(vodka.log.default_config())
 
@@ -124,26 +133,25 @@ class TestBartender(unittest.TestCase):
         cfg = vodka.config.Config(read=str(self.tmpdir))
 
         expected = {
-            'apps': {
-                'test_bartender_app': {
-                    'enabled': True,
-                    'home': HOME,
-                    'module': ''
-                }
+            "apps": {
+                "test_bartender_app": {"enabled": True, "home": HOME, "module": ""}
             },
-            'plugins': [
+            "plugins": [
                 {
-                    'async': 'thread',
-                    'enabled': True,
-                    'start_manual': False,
-                    'name': 'test_bartender_a',
-                    'type': 'test_bartender_a'
+                    "async": "thread",
+                    "enabled": True,
+                    "start_manual": False,
+                    "name": "test_bartender_a",
+                    "type": "test_bartender_a",
                 }
-            ]
+            ],
         }
         self.assertEqual("apps" in cfg.data, True)
         self.assertEqual("plugins" in cfg.data, True)
         # note: because other tests may register applications we
         # cannot directly compare the entire content of "apps"
-        self.assertEqual(expected["apps"]["test_bartender_app"], cfg.data["apps"]["test_bartender_app"])
+        self.assertEqual(
+            expected["apps"]["test_bartender_app"],
+            cfg.data["apps"]["test_bartender_app"],
+        )
         self.assertEqual(expected["plugins"], cfg.data["plugins"])

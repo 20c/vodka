@@ -9,12 +9,10 @@ shared = {}
 MODE_MERGE = 1
 MODE_APPEND = 2
 
-MODES = {
-    "merge" : MODE_MERGE,
-    "append" : MODE_APPEND
-}
+MODES = {"merge": MODE_MERGE, "append": MODE_APPEND}
 
 ROUTERS = {}
+
 
 class register(vodka.util.register):
     class Meta:
@@ -37,7 +35,7 @@ class Attribute(BaseAttribute):
         """
 
         super().__init__(expected_type, **kwargs)
-        share = kwargs.get("share","")
+        share = kwargs.get("share", "")
         self.share = None
         if share:
             sharing_id, sharing_mode = tuple(share.split(":"))
@@ -49,14 +47,13 @@ class Attribute(BaseAttribute):
 
 
 class Container(Attribute):
-
     def finalize(self, cfg, key_name, value, **kwargs):
         return
 
     def preload(self, cfg, key_name, **kwargs):
         if self.share:
             if cfg.get(key_name) is not None:
-                for _k, _v in list(cfg.get(key_name,{}).items()):
+                for _k, _v in list(cfg.get(key_name, {}).items()):
                     self.share.share(_k, _v)
             if self.default is not None:
                 for _k, _v in list(self.default.items()):
@@ -64,26 +61,28 @@ class Container(Attribute):
                 cfg[key_name] = self.share.container
 
 
-
 class Router:
     """
     Config sharing router, will redirect shared config attributes
     to a common container
     """
+
     def __init__(self, _id, mode=MODE_MERGE):
         if not _id:
             raise ValueError("Name must be specified for config sharing router")
         self.id = _id
         self.mode = MODES.get(mode)
         if not self.mode:
-            raise ValueError("Invalid mode specified for config sharing router: %s" % mode)
+            raise ValueError(
+                "Invalid mode specified for config sharing router: %s" % mode
+            )
 
     def __repr__(self):
         return f"{self.__class__.__name__} <{self.id}>"
 
     @property
     def container(self):
-        return shared.get(self.id,{})
+        return shared.get(self.id, {})
 
     @property
     def container_type(self):
@@ -103,9 +102,13 @@ class Router:
             shared[self.id][name] = self.empty
 
         if type(value) != self.container_type:
-            raise ValueError("Router '%s' only accepts value of type '%s'"%(self.id, self.container_type))
+            raise ValueError(
+                "Router '%s' only accepts value of type '%s'"
+                % (self.id, self.container_type)
+            )
 
         return shared[self.id][name]
+
 
 @register(list)
 class ListRouter(Router):
@@ -119,7 +122,7 @@ class ListRouter(Router):
         return list
 
     def share(self, name, value):
-        container = super().share(name,value)
+        container = super().share(name, value)
 
         if self.mode == MODE_MERGE:
             for v in value:
@@ -130,6 +133,7 @@ class ListRouter(Router):
                 container.append(v)
 
         return container
+
 
 @register(dict)
 class DictRouter(Router):
@@ -146,7 +150,7 @@ class DictRouter(Router):
         return self.container.get(key, default)
 
     def share(self, name, value):
-        container = super().share(name,value)
+        container = super().share(name, value)
 
         if self.mode == MODE_MERGE:
             container.update(**value)
@@ -155,11 +159,13 @@ class DictRouter(Router):
 
         return container
 
+
 class RoutersHandler(Handler):
     """
     Extend this handler in order to do nested config sharing with the same
     sharing ruleset
     """
+
     mode = "merge"
     sharing_id = None
     router_cls = DictRouter
@@ -173,6 +179,7 @@ class RoutersHandler(Handler):
         share.share(key_name, value)
         parent_cfg[attr_name] = shared[cls.sharing_id]
 
+
 def Routers(typ, share, handler=RoutersHandler):
     """
     Pass the result of this function to the handler argument
@@ -180,8 +187,10 @@ def Routers(typ, share, handler=RoutersHandler):
     """
     _sharing_id, _mode = tuple(share.split(":"))
     _router_cls = ROUTERS.get(typ)
+
     class _Handler(handler):
-        mode=_mode
-        sharing_id=_sharing_id
-        router_cls=_router_cls
+        mode = _mode
+        sharing_id = _sharing_id
+        router_cls = _router_cls
+
     return _Handler

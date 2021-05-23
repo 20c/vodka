@@ -1,6 +1,7 @@
 import vodka
 import vodka.exceptions
 
+
 class Configurator:
 
     """
@@ -39,7 +40,9 @@ class Configurator:
             if attr.expected_type not in [list, dict]:
                 cfg[name] = self.set(handler, attr, name, path, cfg)
             elif attr.default is None and not hasattr(handler, "configure_%s" % name):
-                self.action_required.append((f"{path}.{name}: {attr.help_text}").strip("."))
+                self.action_required.append(
+                    (f"{path}.{name}: {attr.help_text}").strip(".")
+                )
 
         # configure attributes that have complex handlers defined
         # on the config Handler class (class methods prefixed by
@@ -49,13 +52,12 @@ class Configurator:
                 continue
             if hasattr(handler, "configure_%s" % name):
                 fn = getattr(handler, "configure_%s" % name)
-                fn(self, cfg, "%s.%s"% (path, name))
+                fn(self, cfg, "%s.%s" % (path, name))
                 if attr.expected_type in [list, dict] and not cfg.get(name):
                     try:
                         del cfg[name]
                     except KeyError:
                         pass
-
 
     def set(self, handler, attr, name, path, cfg):
 
@@ -87,7 +89,6 @@ class Configurator:
         if attr.choices:
             self.echo("choices: %s" % ", ".join([str(c) for c in attr.choices]))
 
-
         # obtain user input and validate until input is valid
         b = False
         while not b:
@@ -98,9 +99,9 @@ class Configurator:
                 else:
                     r = self.prompt(full_name, default=default, type=str)
             except ValueError:
-                self.echo("Value expected to be of type %s"% attr.expected_type)
+                self.echo("Value expected to be of type %s" % attr.expected_type)
             try:
-                b = handler.check({name:r}, name, path)
+                b = handler.check({name: r}, name, path)
             except Exception as inst:
                 if hasattr(inst, "explanation"):
                     self.echo(inst.explanation)
@@ -115,4 +116,3 @@ class Configurator:
     def prompt(self, *args, **kwargs):
         """ override this function to prompt for user input """
         return None
-

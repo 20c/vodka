@@ -1,18 +1,9 @@
 import sys
 from pluginmgr.config import ConfigPluginManager
 
-from vodka.instance import (
-    instances,
-    instantiate,
-    ready,
-    get_instance
-)
+from vodka.instance import instances, instantiate, ready, get_instance
 
-from vodka.app import (
-    load_all,
-    applications,
-    get_application
-)
+from vodka.app import load_all, applications, get_application
 
 import vodka.data
 import vodka.data.data_types
@@ -49,7 +40,9 @@ def init(config, rawConfig):
     num_crit, num_warn = vodka.config.InstanceHandler.validate(cfg)
     if num_crit > 0:
         vodka.log.error(
-            "There have been %d critical errors detected in the configuration, please fix them and try again" % num_crit)
+            "There have been %d critical errors detected in the configuration, please fix them and try again"
+            % num_crit
+        )
         sys.exit()
 
     # instantiate data types
@@ -63,7 +56,6 @@ def init(config, rawConfig):
     # instantiate vodka applications
     vodka.log.debug("instantiating applications")
     instantiate(cfg)
-
 
     vodka.log.debug("starting plugins")
 
@@ -99,13 +91,14 @@ def init(config, rawConfig):
     return {
         "gevent_workers": gevent_workers,
         "thread_workers": thread_workers,
-        "asyncio_workers": asyncio_workers
+        "asyncio_workers": asyncio_workers,
     }
 
 
 def start(gevent_workers=None, thread_workers=None, asyncio_workers=None):
     if thread_workers:
         import threading
+
         for w in thread_workers:
             if hasattr(w, "start"):
                 t = threading.Thread(target=w.start)
@@ -117,6 +110,7 @@ def start(gevent_workers=None, thread_workers=None, asyncio_workers=None):
 
     if gevent_workers:
         import gevent
+
         _workers = []
         for worker in gevent_workers:
             if isinstance(worker, gevent.Greenlet):
@@ -132,17 +126,19 @@ def start(gevent_workers=None, thread_workers=None, asyncio_workers=None):
     if asyncio_workers:
         import asyncio
         import threading
+
         def run_asyncio():
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             for worker in asyncio_workers:
                 asyncio.get_event_loop().run_until_complete(worker)
             asyncio.get_event_loop().run_forever()
+
         t = threading.Thread(target=run_asyncio)
         t.start()
 
 
 def run(config, rawConfig=None):
     if not rawConfig:
-        rawConfig=config
+        rawConfig = config
     start(**init(config, rawConfig))

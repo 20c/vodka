@@ -41,9 +41,7 @@ class DataType(vodka.component.Component):
 
     class Configuration(vodka.config.ComponentHandler):
         handlers = vodka.config.Attribute(
-            list,
-            default=[],
-            help_text="data handlers to apply to this data"
+            list, default=[], help_text="data handlers to apply to this data"
         )
 
     @property
