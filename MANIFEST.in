@@ -1,4 +1,0 @@
-include LICENSE
-recursive-include Ctl *.txt
-recursive-include vodka *.py
-include Ctl/VERSION

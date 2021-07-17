@@ -15,7 +15,7 @@ class Handler(vodka.config.Handler):
     @classmethod
     def configure_e(cls, configurator, cfg, path):
         _cfg = {}
-        configurator.configure(_cfg, HandlerE, path="%s.%s" % (path, "test"))
+        configurator.configure(_cfg, HandlerE, path="{}.{}".format(path, "test"))
         cfg["e"] = {"test": _cfg}
 
 

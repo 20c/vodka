@@ -54,11 +54,11 @@ class PluginBase(vodka.component.Component, pluginmgr.config.PluginBase):
         pluginmgr.config.PluginBase.__init__(self, config)
 
     def init(self):
-        """ executed during plugin initialization, app instances not available yet """
+        """executed during plugin initialization, app instances not available yet"""
         pass
 
     def setup(self):
-        """ executed before plugin is started, app instances available """
+        """executed before plugin is started, app instances available"""
         pass
 
     def start(self):

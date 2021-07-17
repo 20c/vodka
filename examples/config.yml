@@ -2,10 +2,10 @@
 apps:
   # my_app application
   my_app:
-    
+
     # load and start this app
     enabled: True
-    
+
     # when loading app from a directory specify the home here
     home: /path/to/app
 
@@ -13,18 +13,18 @@ apps:
     module: my_app.application
 
     # ... remaining app config ...#
-    
+
 # plugins
 plugins:
-    
+
   # first plugin
-  
+
     # plugin type (As it was registered)
   - type: flask
-     
+
     # custom name that means something for you
     name: http
-      
+
     # specify which handler to use for async (thread or gevent)
     async: gevent
 
@@ -64,5 +64,5 @@ logging:
       level: DEBUG
       handlers:
         - console
-  
+
 

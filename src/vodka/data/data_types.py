@@ -46,7 +46,7 @@ class DataType(vodka.component.Component):
 
     @property
     def handlers(self):
-        """ handlers specified for this data type via config"""
+        """handlers specified for this data type via config"""
         return self.get_config("handlers")
 
     def __init__(self, config):

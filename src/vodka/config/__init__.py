@@ -362,7 +362,7 @@ class InstanceHandler(Handler):
                 configurator.configure(
                     plugin_cfg,
                     plugin_class.Configuration,
-                    path="%s.%s" % (path, plugin_name),
+                    path=f"{path}.{plugin_name}",
                 )
                 cfg["plugins"].append(plugin_cfg)
             except Exception as inst:
