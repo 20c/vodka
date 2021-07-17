@@ -45,6 +45,16 @@ flake8 = "^3.8.4"
 pre-commit = "^2.13"
 pyupgrade = "^2.19.4"
 
+# ctl
+ctl = "^1"
+jinja2 = "^2.11.2"
+tmpl = "^1"
+twine = "^3.3.0"
+
+# docs
+markdown = "*"
+markdown-include = ">=0.5,<1"
+mkdocs = "^1"
 
 [tool.poetry.scripts]
 bartender = "vodka.bartender:bartender"
