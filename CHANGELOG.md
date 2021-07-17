@@ -6,6 +6,8 @@
 ### Added
 ### Fixed
 ### Changed
+- updated dependencies
+
 ### Deprecated
 ### Removed
 ### Security
