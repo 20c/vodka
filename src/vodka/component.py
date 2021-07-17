@@ -26,7 +26,7 @@ class Component(vodka.log.LoggerMixin):
 
     @property
     def home(self):
-        """ absolute path to the project home directory """
+        """absolute path to the project home directory"""
         return self.get_config("home")
 
     def get_config(self, key_name):

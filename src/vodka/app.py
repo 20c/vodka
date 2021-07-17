@@ -128,7 +128,7 @@ class Application(vodka.component.Component):
     def versioned_handle(cls):
         if cls.version is None:
             return cls.handle
-        return "%s/%s" % (cls.handle, cls.version)
+        return f"{cls.handle}/{cls.version}"
 
     def __init__(self, config=None, config_dir=None):
 
@@ -199,7 +199,7 @@ class TemplatedApplication(Application):
 
     @property
     def template_path(self):
-        """ absolute path to template directory """
+        """absolute path to template directory"""
         return self.get_config("templates")
 
     def versioned_url(self, path):
@@ -289,7 +289,7 @@ class WebApplication(TemplatedApplication):
 
     @property
     def includes(self):
-        """ return includes from config """
+        """return includes from config"""
         r = {
             k: sorted(list(copy.deepcopy(v).values()), key=lambda x: x.get("order", 0))
             for k, v in list(self.get_config("includes").items())

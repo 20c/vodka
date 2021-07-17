@@ -114,7 +114,7 @@
 
 ### Added
 - wsgi: support for route decorators in config
-- wsgi: added **host** variable to template env 
+- wsgi: added **host** variable to template env
 - flask: crossdomain route decorator
 
 ## 2.0.4
@@ -142,22 +142,22 @@
 
 ### Changed
 - refactored app loading to allow each app to have a separate home location
-  which also makes it now possible to load multiple apps from multiple 
+  which also makes it now possible to load multiple apps from multiple
   sources
-- wsgi plugin: request env now contains an app object for each instantiated app 
+- wsgi plugin: request env now contains an app object for each instantiated app
   with a static_url member to allow loading of app specific static resources
 
 ### Deprecated
 - home config variable in vodka config root, replaced by app home
 
-## 2.0.2 
+## 2.0.2
 
 ### Added
-- plugins/django, allows you to use django**s orm 
+- plugins/django, allows you to use django**s orm
 - bartender command: **config**, interactive config creation
 - impl plugin.setup() method that is called right before a plugin is started
 - impl base class for class registry decorator
-- additional unittests 
+- additional unittests
 
 ### Fixed
 - plugins/flask, fail gracefully when trying to import flask

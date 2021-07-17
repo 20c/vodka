@@ -52,7 +52,7 @@ class Configurator:
                 continue
             if hasattr(handler, "configure_%s" % name):
                 fn = getattr(handler, "configure_%s" % name)
-                fn(self, cfg, "%s.%s" % (path, name))
+                fn(self, cfg, f"{path}.{name}")
                 if attr.expected_type in [list, dict] and not cfg.get(name):
                     try:
                         del cfg[name]
@@ -110,9 +110,9 @@ class Configurator:
         return r
 
     def echo(self, message):
-        """ override this function with something that echos a message to the user """
+        """override this function with something that echos a message to the user"""
         pass
 
     def prompt(self, *args, **kwargs):
-        """ override this function to prompt for user input """
+        """override this function to prompt for user input"""
         return None

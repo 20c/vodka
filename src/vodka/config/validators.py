@@ -11,14 +11,14 @@ import os
 
 
 def path(value):
-    """ Validates that the value is an existing path """
+    """Validates that the value is an existing path"""
     if not value:
         return (True, "")
     return (os.path.exists(value), "path does not exist: %s" % value)
 
 
 def host(value):
-    """ Validates that the value is a valid network location """
+    """Validates that the value is a valid network location"""
     if not value:
         return (True, "")
     try:

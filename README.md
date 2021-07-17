@@ -9,7 +9,7 @@ vodka is a plugin based real-time web service daemon.
 ### Install
 
 ```sh
-pip install vodka 
+pip install vodka
 ```
 
 ### Documentation (work in progress)
