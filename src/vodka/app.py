@@ -236,7 +236,7 @@ class TemplatedApplication(Application):
 
         template_locations = []
 
-        # we want tp searcj additional template location specified
+        # we want tp search additional template location specified
         # in this app's config
         for path in self.get_config("template_locations"):
             if os.path.exists(path):
