@@ -1,8 +1,7 @@
 Unreleased:
   added: []
   fixed: []
-  changed:
-  - updated dependencies
+  changed: []
   deprecated: []
   removed: []
   security: []
@@ -116,3 +115,6 @@ Unreleased:
   changed:
   - plugins are now instantiated before applications
   - vodka.app.register now a decorator
+3.1.0:
+  changed:
+  - updated dependencies
