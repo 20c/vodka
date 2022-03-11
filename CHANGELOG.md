@@ -4,6 +4,7 @@
 ## Unreleased
 ### Fixed
 - allow binding flask to ipv6
+- deprecation message for wsgi.host and wsgi.port
 
 
 ## 3.1.0
