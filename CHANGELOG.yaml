@@ -1,6 +1,7 @@
 Unreleased:
   added: []
-  fixed: []
+  fixed:
+  - allow binding flask to ipv6
   changed: []
   deprecated: []
   removed: []

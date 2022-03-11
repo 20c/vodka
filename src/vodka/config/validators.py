@@ -8,7 +8,7 @@ Desc can be None when passing
 """
 
 import os
-
+import re
 
 def path(value):
     """Validates that the value is an existing path"""
@@ -21,10 +21,13 @@ def host(value):
     """Validates that the value is a valid network location"""
     if not value:
         return (True, "")
-    try:
-        host, port = value.split(":")
-    except ValueError as _:
+
+    parts = re.match("^(.+):(\d+)$", value)
+    if not parts:
         return (False, "value needs to be <host>:<port>")
+
+    host = parts.group(1)
+    port = parts.group(2)
 
     try:
         int(port)

@@ -1,3 +1,4 @@
+import re
 import os
 from vodka import get_instance
 import vodka.plugins
@@ -101,13 +102,16 @@ class WSGIPlugin(vodka.plugins.PluginBase):
 
     def init(self):
         if "bind" in self.pluginmgr_config:
-            (host, port) = self.get_config("bind").split(":")
-            self.host = host
-            self.port = int(port)
+            parts = re.match("^(.+):(\d+)$", self.get_config("bind"))
+            if not parts:
+                raise ValueError("Unable to parse host and port from `bind` config")
 
-        # DEPRECATE: 2.2.0
+            self.host = parts.group(1).strip("[]")
+            self.port = int(parts.group(2))
+
+        # DEPRECATE: 4.0.0
         else:
-            self.host = self.get_config("host")
+            self.host = self.get_config("host").strip("[]")
             self.port = self.get_config("port")
 
     def setup(self):

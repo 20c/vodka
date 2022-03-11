@@ -2,6 +2,8 @@
 
 
 ## Unreleased
+### Fixed
+- allow binding flask to ipv6
 
 
 ## 3.1.0
