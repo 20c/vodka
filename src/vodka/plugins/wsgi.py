@@ -39,20 +39,20 @@ class WSGIPlugin(vodka.plugins.PluginBase):
     wsgi_application = None
 
     class Configuration(vodka.plugins.PluginBase.Configuration):
-        # DEPRECATE: 3.0
+        # DEPRECATE: 4.0
         host = vodka.config.Attribute(
             str,
             default="localhost",
             help_text="host address",
-            deprecated="Well be removed in 3.0, it's being replaced by the 'bind' config attribute",
+            deprecated="4.0. Use the 'bind' config attribute instead.",
         )
 
-        # DEPRECATE: 3.0
+        # DEPRECATE: 4.0
         port = vodka.config.Attribute(
             int,
             default=80,
             help_text="host port",
-            deprecated="Will be removed in 3.0, it's being replaced by the 'bind' config attribute",
+            deprecated="4.0. Use the 'bind' config attribute instead.",
         )
 
         bind = vodka.config.Attribute(
