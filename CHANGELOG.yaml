@@ -3,9 +3,11 @@ Unreleased:
   fixed:
   - allow binding flask to ipv6
   - deprecation message for wsgi.host and wsgi.port
+  - github workflow for unit tests
   changed: []
   deprecated: []
-  removed: []
+  removed:
+  - python3.6 support
   security: []
 3.0.0:
   added:

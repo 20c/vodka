@@ -5,6 +5,9 @@
 ### Fixed
 - allow binding flask to ipv6
 - deprecation message for wsgi.host and wsgi.port
+- github workflow for unit tests
+### Removed
+- python3.6 support
 
 
 ## 3.1.0
