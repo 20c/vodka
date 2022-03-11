@@ -1,11 +1,10 @@
-import json
 import unittest
 import uuid
-
+import json
+import vodka.log
 import vodka.config
 import vodka.config.shared as shared
 import vodka.exceptions as exc
-import vodka.log
 
 vodka.log.set_loggers(vodka.log.default_config())
 

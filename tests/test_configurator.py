@@ -1,8 +1,7 @@
-import sys
 import unittest
-
 import vodka.config
 import vodka.config.configurator
+import sys
 
 
 class Handler(vodka.config.Handler):

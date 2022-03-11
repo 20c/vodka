@@ -1,8 +1,7 @@
 import os.path
 import unittest
-
-import vodka.app
 import vodka.instance
+import vodka.app
 
 
 @vodka.app.register("templated_app_a")

@@ -1,10 +1,9 @@
-import os
 import re
-
+import os
+from vodka import get_instance
+import vodka.plugins
 import vodka.config
 import vodka.config.validators
-import vodka.plugins
-from vodka import get_instance
 
 
 def application():

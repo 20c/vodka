@@ -3,21 +3,21 @@ Vodka application foundation classes. Each vodka app should extend one
 of these.
 """
 
+import os
+import sys
+import re
 import copy
 import importlib
 import inspect
-import os
-import re
-import sys
 
 import pluginmgr
 
-import vodka.component
 import vodka.config
 import vodka.config.shared
-import vodka.instance
 import vodka.log
+import vodka.component
 import vodka.util
+import vodka.instance
 
 applications = {}
 loaded_paths = []

@@ -10,7 +10,6 @@ Desc can be None when passing
 import os
 import re
 
-
 def path(value):
     """Validates that the value is an existing path"""
     if not value:

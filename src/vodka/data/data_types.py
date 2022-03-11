@@ -1,5 +1,5 @@
-import vodka.component
 import vodka.config
+import vodka.component
 
 data_types = {}
 

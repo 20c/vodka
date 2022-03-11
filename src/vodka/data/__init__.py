@@ -1,8 +1,6 @@
 _handlers = {}
 import traceback
-
 import vodka.log
-
 from . import handlers
 
 

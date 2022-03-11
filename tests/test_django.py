@@ -1,10 +1,8 @@
 import os.path
-import sys
 import unittest
-
 import pytest
-
 import vodka
+import sys
 
 CONFIG = {
     "type": "django",

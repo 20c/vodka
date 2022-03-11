@@ -1,7 +1,6 @@
 import os
-
-import vodka.config
 import vodka.log
+import vodka.config
 
 
 class Component(vodka.log.LoggerMixin):

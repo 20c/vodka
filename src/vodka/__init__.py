@@ -1,13 +1,14 @@
 import sys
-
 from pluginmgr.config import ConfigPluginManager
 
-import vodka.config
+from vodka.instance import instances, instantiate, ready, get_instance
+
+from vodka.app import load_all, applications, get_application
+
 import vodka.data
 import vodka.data.data_types
+import vodka.config
 import vodka.log
-from vodka.app import applications, get_application, load_all
-from vodka.instance import get_instance, instances, instantiate, ready
 
 plugin = ConfigPluginManager("vodka.plugins")
 

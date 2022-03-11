@@ -1,13 +1,14 @@
 import os
-import urllib.parse
-from functools import update_wrapper
-
+import vodka.plugins.wsgi
 import vodka
 import vodka.log
-import vodka.plugins.wsgi
+import urllib.parse
+
+from functools import update_wrapper
+
 
 try:
-    from flask import Flask, current_app, make_response, request, send_from_directory
+    from flask import Flask, request, send_from_directory, make_response, current_app
 except ImportError:
     Flask = None
 

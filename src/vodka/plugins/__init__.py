@@ -1,14 +1,13 @@
+import pluginmgr
+import pluginmgr.config
 import time
 import urllib.parse
 
-import pluginmgr
-import pluginmgr.config
-
 import vodka
-import vodka.component
-import vodka.config
-import vodka.data.handlers
 import vodka.log
+import vodka.config
+import vodka.component
+import vodka.data.handlers
 
 
 def get_plugin_by_name(name):

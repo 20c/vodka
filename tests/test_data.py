@@ -1,10 +1,9 @@
-import json
 import unittest
-
-import vodka.config
 import vodka.data
 import vodka.data.handlers
 import vodka.data.renderers
+import vodka.config
+import json
 
 
 @vodka.data.handlers.register("a")

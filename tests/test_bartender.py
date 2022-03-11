@@ -1,16 +1,16 @@
+import unittest
+import pytest
 import json
 import os
-import unittest
 
-import pytest
-from click.testing import CliRunner
-
-import vodka
-import vodka.app
-import vodka.bartender
 import vodka.config
 import vodka.log
+import vodka.bartender
 import vodka.plugins
+import vodka.app
+import vodka
+
+from click.testing import CliRunner
 
 HOME = os.path.join(os.path.dirname(__file__), "resources", "test_bartender_app")
 

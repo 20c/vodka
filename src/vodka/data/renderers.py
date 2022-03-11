@@ -3,10 +3,9 @@ vodka data renderers, takes a dict and returns munge formatted
 string
 """
 
-import inspect
-
 import munge
 import munge.codec.all
+import inspect
 
 # DATA RENDERERS
 
