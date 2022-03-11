@@ -1,11 +1,12 @@
 import unittest
-import vodka
-import vodka.app
-import vodka.instance
-import vodka.plugins.wsgi
-import vodka.config
 
 from flask import Flask, request
+
+import vodka
+import vodka.app
+import vodka.config
+import vodka.instance
+import vodka.plugins.wsgi
 
 
 @vodka.app.register("flask_test")

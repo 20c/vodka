@@ -3,10 +3,10 @@ vodka data handlers, allows to modify data retrieved by
 vodka data plugins
 """
 
-import vodka.config
 import vodka.component
-import vodka.storage
+import vodka.config
 import vodka.data.data_types
+import vodka.storage
 import vodka.util
 
 handlers = {}

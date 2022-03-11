@@ -1,7 +1,8 @@
-import munge
-import types
 import os
 import os.path
+import types
+
+import munge
 
 import vodka.app
 import vodka.exceptions

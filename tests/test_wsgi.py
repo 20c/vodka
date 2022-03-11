@@ -1,8 +1,9 @@
 import unittest
-import vodka.plugins.wsgi
-import vodka.config
-import vodka.app
+
 import vodka
+import vodka.app
+import vodka.config
+import vodka.plugins.wsgi
 
 
 @vodka.plugin.register("wsgi_test")

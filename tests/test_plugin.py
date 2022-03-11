@@ -1,10 +1,10 @@
-import unittest
 import time
+import unittest
 
-import vodka.plugins
-import vodka.data
-import vodka.storage
 import vodka
+import vodka.data
+import vodka.plugins
+import vodka.storage
 
 
 @vodka.plugin.register("test")

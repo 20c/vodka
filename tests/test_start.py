@@ -1,9 +1,10 @@
 import os.path
 import time
 import unittest
+
 import vodka
-import vodka.plugins
 import vodka.instance
+import vodka.plugins
 
 
 @vodka.plugin.register("test_start_plugin_a")

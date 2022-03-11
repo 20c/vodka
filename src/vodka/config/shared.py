@@ -1,8 +1,9 @@
 """
 Allows sharing of configuration keys between different vodka apps
 """
-from vodka.config import Handler, Attribute as BaseAttribute
 import vodka.util
+from vodka.config import Attribute as BaseAttribute
+from vodka.config import Handler
 
 shared = {}
 

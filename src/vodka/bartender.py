@@ -1,16 +1,17 @@
+import inspect
 import os
 import os.path
-import inspect
 import shutil
+
 import click
+import munge.codec.all
+from munge import config as munge_config
+
 import vodka
 import vodka.app
 import vodka.config
 import vodka.config.configurator
 import vodka.load_entrypoints
-
-import munge.codec.all
-from munge import config as munge_config
 
 VODKA_INSTALL_DIR = os.path.dirname(inspect.getfile(vodka))
 

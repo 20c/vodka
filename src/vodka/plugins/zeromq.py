@@ -3,11 +3,11 @@ try:
 except ImportError:
     pass
 
-import vodka
-import vodka.plugins
-import vodka.config
-
 import traceback
+
+import vodka
+import vodka.config
+import vodka.plugins
 
 
 @vodka.plugin.register("zeromq_probe")
