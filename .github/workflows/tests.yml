@@ -32,7 +32,7 @@ jobs:
       # poetry run pre-commit run --all-files
       - name: Run linters
         run: |
-            poetry run isort src/
+            # poetry run isort src/
             poetry run black --check src/
 
   test:

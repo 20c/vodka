@@ -40,7 +40,7 @@ flask = ">=2,<3"
 
 # linting
 black = { version = ">=20", allow-prereleases = true }
-# isort breaks imports
+# isort introduces a circular import somewhere when ran over vodka src
 # isort = "^5.7.0"
 flake8 = "^3.8.4"
 pre-commit = "^2.13"
@@ -64,3 +64,9 @@ bartender = "vodka.bartender:bartender"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+
