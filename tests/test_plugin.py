@@ -65,7 +65,7 @@ class TestDataPlugin(unittest.TestCase):
 
         vodka.start(thread_workers=[plugin])
 
-        time.sleep(0.3)
+        time.sleep(1)
 
         self.assertEqual(len(vodka.storage.get("data_test")), 10)
         for item in vodka.storage.get("data_test"):
